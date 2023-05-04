@@ -1,0 +1,142 @@
+{
+  "name": "@googlemaps/extended-component-library",
+  "version": "0.1.0",
+  "description": "Web Components for building rich experiences with the Google Maps JavaScript API.",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/googlemaps/extended-component-library",
+  "bugs": {
+    "url": "https://github.com/googlemaps/extended-component-library/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/googlemaps/extended-component-library.git"
+  },
+  "scripts": {
+    "build": "wireit",
+    "build:ts": "wireit",
+    "build:package": "wireit",
+    "build:bundle": "wireit",
+    "test": "wireit",
+    "docs": "wireit"
+  },
+  "type": "module",
+  "files": [
+    "**/*.js",
+    "**/*.js.map",
+    "**/*.d.ts",
+    "!web-test-runner.config.js",
+    "!testing/*",
+    "!**/*_test.*",
+    "!.wireit/**",
+    "!**/doc_src/*"
+  ],
+  "exports": {
+    "./api_loader.js": "./api_loader/api_loader.js",
+    "./icon_button.js": "./icon_button/icon_button.js",
+    "./overlay_layout.js": "./overlay_layout/overlay_layout.js",
+    "./place_building_blocks/place_attribution.js": "./place_building_blocks/place_attribution/place_attribution.js",
+    "./place_building_blocks/place_data_provider.js": "./place_building_blocks/place_data_provider/place_data_provider.js",
+    "./place_building_blocks/place_directions_button.js": "./place_building_blocks/place_directions_button/place_directions_button.js",
+    "./place_building_blocks/place_field_boolean.js": "./place_building_blocks/place_field_boolean/place_field_boolean.js",
+    "./place_building_blocks/place_field_link.js": "./place_building_blocks/place_field_link/place_field_link.js",
+    "./place_building_blocks/place_field_text.js": "./place_building_blocks/place_field_text/place_field_text.js",
+    "./place_building_blocks/place_opening_hours.js": "./place_building_blocks/place_opening_hours/place_opening_hours.js",
+    "./place_building_blocks/place_photo_gallery.js": "./place_building_blocks/place_photo_gallery/place_photo_gallery.js",
+    "./place_building_blocks/place_price_level.js": "./place_building_blocks/place_price_level/place_price_level.js",
+    "./place_building_blocks/place_rating.js": "./place_building_blocks/place_rating/place_rating.js",
+    "./place_building_blocks/place_reviews.js": "./place_building_blocks/place_reviews/place_reviews.js",
+    "./place_overview.js": "./place_overview/place_overview.js",
+    "./place_picker.js": "./place_picker/place_picker.js",
+    "./split_layout.js": "./split_layout/split_layout.js"
+  },
+  "unpkg": "dist/index.min.js",
+  "publishConfig": {
+    "registry": "https://wombat-dressing-room.appspot.com"
+  },
+  "dependencies": {
+    "lit": "^2.3.0",
+    "@lit-labs/context": "^0.3.1",
+    "tslib": "^2.4.0"
+  },
+  "devDependencies": {
+    "@custom-elements-manifest/analyzer": "^0.6.8",
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "@rollup/plugin-replace": "^5.0.2",
+    "@rollup/plugin-terser": "^0.4.0",
+    "@types/google.maps": "^3.51.1",
+    "@types/jasmine": "^4.0.3",
+    "@web/test-runner": "^0.15.0",
+    "@web/test-runner-playwright": "^0.9.0",
+    "jasmine": "^4.5.0",
+    "markdown-table": "^3.0.3",
+    "rollup": "^3.15.0",
+    "rollup-plugin-summary": "^2.0.0",
+    "typescript": "~4.7.4",
+    "web-test-runner-jasmine": "^0.0.2",
+    "wireit": "^0.9.0"
+  },
+  "wireit": {
+    "build": {
+      "dependencies": [
+        "build:ts"
+      ]
+    },
+    "build:ts": {
+      "command": "tsc --pretty",
+      "files": [
+        "tsconfig.json",
+        "**/*.ts",
+        "!**/*.d.ts"
+      ],
+      "output": [
+        ".tsbuildinfo",
+        "**/*.js",
+        "**/*.js.map",
+        "**/*.d.ts",
+        "!*.js",
+        "!types/",
+        "!build/rollup.config.js"
+      ],
+      "clean": "if-file-deleted"
+    },
+    "build:package": {
+      "command": ". build/finalize_package.sh",
+      "dependencies": [ "build:ts" ],
+      "files": [
+        "build/finalize_package.sh",
+        "base/constants.js"
+      ],
+      "output": [ "**/*.js", "**/*.md" ],
+      "clean": false
+    },
+    "build:bundle": {
+      "command": "rollup -c build/rollup.config.js",
+      "dependencies": [ "build:package" ],
+      "files": [
+        "build/rollup.config.js",
+        "**/*.js"
+      ],
+      "output": [ "dist/**/*" ]
+    },
+    "test": {
+      "command": "wtr",
+      "dependencies": [ "build:ts" ],
+      "files": [ "web-test-runner.config.js" ],
+      "output": []
+    },
+    "docs": {
+      "command": "cem analyze --litelement --globs \"**/*.ts\" --exclude \"**/*_test.ts\"",
+      "files": [
+        "**/*.ts",
+        "**/doc_src/*",
+        "custom-elements-manifest.config.js",
+        "!**/*.d.ts",
+        "!**/*_test.ts"
+      ],
+      "output": [
+        "**/README.md",
+        "custom-elements.json"
+      ]
+    }
+  }
+}
