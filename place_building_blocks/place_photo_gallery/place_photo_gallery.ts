@@ -20,6 +20,7 @@
 
 import {css, html} from 'lit';
 import {customElement, property, query, state} from 'lit/decorators.js';
+import {ifDefined} from 'lit/directives/if-defined.js';
 import {map} from 'lit/directives/map.js';
 import {styleMap} from 'lit/directives/style-map.js';
 import {when} from 'lit/directives/when.js';
@@ -35,16 +36,46 @@ type PhotoAttribution = google.maps.places.PhotoAttribution;
 
 interface FormattedPhoto {
   uri: string;
+  tileUri: string;
   attributions: PhotoAttribution[];
 }
 
-/** Formats the photos of a `google.maps.places.Place` object for display. */
-function formatPhotos(place?: Place|null): FormattedPhoto[] {
-  if (!place || !place.photos) return [];
-  return place.photos.map((photo: Photo) => ({
-                            uri: photo.getURI(),
-                            attributions: photo.attributions,
-                          }));
+interface TileSize {
+  widthPx: number;
+  heightPx: number;
+}
+
+/**
+ * Formats a `google.maps.places.Photo` object for display based on tile size.
+ *
+ * If photo is wider relative to its height compared to the tile, then its
+ * height should be capped at the tile's height; vice versa for tile width.
+ *
+ *                                            ┌┄┄┄┄┄┄┄┄┄┄┄┄┐
+ *                                            ┆            ┆  PHOTO
+ *    ┌┄┄┄┄┄┌────────────┐┄┄┄┄┄┐              ├────────────┤
+ *    ┆     │            │     ┆              │            │
+ *    ┆     │    TILE    │     ┆  PHOTO       │    TILE    │
+ *    ┆     │            │     ┆              │            │
+ *    └┄┄┄┄┄└────────────┘┄┄┄┄┄┘              ├────────────┤
+ *                                            ┆            ┆
+ *                                            └┄┄┄┄┄┄┄┄┄┄┄┄┘
+ */
+function formatPhoto(photo: Photo, tileSize: TileSize): FormattedPhoto {
+  const photoSizeRatio = photo.widthPx / photo.heightPx;
+  const tileSizeRatio = tileSize.widthPx / tileSize.heightPx;
+
+  // Account for diff between physical and CSS pixels on current device; see:
+  // https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio.
+  const tilePhotoOptions = photoSizeRatio > tileSizeRatio ?
+      {maxHeight: Math.ceil(tileSize.heightPx * window.devicePixelRatio)} :
+      {maxWidth: Math.ceil(tileSize.widthPx * window.devicePixelRatio)};
+
+  return {
+    uri: photo.getURI(),
+    tileUri: photo.getURI(tilePhotoOptions),
+    attributions: photo.attributions,
+  };
 }
 
 /** Spacing for margins and paddings based on baseline font size. */
@@ -188,10 +219,11 @@ export class PlacePhotoGallery extends PlaceDataConsumer {
   maxTiles?: number;
 
   @state() private selectedIndex = 0;
+  @state() private tileSize?: TileSize;
 
   @query('.container') private readonly containerElement?: HTMLDivElement;
-
   @query('.lightbox') private readonly lightboxElement?: HTMLDialogElement;
+  @query('[part="tile"]') private readonly firstTileElement?: HTMLButtonElement;
 
   protected readonly fontLoader = new WebFontController(
       this, [WebFont.GOOGLE_SANS_TEXT, WebFont.MATERIAL_SYMBOLS_OUTLINED]);
@@ -219,8 +251,6 @@ export class PlacePhotoGallery extends PlaceDataConsumer {
     this.containerElement?.classList.add('no-focus-ring');
   };
 
-  private photos: FormattedPhoto[] = [];
-
   override connectedCallback() {
     super.connectedCallback();
     document.addEventListener('keydown', this.keydownEventListener);
@@ -233,12 +263,9 @@ export class PlacePhotoGallery extends PlaceDataConsumer {
     document.removeEventListener('mousedown', this.mousedownEventListener);
   }
 
-  protected override placeChangedCallback(place?: Place|null) {
-    this.photos = formatPhotos(place);
-  }
-
   protected override render() {
-    const selectedPhoto = this.photos[this.selectedIndex];
+    const photos = this.getFormattedPhotos();
+    const selectedPhoto = photos[this.selectedIndex];
     const placeName = this.getPlace()?.displayName;
 
     // clang-format off
@@ -258,7 +285,7 @@ export class PlacePhotoGallery extends PlaceDataConsumer {
           ${when(selectedPhoto?.attributions.length, () => html`
             <div class="caption">
               <span>${this.getMsg('PLACE_PHOTO_ATTRIBUTION_PREFIX')}</span>
-              ${map(selectedPhoto.attributions,
+              ${map(selectedPhoto!.attributions,
                     ({author, authorURI}) =>
                         html`${renderAttribution(author, authorURI)} `)}
             </div>
@@ -282,7 +309,7 @@ export class PlacePhotoGallery extends PlaceDataConsumer {
         <button
           aria-label=${this.getMsg('PLACE_PHOTO_NEXT_ARIA_LABEL')}
           @click=${this.navigateToNext}
-          .disabled=${this.selectedIndex === this.photos.length - 1}
+          .disabled=${this.selectedIndex === photos.length - 1}
         >
           <span aria-hidden="true" class="icon material-symbols-outlined">
             ${this.isRTL() ? 'chevron_left' : 'chevron_right'}
@@ -291,6 +318,7 @@ export class PlacePhotoGallery extends PlaceDataConsumer {
       </div>
     `;
 
+    // clang-format off
     const renderTileButton = (photo: FormattedPhoto|null, i: number) => html`
       <button
         aria-label=${this.getMsg('PLACE_PHOTO_TILE_ARIA_LABEL', i + 1)}
@@ -298,29 +326,36 @@ export class PlacePhotoGallery extends PlaceDataConsumer {
         .disabled=${!photo}
         part="tile"
         style=${styleMap({
-      'background-image': photo && `url(${photo.uri})`
-    })}
+          'background-image': photo && `url(${photo.tileUri})`,
+        })}
       ></button>
     `;
+    // clang-format on
 
-    const tiledPhotos = this.getPlace() ?
-        this.photos.slice(0, this.maxTiles) :
-        new Array(this.maxTiles ?? 10).fill(null);
     return html`
       <div class="container">
-        <div>${map(tiledPhotos, renderTileButton)}</div>
+        <div>${map(photos.slice(0, this.maxTiles), renderTileButton)}</div>
         <dialog class="lightbox">
           <div class="backdrop" @click=${this.closeLightbox}></div>
           <img
             alt=${this.getMsg('PLACE_PHOTO_ALT', placeName ?? '')}
             class="photo"
-            .src=${selectedPhoto?.uri}
+            src=${ifDefined(selectedPhoto?.uri)}
           />
           ${captionCard}
           ${navControls}
         </dialog>
       </div>
     `;
+  }
+
+  protected override updated() {
+    if (!this.tileSize && this.firstTileElement) {
+      this.tileSize = {
+        widthPx: this.firstTileElement.clientWidth,
+        heightPx: this.firstTileElement.clientHeight,
+      };
+    }
   }
 
   /** @ignore */
@@ -330,6 +365,17 @@ export class PlacePhotoGallery extends PlaceDataConsumer {
 
   protected override placeHasData(place: Place): boolean {
     return !!(place.photos && place.photos.length > 0);
+  }
+
+  private getFormattedPhotos(): Array<FormattedPhoto|null> {
+    const place = this.getPlace();
+    // If Place data is not yet available or the tile elements have not been
+    // rendered, then return a list of null values as placeholders.
+    if (place === undefined || !this.tileSize) {
+      return new Array(10).fill(null);
+    }
+    if (!place?.photos) return [];
+    return place.photos.map((photo) => formatPhoto(photo, this.tileSize!));
   }
 
   private isRTL(): boolean {
@@ -351,6 +397,7 @@ export class PlacePhotoGallery extends PlaceDataConsumer {
   }
 
   private navigateToNext() {
-    if (this.selectedIndex < this.photos.length - 1) this.selectedIndex++;
+    const numPhotos = this.getPlace()?.photos?.length;
+    if (numPhotos && this.selectedIndex < numPhotos - 1) this.selectedIndex++;
   }
 }

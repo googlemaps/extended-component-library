@@ -57,15 +57,15 @@ const fakePlace = makeFakePlace({
               authorURI: 'https://www.google.com/maps/contrib/B1',
             },
           ],
-          heightPx: 1000,
-          widthPx: 2000,
+          heightPx: 2000,
+          widthPx: 1000,
         },
         'https://lh3.googleusercontent.com/places/B'),
     makeFakePhoto(
         {
           attributions: [],
-          heightPx: 1000,
-          widthPx: 2000,
+          heightPx: 1340,
+          widthPx: 1420,
         },
         'https://lh3.googleusercontent.com/places/C'),
   ],
@@ -81,7 +81,7 @@ const fakePlaceResult: google.maps.places.PlaceResult = {
             '<a href="https://www.google.com/maps/contrib/A1">Author A1</a>',
             '<a>Author A2</a>',
           ],
-          height: 1080,
+          height: 1000,
           width: 2000,
         },
         'https://lh3.googleusercontent.com/places/A'),
@@ -90,15 +90,15 @@ const fakePlaceResult: google.maps.places.PlaceResult = {
           html_attributions: [
             '<a href="https://www.google.com/maps/contrib/B1">Author B1</a>',
           ],
-          height: 1080,
-          width: 2000,
+          height: 2000,
+          width: 1000,
         },
         'https://lh3.googleusercontent.com/places/B'),
     makeFakePlacePhoto(
         {
           html_attributions: [],
-          height: 1080,
-          width: 2000,
+          height: 1340,
+          width: 1420,
         },
         'https://lh3.googleusercontent.com/places/C'),
   ],
@@ -163,9 +163,16 @@ describe('PlacePhotoGallery', () => {
   });
 
   it('shows all photos from Place data as tiles, in order', async () => {
+    const getUri0Spy = spyOn(fakePlace.photos![0], 'getURI').and.callThrough();
+    const getUri1Spy = spyOn(fakePlace.photos![1], 'getURI').and.callThrough();
+    const getUri2Spy = spyOn(fakePlace.photos![2], 'getURI').and.callThrough();
+
     const {tiles} = await prepareState({place: fakePlace});
 
     expect(tiles.length).toBe(3);
+    expect(getUri0Spy).toHaveBeenCalledWith({maxHeight: 134});
+    expect(getUri1Spy).toHaveBeenCalledWith({maxWidth: 142});
+    expect(getUri2Spy).toHaveBeenCalledWith({maxWidth: 142});
     expect(getComputedStyle(tiles[0]).backgroundImage)
         .toBe('url("https://lh3.googleusercontent.com/places/A")');
     expect(getComputedStyle(tiles[1]).backgroundImage)
@@ -175,9 +182,19 @@ describe('PlacePhotoGallery', () => {
   });
 
   it('shows all photos from PlaceResult data as tiles, in order', async () => {
+    const getUrl0Spy =
+        spyOn(fakePlaceResult.photos![0], 'getUrl').and.callThrough();
+    const getUrl1Spy =
+        spyOn(fakePlaceResult.photos![1], 'getUrl').and.callThrough();
+    const getUrl2Spy =
+        spyOn(fakePlaceResult.photos![2], 'getUrl').and.callThrough();
+
     const {tiles} = await prepareState({place: fakePlaceResult});
 
     expect(tiles.length).toBe(3);
+    expect(getUrl0Spy).toHaveBeenCalledWith({maxHeight: 134});
+    expect(getUrl1Spy).toHaveBeenCalledWith({maxWidth: 142});
+    expect(getUrl2Spy).toHaveBeenCalledWith({maxWidth: 142});
     expect(getComputedStyle(tiles[0]).backgroundImage)
         .toBe('url("https://lh3.googleusercontent.com/places/A")');
     expect(getComputedStyle(tiles[1]).backgroundImage)
