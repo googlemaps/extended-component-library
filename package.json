@@ -25,6 +25,8 @@
     "**/*.js.map",
     "**/*.d.ts",
     "!web-test-runner.config.js",
+    "!custom-elements-manifest.config.js",
+    "!build/*",
     "!testing/*",
     "!**/*_test.*",
     "!.wireit/**",
