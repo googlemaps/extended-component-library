@@ -38,6 +38,10 @@ describe('IconButton', () => {
     return root.querySelector<IconButton>('gmpx-icon-button')!;
   }
 
+  it('is bad', () => {
+    expect(true).toBe(false);
+  });
+
   it('is defined', () => {
     const el = document.createElement('gmpx-icon-button');
     expect(el).toBeInstanceOf(IconButton);
