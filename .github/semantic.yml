@@ -1,0 +1,2 @@
+# Disable "Semantic PRs" on this project; we'll use a GitHub workflow for the same purpose instead.
+enabled: false
