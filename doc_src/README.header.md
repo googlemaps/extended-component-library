@@ -81,11 +81,13 @@ Web Components are also designed to be used with JavaScript. Here’s an example
 </gmp-map>
 
 <script>
-const mapElement = document.getElementById('my-map');
-const markers = document.querySelectorAll('gmp-advanced-marker.pannable');
-markers.forEach((marker) => {
-  marker.addEventListener('gmp-click', () => {
-    mapElement.innerMap.panTo(marker.position);
+window.addEventListener('load', () => {
+  const mapElement = document.getElementById('my-map');
+  const markers = document.querySelectorAll('gmp-advanced-marker.pannable');
+  markers.forEach((marker) => {
+    marker.addEventListener('gmp-click', () => {
+      mapElement.innerMap.panTo(marker.position);
+    });
   });
 });
 </script>

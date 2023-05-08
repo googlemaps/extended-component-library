@@ -96,7 +96,7 @@ You can use most built-in CSS properties to control the positioning or display o
 ### Show information about a specific Place
 
 ```html
-<gmpx-place-overview place="123abc">
+<gmpx-place-overview place="ChIJN1t_tDeuEmsRUsoyG83frY4">
 </gmpx-place-overview>
 ```
 
@@ -112,7 +112,7 @@ Then, in the Angular template, include the following:
 
 ```html
 <gmpx-place-overview
-    place="123abc"
+    place="ChIJN1t_tDeuEmsRUsoyG83frY4"
     size="medium"
     [travelOrigin]="userLocation">
   
