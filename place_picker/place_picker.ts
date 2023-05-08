@@ -25,8 +25,10 @@ import {APILoader} from '../api_loader/api_loader.js';
 import {BaseComponent} from '../base/base_component.js';
 import {GMPX_COLOR_ON_SURFACE, GMPX_COLOR_PRIMARY, GMPX_COLOR_SURFACE, GMPX_FONT_BODY, GMPX_FONT_SIZE_BASE} from '../base/common_styles.js';
 import {RequestErrorEvent} from '../base/events.js';
+import {FocusController} from '../base/focus_controller.js';
 import {WebFont, WebFontController} from '../base/web_font_controller.js';
 import {LAT_LNG_LITERAL_ATTRIBUTE_CONVERTER, STRING_ARRAY_ATTRIBUTE_CONVERTER} from '../utils/attribute_converters.js';
+import {getDeepActiveElement} from '../utils/deep_element_access.js';
 import {Deferred} from '../utils/deferred.js';
 import {makePlaceFromPlaceResult} from '../utils/place_utils.js';
 
@@ -252,10 +254,30 @@ export class PlacePicker extends BaseComponent {
 
   @query('input') private readonly inputElement?: HTMLInputElement;
 
+  @query('.clear-button')
+  private readonly clearButtonElement?: HTMLButtonElement;
+  @query('.search-button')
+  private readonly searchButtonElement?: HTMLButtonElement;
+
+  protected readonly focusController = new FocusController(this);
+
   protected readonly fontLoader = new WebFontController(
       this, [WebFont.GOOGLE_SANS_TEXT, WebFont.MATERIAL_SYMBOLS_OUTLINED]);
 
   private readonly autocomplete = new Deferred<Autocomplete>();
+
+  protected override willUpdate(changedProperties: PropertyValues) {
+    if (changedProperties.has('disableSearch') && this.disableSearch &&
+        this.focusController.isKeyboardNavigating &&
+        getDeepActiveElement() === this.searchButtonElement) {
+      this.clearButtonElement?.focus();
+    }
+    if (changedProperties.has('hideClearButton') && this.hideClearButton &&
+        this.focusController.isKeyboardNavigating &&
+        getDeepActiveElement() === this.clearButtonElement) {
+      this.inputElement?.focus();
+    }
+  }
 
   protected override render() {
     return html`

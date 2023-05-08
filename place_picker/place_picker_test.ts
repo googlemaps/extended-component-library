@@ -357,6 +357,30 @@ describe('PlacePicker', () => {
             jasmine.objectContaining({type: 'gmpx-requesterror', error}));
   });
 
+  it(`moves focus to clear button when searching via keyboard`, async () => {
+    const {input, searchButton, clearButton} = await prepareState();
+
+    await enterQueryText(input);
+    document.dispatchEvent(new KeyboardEvent('keydown', {key: 'Tab'}));
+    searchButton.focus();
+    searchButton.click();
+    await env.waitForStability();
+
+    expect(getDeepActiveElement()).toBe(clearButton);
+  });
+
+  it(`moves focus to input when clearing via keyboard`, async () => {
+    const {input, clearButton} = await prepareState();
+
+    await enterQueryText(input);
+    document.dispatchEvent(new KeyboardEvent('keydown', {key: 'Tab'}));
+    clearButton.focus();
+    clearButton.click();
+    await env.waitForStability();
+
+    expect(getDeepActiveElement()).toBe(input);
+  });
+
   it(`binds to map bounds imperatively via method`, async () => {
     const bindToSpy =
         spyOn(FAKE_PLACES_LIBRARY.Autocomplete.prototype, 'bindTo');

@@ -26,6 +26,7 @@ import {styleMap} from 'lit/directives/style-map.js';
 import {when} from 'lit/directives/when.js';
 
 import {GMPX_FONT_CAPTION, GMPX_FONT_SIZE_BASE, GMPX_FONT_TITLE_MEDIUM} from '../../base/common_styles.js';
+import {FocusController} from '../../base/focus_controller.js';
 import {WebFont, WebFontController} from '../../base/web_font_controller.js';
 import {renderAttribution} from '../../utils/place_utils.js';
 import {PlaceDataConsumer} from '../place_data_consumer.js';
@@ -105,7 +106,7 @@ export class PlacePhotoGallery extends PlaceDataConsumer {
       display: block;
     }
 
-    .container.no-focus-ring button:focus {
+    .container.hide-focus-ring button:focus {
       outline: none;
     }
 
@@ -225,13 +226,19 @@ export class PlacePhotoGallery extends PlaceDataConsumer {
   @query('.lightbox') private readonly lightboxElement?: HTMLDialogElement;
   @query('[part="tile"]') private readonly firstTileElement?: HTMLButtonElement;
 
+  protected readonly focusController =
+      new FocusController(this, (isKeyboardNavigating) => {
+        if (isKeyboardNavigating) {
+          this.containerElement?.classList.remove('hide-focus-ring');
+        } else {
+          this.containerElement?.classList.add('hide-focus-ring');
+        }
+      });
+
   protected readonly fontLoader = new WebFontController(
       this, [WebFont.GOOGLE_SANS_TEXT, WebFont.MATERIAL_SYMBOLS_OUTLINED]);
 
   private readonly keydownEventListener = ({key}: KeyboardEvent) => {
-    if (key === 'Tab' || key === 'Enter') {
-      this.containerElement?.classList.remove('no-focus-ring');
-    }
     if (!this.lightboxElement?.open) return;
     switch (key) {
       case 'ArrowLeft':
@@ -247,20 +254,14 @@ export class PlacePhotoGallery extends PlaceDataConsumer {
     }
   };
 
-  private readonly mousedownEventListener = () => {
-    this.containerElement?.classList.add('no-focus-ring');
-  };
-
   override connectedCallback() {
     super.connectedCallback();
     document.addEventListener('keydown', this.keydownEventListener);
-    document.addEventListener('mousedown', this.mousedownEventListener);
   }
 
   override disconnectedCallback() {
     super.disconnectedCallback();
     document.removeEventListener('keydown', this.keydownEventListener);
-    document.removeEventListener('mousedown', this.mousedownEventListener);
   }
 
   protected override render() {
