@@ -1,0 +1,32 @@
+name: Docs
+
+on: [push]
+
+jobs:
+  check-generated-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: npm
+      - uses: google/wireit@setup-github-actions-caching/v1
+
+      - run: npm ci
+      - run: npm run docs
+        env:
+          WIREIT_FAILURES: continue
+      - run: git add .
+      - run: |
+          if git diff --staged --name-only | grep "\.md$"
+          then
+            echo ""
+            echo "*************************************************************************"
+            echo "* Please execute 'npm run docs' and update your commit with the output! *"
+            echo "*************************************************************************"
+            exit 1
+          else
+            exit 0
+          fi
