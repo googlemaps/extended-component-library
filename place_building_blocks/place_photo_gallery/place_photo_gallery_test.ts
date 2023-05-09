@@ -181,6 +181,28 @@ describe('PlacePhotoGallery', () => {
         .toBe('url("https://lh3.googleusercontent.com/places/C")');
   });
 
+  it('does not fetch photos when tile has zero width/height', async () => {
+    const getUri0Spy = spyOn(fakePlace.photos![0], 'getURI').and.callThrough();
+    const getUri1Spy = spyOn(fakePlace.photos![1], 'getURI').and.callThrough();
+    const getUri2Spy = spyOn(fakePlace.photos![2], 'getURI').and.callThrough();
+
+    env.render(html`
+      <style>
+        gmpx-place-photo-gallery::part(tile) {
+          height: 0px;
+          width: 0px;
+        }
+      </style>
+      <gmpx-place-photo-gallery .place=${fakePlace}
+      ></gmpx-place-photo-gallery>
+    `);
+    await env.waitForStability();
+
+    expect(getUri0Spy).not.toHaveBeenCalled();
+    expect(getUri1Spy).not.toHaveBeenCalled();
+    expect(getUri2Spy).not.toHaveBeenCalled();
+  });
+
   it('shows all photos from PlaceResult data as tiles, in order', async () => {
     const getUrl0Spy =
         spyOn(fakePlaceResult.photos![0], 'getUrl').and.callThrough();

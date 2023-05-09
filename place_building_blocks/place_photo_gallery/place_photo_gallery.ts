@@ -351,10 +351,11 @@ export class PlacePhotoGallery extends PlaceDataConsumer {
   }
 
   protected override updated() {
-    if (!this.tileSize && this.firstTileElement) {
+    const {clientWidth, clientHeight} = this.firstTileElement ?? {};
+    if (!this.tileSize && clientWidth && clientHeight) {
       this.tileSize = {
-        widthPx: this.firstTileElement.clientWidth,
-        heightPx: this.firstTileElement.clientHeight,
+        widthPx: clientWidth,
+        heightPx: clientHeight,
       };
     }
   }
