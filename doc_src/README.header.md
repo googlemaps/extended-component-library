@@ -4,7 +4,7 @@ Google Maps Platform’s Extended Component Library is a set of Web Components t
 
 Ultimately, these components make it easier to read, learn, customize, and maintain maps-related code.
 
-![](doc_src/gmpx-header.png)
+![](https://raw.githubusercontent.com/googlemaps/extended-component-library/main/doc_src/gmpx-header.png)
 
 ## Installation
 
