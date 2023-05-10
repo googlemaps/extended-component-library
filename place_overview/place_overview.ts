@@ -33,7 +33,7 @@ import '../place_building_blocks/place_reviews/place_reviews.js';
 
 import {consume} from '@lit-labs/context';
 import {css, html, PropertyValues} from 'lit';
-import {customElement, property} from 'lit/decorators.js';
+import {customElement, property, query} from 'lit/decorators.js';
 import {choose} from 'lit/directives/choose.js';
 import {when} from 'lit/directives/when.js';
 
@@ -43,6 +43,7 @@ import {RequestErrorEvent} from '../base/events.js';
 import {SlotValidationController} from '../base/slot_validation_controller.js';
 import {WebFont, WebFontController} from '../base/web_font_controller.js';
 import {placeContext} from '../place_building_blocks/place_data_consumer.js';
+import {PlaceDataProvider} from '../place_building_blocks/place_data_provider/place_data_provider.js';
 
 type LatLng = google.maps.LatLng;
 type LatLngLiteral = google.maps.LatLngLiteral;
@@ -353,6 +354,9 @@ export class PlaceOverview extends BaseComponent {
    */
   @property({attribute: false}) travelOrigin?: LatLng|LatLngLiteral|Place;
 
+  @query('gmpx-place-data-provider')
+  private readonly dataProviderElement?: PlaceDataProvider;
+
   protected readonly fontLoader = new WebFontController(
       this, [WebFont.GOOGLE_SANS_TEXT, WebFont.MATERIAL_SYMBOLS_OUTLINED]);
 
@@ -584,6 +588,9 @@ export class PlaceOverview extends BaseComponent {
   `;
 
   private forwardRequestError(event: RequestErrorEvent) {
+    if (event.target && event.target === this.dataProviderElement) {
+      console.error(event.error);
+    }
     const requestErrorEvent = new RequestErrorEvent(event.error);
     this.dispatchEvent(requestErrorEvent);
   }

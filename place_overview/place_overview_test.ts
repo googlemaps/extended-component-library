@@ -27,7 +27,7 @@ import {ifDefined} from 'lit/directives/if-defined.js';
 import {PlaceDataConsumer} from '../place_building_blocks/place_data_consumer.js';
 import {PlaceDataProvider} from '../place_building_blocks/place_data_provider/place_data_provider.js';
 import {Environment} from '../testing/environment.js';
-import {SAMPLE_FAKE_PLACE} from '../testing/fake_place.js';
+import {makeFakePlace, SAMPLE_FAKE_PLACE} from '../testing/fake_place.js';
 
 import {PlaceOverview} from './place_overview.js';
 
@@ -151,6 +151,7 @@ describe('PlaceOverview', () => {
   });
 
   it(`emits request error event when Directions request fails`, async () => {
+    const consoleErrorSpy = spyOn(console, 'error');
     const error = new Error('no direction results');
     env.importLibrarySpy?.withArgs('routes', jasmine.anything())
         .and.returnValue({
@@ -164,6 +165,24 @@ describe('PlaceOverview', () => {
     overview.travelOrigin = {lat: 1, lng: 2};
     await env.waitForStability();
 
+    expect(consoleErrorSpy).not.toHaveBeenCalled();
+    expect(dispatchEventSpy)
+        .toHaveBeenCalledOnceWith(
+            jasmine.objectContaining({type: 'gmpx-requesterror', error}));
+  });
+
+  it(`emits and logs error event when Place ID is invalid`, async () => {
+    const consoleErrorSpy = spyOn(console, 'error');
+    const error = new Error('INVALID_REQUEST');
+    const overview = await prepareState({});
+    const dispatchEventSpy = spyOn(overview, 'dispatchEvent');
+    overview.place = makeFakePlace({
+      id: 'INVALID_PLACE_ID',
+      fetchFields: () => Promise.reject(error),
+    });
+    await env.waitForStability();
+
+    expect(consoleErrorSpy).toHaveBeenCalledOnceWith(error);
     expect(dispatchEventSpy)
         .toHaveBeenCalledOnceWith(
             jasmine.objectContaining({type: 'gmpx-requesterror', error}));
