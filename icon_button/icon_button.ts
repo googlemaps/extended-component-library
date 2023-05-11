@@ -159,7 +159,8 @@ export class IconButton extends BaseComponent {
     }
   `;
 
-  // https://lit.dev/docs/components/shadow-dom/#setting-shadowrootoptions
+  // Set up focus delegation; see
+  // https://lit.dev/docs/components/shadow-dom/#setting-shadowrootoptions.
   /** @ignore */
   static override shadowRootOptions = {
     ...BaseComponent.shadowRootOptions,
