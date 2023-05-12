@@ -1,6 +1,6 @@
 {
   "name": "@googlemaps/extended-component-library",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Web Components for building rich experiences with the Google Maps JavaScript API.",
   "license": "Apache-2.0",
   "homepage": "https://github.com/googlemaps/extended-component-library",
@@ -103,27 +103,40 @@
     },
     "build:package": {
       "command": ". build/finalize_package.sh",
-      "dependencies": [ "build:ts" ],
+      "dependencies": [
+        "build:ts"
+      ],
       "files": [
         "build/finalize_package.sh",
         "base/constants.js"
       ],
-      "output": [ "**/*.js", "**/*.md" ],
+      "output": [
+        "**/*.js",
+        "**/*.md"
+      ],
       "clean": false
     },
     "build:bundle": {
       "command": "rollup -c build/rollup.config.js",
-      "dependencies": [ "build:package" ],
+      "dependencies": [
+        "build:package"
+      ],
       "files": [
         "build/rollup.config.js",
         "**/*.js"
       ],
-      "output": [ "dist/**/*" ]
+      "output": [
+        "dist/**/*"
+      ]
     },
     "test": {
       "command": "wtr",
-      "dependencies": [ "build:ts" ],
-      "files": [ "web-test-runner.config.js" ],
+      "dependencies": [
+        "build:ts"
+      ],
+      "files": [
+        "web-test-runner.config.js"
+      ],
       "output": []
     },
     "docs": {
