@@ -99,12 +99,12 @@ Web Components work well with most popular frontend frameworks such as Angular, 
 
 ## Components available with Maps JS SDK
 
-Map and marker components can be used with the Extended Component Library, or on their own.
+Map and marker components can be used with the Extended Component Library, or on their own. See the [guide](https://developers.google.com/maps/documentation/web-components/overview?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components) for more information on Web Components in the Maps JS SDK.
 
 | Component               | Description                                    |
 | ----------------------- | ---------------------------------------------- |
-| `<gmp-map>`             | The map component displays a map on a webpage, and can wrap other map-related components such as markers inside the map component in HTML. |
-| `<gmp-advanced-marker>` | The marker component displays a pin on the map at specified coordinates. |
+| [`<gmp-map>`](https://developers.google.com/maps/documentation/javascript/reference/map?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#MapElement)             | The map component displays a map on a webpage, and can wrap other map-related components such as markers inside the map component in HTML. |
+| [`<gmp-advanced-marker>`](https://developers.google.com/maps/documentation/javascript/reference/advanced-markers?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#AdvancedMarkerElement) | The marker component displays a pin on the map at specified coordinates. |
 
 ## Inventory of components
 
