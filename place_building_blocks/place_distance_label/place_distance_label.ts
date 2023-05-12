@@ -153,6 +153,9 @@ export class PlaceDistanceLabel extends PlaceDataConsumer {
         travelMode: (this.travelMode?.toUpperCase() ?? 'DRIVING') as TravelMode,
       });
       this.directionsData = result?.routes[0]?.legs[0];
+      // When switching the travel mode between driving and undefined,
+      // this.directionsData is unchanged but we still want an update.
+      this.requestUpdate();
     } else {
       this.directionsData = undefined;
     }

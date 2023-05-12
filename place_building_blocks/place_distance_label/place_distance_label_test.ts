@@ -186,6 +186,20 @@ describe('PlaceDistanceLabel', () => {
     });
   });
 
+  it(`updates on new travel mode and same directions data`, async () => {
+    spyOn(DirectionsController.prototype, 'route')
+        .and.resolveTo(FAKE_DIRECTIONS_RESULT);
+    const label = await prepareState({
+      place: FAKE_PLACE,
+      origin: FAKE_ORIGIN_LAT_LNG,
+    });
+
+    label.travelMode = 'driving';
+    await env.waitForStability();
+
+    expect(label.renderRoot.textContent).toContain('15 mins');
+  });
+
   it(`doesn't make Directions request when Place ID is unchanged`, async () => {
     const routeSpy = spyOn(DirectionsController.prototype, 'route')
                          .and.resolveTo(FAKE_DIRECTIONS_RESULT);
