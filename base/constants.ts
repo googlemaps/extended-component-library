@@ -18,10 +18,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-// TODO(b/266088660): Have this auto-set by build process.
 /** Package version of this component library. */
-export const LIBRARY_VERSION = '0.1.0';
+export const LIBRARY_VERSION = '0.1.0';  // x-release-please-version
 
-// TODO(b/266088660): Have this auto-set by build process.
 /** Identifier of where this component library is sourced from. */
 export const ATTRIBUTION_SOURCE_ID = 'GIT';

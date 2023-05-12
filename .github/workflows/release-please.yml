@@ -1,0 +1,22 @@
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+name: Release Please
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: google-github-actions/release-please-action@v3
+        with:
+          release-type: node
+          token: ${{ secrets.SYNCED_GITHUB_TOKEN_REPO }}
+          package-name: release-please-action
+          bump-minor-pre-major: true
+          extra-files: base/constants.ts
