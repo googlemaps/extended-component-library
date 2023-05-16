@@ -40,6 +40,12 @@ jobs:
         env:
           WIREIT_FAILURES: continue
         if: ${{ steps.release.outputs.release_created }}
+      # Now configure with the publish service for install.
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          registry-url: 'https://wombat-dressing-room.appspot.com/'
+        if: ${{ steps.release.outputs.release_created }}
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NODE_AUTH_TOKEN}}
