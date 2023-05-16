@@ -22,12 +22,17 @@ import {LitElement, ReactiveController, ReactiveControllerHost} from 'lit';
 
 import {APILoader} from '../../api_loader/api_loader.js';
 import {RequestErrorEvent} from '../../base/events.js';
+import {RequestCache} from '../../utils/request_cache.js';
+
+const CACHE_SIZE = 100;
 
 /**
  * Controller that interfaces with the Maps JavaScript API Directions Service.
  */
 export class DirectionsController implements ReactiveController {
   private static service?: google.maps.DirectionsService;
+  private static readonly cache = new RequestCache<
+      google.maps.DirectionsRequest, google.maps.DirectionsResult>(CACHE_SIZE);
 
   constructor(private readonly host: ReactiveControllerHost&LitElement) {
     this.host.addController(this);
@@ -42,9 +47,14 @@ export class DirectionsController implements ReactiveController {
    */
   async route(request: google.maps.DirectionsRequest):
       Promise<google.maps.DirectionsResult|null> {
-    const service = await this.getService();
+    let responsePromise = DirectionsController.cache.get(request);
+    if (responsePromise === null) {
+      responsePromise =
+          this.getService().then((service) => service.route(request));
+      DirectionsController.cache.set(request, responsePromise);
+    }
     try {
-      return await service.route(request);
+      return await responsePromise;
     } catch (error: unknown) {
       const requestErrorEvent = new RequestErrorEvent(error);
       this.host.dispatchEvent(requestErrorEvent);
