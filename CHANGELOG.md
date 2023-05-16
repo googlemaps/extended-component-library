@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/googlemaps/extended-component-library/compare/v0.1.1...v0.1.2) (2023-05-16)
+
+
+### Performance Improvements
+
+* create request/response cache for API services being called multiple times ([82973a3](https://github.com/googlemaps/extended-component-library/commit/82973a331920d8bf604153958f81f125933b07d7))
+
 ## 0.1.1 (2023-05-12)
 
 
