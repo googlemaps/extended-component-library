@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/googlemaps/extended-component-library/compare/v0.1.2...v0.1.3) (2023-05-16)
+
+
+### Bug Fixes
+
+* update npm publish action ([90a4024](https://github.com/googlemaps/extended-component-library/commit/90a40245ea69655ba8d2a8101e8a13d15e4ea2a7))
+
 ## [0.1.2](https://github.com/googlemaps/extended-component-library/compare/v0.1.1...v0.1.2) (2023-05-16)
 
 
