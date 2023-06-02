@@ -177,7 +177,7 @@ export class APILoader extends BaseComponent {
       const solutionChannel = this.getSolutionChannel();
       const googleMaps = inlineScript.load({
         key,
-        ...(version && {'v': version}),
+        ...(version && {v: version}),
         ...(language && {language}),
         ...(region && {region}),
         ...(solutionChannel && {solutionChannel}),

@@ -22,7 +22,7 @@
  * Query parameters for the script loading URL of the Maps JavaScript API.
  * See: https://developers.google.com/maps/documentation/javascript/url-params.
  */
-interface BootstrapParams {
+declare interface BootstrapParams {
   key: string;
   v?: string;
   language?: string;
