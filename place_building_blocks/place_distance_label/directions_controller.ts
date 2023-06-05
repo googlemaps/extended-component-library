@@ -32,7 +32,16 @@ const CACHE_SIZE = 100;
 export class DirectionsController implements ReactiveController {
   private static service?: google.maps.DirectionsService;
   private static readonly cache = new RequestCache<
-      google.maps.DirectionsRequest, google.maps.DirectionsResult>(CACHE_SIZE);
+      google.maps.DirectionsRequest, google.maps.DirectionsResult,
+      google.maps.MapsRequestError>(
+      CACHE_SIZE, (error: google.maps.MapsRequestError) => {
+        // Requests with a transient error DirectionsStatus of OVER_QUERY_LIMIT
+        // and UNKNOWN_ERROR should be retried. See full list of statuses
+        // https://developers.google.com/maps/documentation/javascript/directions#DirectionsStatus
+        return error.code ===
+            'OVER_QUERY_LIMIT' as google.maps.DirectionsStatus ||
+            error.code === 'UNKNOWN_ERROR' as google.maps.DirectionsStatus;
+      });
 
   constructor(private readonly host: ReactiveControllerHost&LitElement) {
     this.host.addController(this);
@@ -55,7 +64,7 @@ export class DirectionsController implements ReactiveController {
     }
     try {
       return await responsePromise;
-    } catch (error: unknown) {
+    } catch (error) {
       const requestErrorEvent = new RequestErrorEvent(error);
       this.host.dispatchEvent(requestErrorEvent);
       return null;

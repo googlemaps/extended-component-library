@@ -45,13 +45,17 @@ export class LRUMap<K, V> {
   set(key: K, value: V) {
     // Rather than reinserting the entry, just delete it to avoid the extra call
     // to this.map.set().
-    if (this.map.has(key)) {
-      this.map.delete(key);
-    }
+    this.delete(key);
     this.map.set(key, value);
     if (this.map.size > this.capacity) {
       const [lruKey] = this.map.keys();
       this.map.delete(lruKey);
+    }
+  }
+
+  delete(key: K) {
+    if (this.map.has(key)) {
+      this.map.delete(key);
     }
   }
 

@@ -79,4 +79,11 @@ describe('LRUMap', () => {
     expect(m.has('a')).toBeTrue();
     expect(m.has('b')).toBeFalse();
   });
+
+  it(`deletes a value that was set`, () => {
+    const m = new LRUMap<string, number>(2);
+    m.set('a', 1);
+    m.delete('a');
+    expect(m.has('a')).toBeFalse();
+  });
 });

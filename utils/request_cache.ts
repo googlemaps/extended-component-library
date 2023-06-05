@@ -23,12 +23,16 @@ import {LRUMap} from './lru_map.js';
 /**
  * A limited-capacity cache keyed by serialized request objects.
  */
-export class RequestCache<RequestType, ResponseType> {
+export class RequestCache<RequestType, ResponseType, ErrorType extends Error> {
   private readonly requestCacheMap: LRUMap<string, Promise<ResponseType>>;
   /**
    * @param capacity - The maximum number of objects to keep in the cache.
+   * @param shouldRetry - Callback that determines if a request should be
+   * retried, or if the failure should be cached.
    */
-  constructor(capacity: number) {
+  constructor(
+      capacity: number,
+      private readonly shouldRetry: (error: ErrorType) => boolean) {
     this.requestCacheMap = new LRUMap(capacity);
   }
 
@@ -44,7 +48,13 @@ export class RequestCache<RequestType, ResponseType> {
    * existing result if one exists already.
    */
   set(key: RequestType, value: Promise<ResponseType>) {
-    this.requestCacheMap.set(this.serialize(key), value);
+    const serializedKey = this.serialize(key);
+    this.requestCacheMap.set(serializedKey, value);
+    value.catch((error: ErrorType) => {
+      if (this.shouldRetry(error)) {
+        this.requestCacheMap.delete(serializedKey);
+      }
+    });
   }
 
   /**

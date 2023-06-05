@@ -67,33 +67,46 @@ const FAKE_RESPONSE_2: Response = {
   id: 'xHD87228BCE8',
   cost: 110.75,
   delivered: false,
-  status: 'UNKOWN',
+  status: 'UNKNOWN',
 };
 
 describe('RequestCache', () => {
   it('returns null when no request exists', async () => {
-    const requestCache = new RequestCache<Request, Response>(10);
+    const requestCache =
+        new RequestCache<Request, Response, Error>(10, () => false);
     const result = requestCache.get(FAKE_REQUEST);
     expect(result).toBeNull();
   });
 
   it('returns the existing result when one exists', async () => {
-    const requestCache = new RequestCache<Request, Response>(10);
+    const requestCache =
+        new RequestCache<Request, Response, Error>(10, () => false);
     requestCache.set(FAKE_REQUEST, Promise.resolve(FAKE_RESPONSE));
     const result = await requestCache.get(FAKE_REQUEST);
     expect(result).toEqual(FAKE_RESPONSE);
   });
 
   it('updates result if request already exists', async () => {
-    const requestCache = new RequestCache<Request, Response>(10);
+    const requestCache =
+        new RequestCache<Request, Response, Error>(10, () => false);
     requestCache.set(FAKE_REQUEST, Promise.resolve(FAKE_RESPONSE));
     requestCache.set(FAKE_REQUEST, Promise.resolve(FAKE_RESPONSE_2));
     const result = await requestCache.get(FAKE_REQUEST);
     expect(result).toEqual(FAKE_RESPONSE_2);
   });
 
+  it('deletes request if it should be retried', async () => {
+    const requestCache =
+        new RequestCache<Request, Response, Error>(10, () => true);
+    requestCache.set(FAKE_REQUEST, Promise.reject(new Error()));
+    await 0;
+    const result = await requestCache.get(FAKE_REQUEST);
+    expect(result).toBeNull();
+  });
+
   it('treats requests the same regardless of property order', async () => {
-    const requestCache = new RequestCache<Request, Response>(10);
+    const requestCache =
+        new RequestCache<Request, Response, Error>(10, () => false);
     requestCache.set(FAKE_REQUEST, Promise.resolve(FAKE_RESPONSE));
     const result = await requestCache.get(SORTED_REQUEST);
     expect(result).toEqual(FAKE_RESPONSE);
