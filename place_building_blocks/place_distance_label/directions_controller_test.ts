@@ -64,6 +64,10 @@ describe('DirectionsController', () => {
     return host;
   }
 
+  afterEach(() => {
+    DirectionsController.reset();
+  });
+
   const parameters: Array<{error: google.maps.MapsRequestError}> = [
     {
       error: {

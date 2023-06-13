@@ -26,12 +26,8 @@ import {RequestCache} from '../../utils/request_cache.js';
 
 const CACHE_SIZE = 100;
 
-/**
- * Controller that interfaces with the Maps JavaScript API Directions Service.
- */
-export class DirectionsController implements ReactiveController {
-  private static service?: google.maps.DirectionsService;
-  private static readonly cache = new RequestCache<
+function makeDirectionsRequestCache() {
+  return new RequestCache<
       google.maps.DirectionsRequest, google.maps.DirectionsResult,
       google.maps.MapsRequestError>(
       CACHE_SIZE, (error: google.maps.MapsRequestError) => {
@@ -42,6 +38,14 @@ export class DirectionsController implements ReactiveController {
             'OVER_QUERY_LIMIT' as google.maps.DirectionsStatus ||
             error.code === 'UNKNOWN_ERROR' as google.maps.DirectionsStatus;
       });
+}
+
+/**
+ * Controller that interfaces with the Maps JavaScript API Directions Service.
+ */
+export class DirectionsController implements ReactiveController {
+  private static service?: google.maps.DirectionsService;
+  private static cache = makeDirectionsRequestCache();
 
   constructor(private readonly host: ReactiveControllerHost&LitElement) {
     this.host.addController(this);
@@ -79,5 +83,16 @@ export class DirectionsController implements ReactiveController {
       DirectionsController.service = new DirectionsService();
     }
     return DirectionsController.service;
+  }
+
+  /**
+   * Resets Directions Controller state by deleting any existing service object
+   * and clearing its cache.
+   * This method should be invoked for testing purposes only.
+   * @ignore
+   */
+  static reset() {
+    DirectionsController.cache = makeDirectionsRequestCache();
+    DirectionsController.service = undefined;
   }
 }
