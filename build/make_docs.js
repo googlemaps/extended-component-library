@@ -227,7 +227,7 @@ function getNpmExportsLookup() {
 function makeImportSection(headerLevel, modulePath, className, tagName) {
   let md = '';
   const npmExports = getNpmExportsLookup();
-  const npmPath = './' + modulePath.replace(/ts$/, 'js');
+  const npmPath = './lib/' + modulePath.replace(/ts$/, 'js');
 
   // Only create a section if this component is specifically exported.
   if (!npmExports.has(npmPath)) {

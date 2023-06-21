@@ -15,6 +15,12 @@
 # limitations under the License.
 # ==============================================================================
 
-sed -i "s/'GIT'/'NPM'/g" ./base/constants.js
-find . -type f -name '*.md' -exec sed -i 's/utm_source=github/utm_source=npm/g' {} \;
-find . -type f -name '*.js' -exec sed -i 's/utm_source=github/utm_source=npm/g' {} \;
+# Copy README files to the lib directory and keep file structure.
+find . -type f -name 'README.md' -not -path '**/node_modules/**' -not -path '**/.wireit/**' -exec cp --parents {} ./lib \;
+
+find ./lib/base -type f -name 'constants.*' -exec sed -i 's/'GIT'/'NPM'/g' {} \;
+find ./lib -type f -name '*.md' -exec sed -i 's/utm_source=github/utm_source=npm/g' {} \;
+find ./lib -type f -name '*.js' -exec sed -i 's/utm_source=github/utm_source=npm/g' {} \;
+
+# Overwrite root level README with copy from lib directory.
+mv -f ./lib/README.md .

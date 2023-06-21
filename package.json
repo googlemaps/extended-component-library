@@ -22,35 +22,30 @@
   },
   "type": "module",
   "files": [
-    "**/*.js",
-    "**/*.js.map",
-    "**/*.d.ts",
-    "!web-test-runner.config.js",
-    "!custom-elements-manifest.config.js",
-    "!build/*",
-    "!testing/*",
-    "!**/*_test.*",
-    "!.wireit/**",
-    "!**/doc_src/*"
+    "dist",
+    "lib",
+    "!lib/build/*",
+    "!lib/testing/*",
+    "!lib/**/*_test.*"
   ],
   "exports": {
-    "./api_loader.js": "./api_loader/api_loader.js",
-    "./icon_button.js": "./icon_button/icon_button.js",
-    "./overlay_layout.js": "./overlay_layout/overlay_layout.js",
-    "./place_building_blocks/place_attribution.js": "./place_building_blocks/place_attribution/place_attribution.js",
-    "./place_building_blocks/place_data_provider.js": "./place_building_blocks/place_data_provider/place_data_provider.js",
-    "./place_building_blocks/place_directions_button.js": "./place_building_blocks/place_directions_button/place_directions_button.js",
-    "./place_building_blocks/place_field_boolean.js": "./place_building_blocks/place_field_boolean/place_field_boolean.js",
-    "./place_building_blocks/place_field_link.js": "./place_building_blocks/place_field_link/place_field_link.js",
-    "./place_building_blocks/place_field_text.js": "./place_building_blocks/place_field_text/place_field_text.js",
-    "./place_building_blocks/place_opening_hours.js": "./place_building_blocks/place_opening_hours/place_opening_hours.js",
-    "./place_building_blocks/place_photo_gallery.js": "./place_building_blocks/place_photo_gallery/place_photo_gallery.js",
-    "./place_building_blocks/place_price_level.js": "./place_building_blocks/place_price_level/place_price_level.js",
-    "./place_building_blocks/place_rating.js": "./place_building_blocks/place_rating/place_rating.js",
-    "./place_building_blocks/place_reviews.js": "./place_building_blocks/place_reviews/place_reviews.js",
-    "./place_overview.js": "./place_overview/place_overview.js",
-    "./place_picker.js": "./place_picker/place_picker.js",
-    "./split_layout.js": "./split_layout/split_layout.js"
+    "./api_loader.js": "./lib/api_loader/api_loader.js",
+    "./icon_button.js": "./lib/icon_button/icon_button.js",
+    "./overlay_layout.js": "./lib/overlay_layout/overlay_layout.js",
+    "./place_building_blocks/place_attribution.js": "./lib/place_building_blocks/place_attribution/place_attribution.js",
+    "./place_building_blocks/place_data_provider.js": "./lib/place_building_blocks/place_data_provider/place_data_provider.js",
+    "./place_building_blocks/place_directions_button.js": "./lib/place_building_blocks/place_directions_button/place_directions_button.js",
+    "./place_building_blocks/place_field_boolean.js": "./lib/place_building_blocks/place_field_boolean/place_field_boolean.js",
+    "./place_building_blocks/place_field_link.js": "./lib/place_building_blocks/place_field_link/place_field_link.js",
+    "./place_building_blocks/place_field_text.js": "./lib/place_building_blocks/place_field_text/place_field_text.js",
+    "./place_building_blocks/place_opening_hours.js": "./lib/place_building_blocks/place_opening_hours/place_opening_hours.js",
+    "./place_building_blocks/place_photo_gallery.js": "./lib/place_building_blocks/place_photo_gallery/place_photo_gallery.js",
+    "./place_building_blocks/place_price_level.js": "./lib/place_building_blocks/place_price_level/place_price_level.js",
+    "./place_building_blocks/place_rating.js": "./lib/place_building_blocks/place_rating/place_rating.js",
+    "./place_building_blocks/place_reviews.js": "./lib/place_building_blocks/place_reviews/place_reviews.js",
+    "./place_overview.js": "./lib/place_overview/place_overview.js",
+    "./place_picker.js": "./lib/place_picker/place_picker.js",
+    "./split_layout.js": "./lib/split_layout/split_layout.js"
   },
   "unpkg": "dist/index.min.js",
   "publishConfig": {
@@ -99,6 +94,7 @@
       ],
       "files": [
         "**/doc_src/*",
+        "build/make_docs.js",
         "custom-elements.json"
       ],
       "output": [
@@ -111,21 +107,14 @@
       ]
     },
     "build:ts": {
-      "command": "tsc --pretty",
+      "command": "tsc --pretty --outDir \"lib\"",
       "files": [
         "tsconfig.json",
         "**/*.ts",
         "!**/*.d.ts"
       ],
       "output": [
-        ".tsbuildinfo",
-        "**/*.js",
-        "**/*.js.map",
-        "**/*.d.ts",
-        "!*.js",
-        "!types/",
-        "!build/make_docs.js",
-        "!build/rollup.config.js"
+        "lib/**/*"
       ],
       "clean": "if-file-deleted"
     },
@@ -136,11 +125,11 @@
       ],
       "files": [
         "build/finalize_package.sh",
-        "base/constants.js"
+        "lib/base/constants.js"
       ],
       "output": [
-        "**/*.js",
-        "**/*.md"
+        "lib/**/*.js",
+        "lib/**/*.md"
       ],
       "clean": false
     },
@@ -151,10 +140,10 @@
       ],
       "files": [
         "build/rollup.config.js",
-        "**/*.js"
+        "lib/**/*.js"
       ],
       "output": [
-        "dist/**/*"
+        "dist/index.min.js"
       ]
     },
     "test": {

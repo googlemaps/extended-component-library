@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * @license
  * Copyright 2023 Google LLC
  * SPDX-License-Identifier: Apache-2.0
@@ -29,14 +29,14 @@ import summary from 'rollup-plugin-summary';
 
 
 export default {
-  input: 'build/cdn_index.js',
+  input: 'lib/build/cdn_index.js',
   plugins: [
     // Resolve bare module specifiers to relative paths
     resolve(),
 
     // Update compile-time constants
     replace({
-      include: ['base/constants.js'],
+      include: ['lib/base/constants.js'],
       preventAssignment: true,
       values: {
         "NPM": "CDN"
@@ -49,7 +49,7 @@ export default {
       module: true,
       warnings: true,
     }),
-    
+
     // Print bundle summary
     summary(),
   ],
