@@ -29,7 +29,7 @@ import summary from 'rollup-plugin-summary';
 
 
 export default {
-  input: 'lib/build/cdn_index.js',
+  input: 'lib/cdn_index.js',
   plugins: [
     // Resolve bare module specifiers to relative paths
     resolve(),
