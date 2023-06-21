@@ -24,7 +24,7 @@
   "files": [
     "dist",
     "lib",
-    "!lib/build/*",
+    "!lib/cdn_index.*",
     "!lib/testing/*",
     "!lib/**/*_test.*"
   ],
@@ -75,13 +75,13 @@
   },
   "wireit": {
     "cem": {
-      "command": "cem analyze --litelement --globs \"**/*.ts\" --exclude \"**/*_test.ts\" --exclude \"testing/*.ts\"",
+      "command": "cem analyze --litelement --globs \"src/**/*.ts\" --exclude \"**/*_test.ts\" --exclude \"src/testing/*.ts\"",
       "files": [
-        "**/*.ts",
+        "src/**/*.ts",
         "custom-elements-manifest.config.js",
         "!**/*.d.ts",
         "!**/*_test.ts",
-        "!testing/*.ts"
+        "!src/testing/*.ts"
       ],
       "output": [
         "custom-elements.json"
@@ -107,13 +107,13 @@
       ]
     },
     "build:ts": {
-      "command": "tsc --pretty --outDir \"lib\"",
+      "command": "tsc --pretty --rootDir \"src\" --outDir \"lib\"",
       "files": [
         "tsconfig.json",
-        "**/*.ts",
-        "!**/*.d.ts"
+        "src/**/*.ts"
       ],
       "output": [
+        ".tsbuildinfo",
         "lib/**/*"
       ],
       "clean": "if-file-deleted"

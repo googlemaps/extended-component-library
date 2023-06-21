@@ -15,12 +15,12 @@
 # limitations under the License.
 # ==============================================================================
 
-# Copy README files to the lib directory and keep file structure.
-find . -type f -name 'README.md' -not -path '**/node_modules/**' -not -path '**/.wireit/**' -exec cp --parents {} ./lib \;
+# Copy README files from src to the lib directory and keep file structure.
+cd src
+find . -type f -name 'README.md' -exec cp --parents {} ../lib \;
+cd ..
 
 find ./lib/base -type f -name 'constants.*' -exec sed -i 's/'GIT'/'NPM'/g' {} \;
 find ./lib -type f -name '*.md' -exec sed -i 's/utm_source=github/utm_source=npm/g' {} \;
 find ./lib -type f -name '*.js' -exec sed -i 's/utm_source=github/utm_source=npm/g' {} \;
-
-# Overwrite root level README with copy from lib directory.
-mv -f ./lib/README.md .
+sed -i 's/utm_source=github/utm_source=npm/g' 'README.md'

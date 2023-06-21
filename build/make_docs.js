@@ -23,7 +23,7 @@ import {markdownTable} from 'markdown-table';
 import {dirname, join, resolve, sep as pathSep} from 'path';
 
 const BASE_PATH = resolve('.');
-const PLACE_BUILDING_BLOCKS_DIR = 'place_building_blocks';
+const PLACE_BUILDING_BLOCKS_DIR = join('src', 'place_building_blocks');
 
 const GLOBAL_STYLE_TOKENS = new Set([
   '--gmpx-color-surface',
@@ -227,7 +227,7 @@ function getNpmExportsLookup() {
 function makeImportSection(headerLevel, modulePath, className, tagName) {
   let md = '';
   const npmExports = getNpmExportsLookup();
-  const npmPath = './lib/' + modulePath.replace(/ts$/, 'js');
+  const npmPath = './' + modulePath.replace(/^src/, 'lib').replace(/ts$/, 'js');
 
   // Only create a section if this component is specifically exported.
   if (!npmExports.has(npmPath)) {
@@ -345,6 +345,7 @@ function generateBreadcrumbs(readmeDir) {
 
   const breadcrumbs = [`[Extended Component Library](${relativeReadmeUrl(0)})`];
   for (let i = 0; i < (pathSegments.length - 1); i++) {
+    if (pathSegments[i] === 'src') continue;
     breadcrumbs.push(
         `[${titleCase(pathSegments[i])}](${relativeReadmeUrl(i + 1)})`);
   }
