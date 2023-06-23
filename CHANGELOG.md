@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.1.4](https://github.com/googlemaps/extended-component-library/compare/v0.1.3...v0.1.4) (2023-06-21)
+
+
+### Bug Fixes
+
+* declare JS API bootstrap params as external ([7ce41b8](https://github.com/googlemaps/extended-component-library/commit/7ce41b864ed98b9fccf3ab7032484e0a1d37af39))
+* prevent Directions Controller unit tests from sharing state ([c85bec1](https://github.com/googlemaps/extended-component-library/commit/c85bec1f72bb960567758917ef2a5d8d70ed5688))
+* prevent unwanted property renaming ([51d7f41](https://github.com/googlemaps/extended-component-library/commit/51d7f41a177a0c534a1ca65cb39446d31ae64317))
+
+
+### Performance Improvements
+
+* improve caching/retry behavior of service calls ([2e60fd4](https://github.com/googlemaps/extended-component-library/commit/2e60fd4bc1be46c9ae47176138619ea6071b3edc))
+
 ## [0.1.3](https://github.com/googlemaps/extended-component-library/compare/v0.1.2...v0.1.3) (2023-05-16)
 
 
