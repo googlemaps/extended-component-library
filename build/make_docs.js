@@ -89,7 +89,7 @@ function sanitizeForMarkdownTable(text) {
 /**
  * Formats the given text as a Markdown inline code segment.
  * @param {string} text
- * @returns {string}
+ * @return {string}
  */
 function asCode(text) {
   return '`' + text + '`';
@@ -98,7 +98,7 @@ function asCode(text) {
 /**
  * Creates a new Markdown paragraph for the given text.
  * @param {string} text
- * @returns {string}
+ * @return {string}
  */
 function newParagraph(text) {
   return text + '\n\n';
@@ -108,7 +108,7 @@ function newParagraph(text) {
  * Generates a Markdown header at the given level.
  * @param {number} level Markdown header level, 1 -> '#', 2 -> '##', etc.
  * @param {string} text Header text
- * @returns {string} a Markdown string
+ * @return {string} a Markdown string
  */
 function header(level, text) {
   return '#'.repeat(level) + ' ' + text;
@@ -117,7 +117,7 @@ function header(level, text) {
 /**
  * Returns only the first paragraph of the given text.
  * @param {string} text
- * @returns {string}
+ * @return {string}
  */
 function firstParagraphOf(text) {
   return text.split('\n\n')[0];
@@ -128,7 +128,7 @@ function firstParagraphOf(text) {
  * the README.
  * @param {import('custom-elements-manifest/schema').Declaration} declaration
  * @param {import('custom-elements-manifest/schema').Module} module
- * @returns {boolean}
+ * @return {boolean}
  */
 function shouldDocumentDeclaration(declaration, module) {
   return (
@@ -141,7 +141,7 @@ function shouldDocumentDeclaration(declaration, module) {
  * to the specified member kind.
  * @param {import('custom-elements-manifest/schema').Declaration} declaration
  * @param {string} kind
- * @returns
+ * @return
  */
 function getPublicMembers(declaration, kind) {
   return (declaration.members || [])
@@ -151,7 +151,7 @@ function getPublicMembers(declaration, kind) {
 /**
  * Determines which README file a module should be documented in.
  * @param {import('custom-elements-manifest/schema').Module} module
- * @returns {string} The path of the README file
+ * @return {string} The path of the README file
  */
 function getReadmeForModule(module) {
   const pathParts = module.path.split('/');
@@ -162,7 +162,7 @@ function getReadmeForModule(module) {
  * Reads content from README file with the specified base path and section name.
  * @param {sring} basePath
  * @param {string} section
- * @returns {string} Readme content, or empty string if file is not found
+ * @return {string} Readme content, or empty string if file is not found
  */
 function getStaticContent(basePath, section) {
   const filePath = join(basePath, 'doc_src', `README.${section}.md`);
@@ -178,7 +178,7 @@ function getStaticContent(basePath, section) {
  * footer, if they exist.
  * @param {string} basePath
  * @param {string} generatedContent
- * @returns {string} Readme content
+ * @return {string} Readme content
  */
 function appendStaticHeaderAndFooter(basePath, generatedContent) {
   return getStaticContent(basePath, 'header') + newParagraph(generatedContent) +
@@ -202,7 +202,7 @@ let _exportsLookup;
 
 /**
  * Provides a lookup mapping a JS file path to its NPM export alias.
- * @returns {Map}
+ * @return {Map}
  */
 function getNpmExportsLookup() {
   if (_exportsLookup) {
@@ -222,7 +222,7 @@ function getNpmExportsLookup() {
  * @param {string} modulePath
  * @param {string} className
  * @param {string} tagName
- * @returns {string}
+ * @return {string}
  */
 function makeImportSection(headerLevel, modulePath, className, tagName) {
   let md = '';
@@ -266,7 +266,7 @@ function makeImportSection(headerLevel, modulePath, className, tagName) {
  * Creates documentation section on APIs and SKUs used by a component.
  * @param {string} basePath
  * @param {number} headerLevel
- * @returns {string}
+ * @return {string}
  */
 function makeApiSkuSection(basePath, headerLevel) {
   const content = getStaticContent(basePath, 'apis');
@@ -286,7 +286,7 @@ function makeApiSkuSection(basePath, headerLevel) {
  * Creates documentation section for code examples.
  * @param {string} basePath
  * @param {number} headerLevel
- * @returns {string}
+ * @return {string}
  */
 function makeExamplesSection(basePath, headerLevel) {
   const content = getStaticContent(basePath, 'examples');
@@ -299,7 +299,7 @@ function makeExamplesSection(basePath, headerLevel) {
  * Sorts a table (including a header row) by the first column.
  *
  * @param {Array<Array<string>>} table
- * @returns {Array<Array<string>>}
+ * @return {Array<Array<string>>}
  */
 function sortTable(table) {
   const header = table[0];
@@ -377,7 +377,7 @@ function writeReadme(basePath, content) {
  * @param {import('custom-elements-manifest/schema').Module} module
  * @param {number} headerLevel Markdown header level for the overall element, 1
  *     -> "#", 2 -> "##", etc.
- * @returns {string}
+ * @return {string}
  */
 function declarationToMarkdown(declaration, module, headerLevel) {
   let headerName = `${asCode(`<${declaration.tagName}>`)} (as class ${

@@ -50,7 +50,7 @@ function getIconNameFromTravelMode(travelMode: TravelModeAttribute): string {
  * Converts data into a format suitable for specifying a place in the
  * `DirectionsRequest`.
  *
- * @returns A `google.maps.Place` object that is identified by exactly one of
+ * @return A `google.maps.Place` object that is identified by exactly one of
  *     Place ID, location, or query, with preference in that order.
  */
 function makePlaceForDirectionsRequest(data: LatLng|LatLngLiteral|Place|null|

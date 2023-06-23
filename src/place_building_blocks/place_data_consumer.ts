@@ -52,10 +52,10 @@ export const placeConsumerRegistrationContext =
         Symbol('place-consumer-registration'));
 
 /**
- * Base class for components which render Place data provided elsewhere; i.e
+ * Base class for components which render Place data provided elsewhere; i.e.
  * Place Representation Building Blocks.
  *
- * This class implements functionality to retreive a `Place` or `PlaceResult`
+ * This class implements functionality to retrieve a `Place` or `PlaceResult`
  * via context from a parent `<gmpx-place-data-provider>` component.
  */
 export abstract class PlaceDataConsumer extends BaseComponent {

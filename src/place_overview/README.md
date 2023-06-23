@@ -17,7 +17,7 @@ API](https://developers.google.com/maps/documentation/javascript/reference/place
 ![](./doc_src/place-overview.png)
 
 The easiest way to use this component is to start with a Place ID, which can
-be retreived from various Google Maps APIs or [looked up
+be retrieved from various Google Maps APIs or [looked up
 directly](https://developers.google.com/maps/documentation/javascript/examples/places-placeid-finder?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components).
 
 This component is designed to display any provided buttons for custom

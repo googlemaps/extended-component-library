@@ -317,7 +317,7 @@ export class PlaceFieldText extends PlaceDataConsumer {
    * rendered by PlaceFieldText.
    *
    * @param placeTypes - A list of place types
-   * @returns The first allowed place type in the list, formatted for display,
+   * @return The first allowed place type in the list, formatted for display,
    *     or null if there is no allowed type.
    */
   private getDisplayType(placeTypes: string[]): string|null {

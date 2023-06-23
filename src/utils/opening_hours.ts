@@ -93,7 +93,7 @@ function getLastSundayUTC(date: Date):
 }
 
 /**
- * From all occurences of "Sunday at 00:00" in the Place's timezone, return
+ * From all occurrences of "Sunday at 00:00" in the Place's timezone, return
  * the most recent one prior to `now`.
  */
 function getLastSundayInPlaceTimezone(
