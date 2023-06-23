@@ -66,6 +66,18 @@ declare global {
 @customElement('gmpx-api-loader')
 export class APILoader extends BaseComponent {
   /**
+   * An alias for the `key` property. React developers should use this prop to
+   * set the API key.
+   * ![upcoming release](https://img.shields.io/badge/upcoming%20release-blue)
+   */
+  set apiKey(key: string|undefined) {
+    this.key = key;
+  }
+  get apiKey(): string|undefined {
+    return this.key;
+  }
+
+  /**
    * Maps JS customers can configure HTTP Referrer Restrictions in the Cloud
    * Console to limit which URLs are allowed to use a particular API Key. This
    * parameter can limit the amount of data sent to Google Maps when evaluating
@@ -80,6 +92,9 @@ export class APILoader extends BaseComponent {
    * (Required) A valid Google Maps Platform API key. If you don't have one
    * already [sign up for Google Maps Platform and create an API
    * key](https://console.cloud.google.com/google/maps-apis/start?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components).
+   *
+   * React developers are encouraged to use the `apiKey` property instead,
+   * as `key` is a reserved word.
    *
    * You can learn more about API keys in the Google Maps Platform
    * [documentation](https://developers.google.com/maps/documentation/javascript/get-api-key?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components).

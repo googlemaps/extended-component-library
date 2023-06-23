@@ -169,6 +169,20 @@ describe('APILoader', () => {
     expect(consoleWarnSpy).not.toHaveBeenCalled();
   });
 
+  it('loads API when key is set using the `apiKey` alias', async () => {
+    const {loaderEl, consumerEl, scriptLoadSpy} = await prepareState();
+
+    loaderEl!.apiKey = 'TEST_API_KEY';
+    await env.waitForStability();
+
+    expect(loaderEl!.apiKey).toBe('TEST_API_KEY');
+    expect(loaderEl!.key).toBe('TEST_API_KEY');
+    expect(consumerEl!.coreLibrary).toBe(FAKE_CORE_LIBRARY);
+    expect(scriptLoadSpy).toHaveBeenCalledOnceWith(jasmine.objectContaining({
+      key: 'TEST_API_KEY',
+    }));
+  });
+
   it('logs warning when `google.maps` is already defined', async () => {
     window.google = {maps: FAKE_GOOGLE_MAPS};
     const {consumerEl, consoleWarnSpy, importLibrarySpy} = await prepareState({
