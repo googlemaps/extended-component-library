@@ -24,6 +24,7 @@ import {map} from 'lit/directives/map.js';
 import {when} from 'lit/directives/when.js';
 
 import {getTypeScaleSizeFromPx, GMPX_BORDER_SEPARATOR, GMPX_COLOR_ON_SURFACE, GMPX_COLOR_ON_SURFACE_VARIANT, GMPX_FONT_BODY, GMPX_FONT_CAPTION, GMPX_FONT_TITLE_MEDIUM, GMPX_RATING_COLOR, GMPX_RATING_COLOR_EMPTY} from '../../base/common_styles.js';
+import {LocalizationController} from '../../base/localization_controller.js';
 import {WebFont, WebFontController} from '../../base/web_font_controller.js';
 import {PlaceDataConsumer} from '../place_data_consumer.js';
 
@@ -112,6 +113,8 @@ export class PlaceReviews extends PlaceDataConsumer {
 
   protected readonly fontLoader =
       new WebFontController(this, [WebFont.GOOGLE_SANS_TEXT]);
+
+  protected readonly getMsg = LocalizationController.buildLocalizer(this);
 
   protected override render() {
     const reviews = this.getReviews();

@@ -12,20 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * @license
  * Copyright 2023 Google LLC
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {LitElement} from 'lit';
-
-import {LoggingController} from './logging_controller.js';
+import {LocalizationController} from '../base/localization_controller.js';
 
 /**
- * Base class for Web Components in the library.
+ * Sets one or many localized string literals in the new locale then
+ * requests an update for all currently connected components.
  */
-export abstract class BaseComponent extends LitElement {
-  /** @ignore A logger for outputting messages to the web console. */
-  protected readonly logger = new LoggingController(this);
-}
+export const {setStringLiterals} = LocalizationController;

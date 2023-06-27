@@ -27,6 +27,7 @@ import {when} from 'lit/directives/when.js';
 
 import {GMPX_FONT_CAPTION, GMPX_FONT_SIZE_BASE, GMPX_FONT_TITLE_MEDIUM} from '../../base/common_styles.js';
 import {FocusController} from '../../base/focus_controller.js';
+import {LocalizationController} from '../../base/localization_controller.js';
 import {WebFont, WebFontController} from '../../base/web_font_controller.js';
 import {renderAttribution} from '../../utils/place_utils.js';
 import {PlaceDataConsumer} from '../place_data_consumer.js';
@@ -263,6 +264,8 @@ export class PlacePhotoGallery extends PlaceDataConsumer {
     super.disconnectedCallback();
     document.removeEventListener('keydown', this.keydownEventListener);
   }
+
+  protected readonly getMsg = LocalizationController.buildLocalizer(this);
 
   protected override render() {
     const photos = this.getFormattedPhotos();

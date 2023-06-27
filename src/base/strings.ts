@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * @license
  * Copyright 2023 Google LLC
  * SPDX-License-Identifier: Apache-2.0
@@ -27,7 +27,8 @@ export type StringFunction = (...args: any[]) => string;
  * The values of this interface may be either plain strings or string functions,
  * the latter of which outputs a string based on one or more string parameters.
  */
-export declare interface StringLiterals {
+export declare interface StringLiterals extends
+    Record<string, string|StringFunction> {
   PLACE_CLEAR_ARIA_LABEL: string;
   PLACE_CLOSED: string;
   PLACE_CLOSED_PERMANENTLY: string;
@@ -63,43 +64,42 @@ export declare interface StringLiterals {
 }
 
 /** String literals in the `en-US` locale. */
-export const STRING_LITERALS_EN_US: StringLiterals&
-    {[key: string]: string | StringFunction} = Object.freeze({
-      'PLACE_CLEAR_ARIA_LABEL': 'Clear',
-      'PLACE_CLOSED': 'Closed',
-      'PLACE_CLOSED_PERMANENTLY': 'Permanently closed',
-      'PLACE_CLOSED_TEMPORARILY': 'Temporarily closed',
-      'PLACE_CLOSES': (closingTime) => `Closes ${closingTime}`,
-      'PLACE_HAS_DELIVERY': 'Delivery',
-      'PLACE_HAS_DINE_IN': 'Dine-in',
-      'PLACE_HAS_TAKEOUT': 'Takeout',
-      'PLACE_NO_DELIVERY': 'No Delivery',
-      'PLACE_NO_DINE_IN': 'No Dine-in',
-      'PLACE_NO_TAKEOUT': 'No Takeout',
-      'PLACE_OPEN_ALWAYS': 'Open 24 hours',
-      'PLACE_OPEN_NOW': 'Open now',
-      'PLACE_OPENING_HOURS_DEFAULT_SUMMARY': 'See opening hours',
-      'PLACE_OPENING_HOURS_ARIA_LABEL': 'Weekly opening hours',
-      'PLACE_OPENS': (openingTime) => `Opens ${openingTime}`,
-      'PLACE_OPERATIONAL': 'Operational',
-      'PLACE_PHOTO_ALT': (placeName) => `Photo of ${placeName || 'place'}`,
-      'PLACE_PHOTO_ATTRIBUTION_PREFIX': 'Photo by',
-      'PLACE_PHOTO_BACK_ARIA_LABEL': 'Back',
-      'PLACE_PHOTO_NEXT_ARIA_LABEL': 'Next',
-      'PLACE_PHOTO_PREV_ARIA_LABEL': 'Previous',
-      'PLACE_PHOTO_TILE_ARIA_LABEL': (i) => `Open photo ${i}`,
-      'PLACE_RATING_ARIA_LABEL': (rating) =>
-          (rating === 1) ? '1 star' : `${rating} stars`,
-      'PLACE_REVIEWS_AUTHOR_PHOTO_ALT': (author) =>
-          `Photo of ${author || 'reviewer'}`,
-      'PLACE_REVIEWS_MORE': 'More reviews',
-      'PLACE_REVIEWS_SECTION_CAPTION': 'Most relevant',
-      'PLACE_REVIEWS_SECTION_HEADING': 'Reviews by Google users',
-      'PLACE_SEARCH_ARIA_LABEL': 'Search',
-      'PLACE_TYPE': (placeType) => {
-        // Example: "hardware_store" -> "Hardware store"
-        if (placeType === '') return '';
-        const capitalized = placeType[0].toUpperCase() + placeType.slice(1);
-        return capitalized.replace(/_/g, ' ');
-      },
-    });
+export const STRING_LITERALS_EN_US: StringLiterals = Object.freeze({
+  'PLACE_CLEAR_ARIA_LABEL': 'Clear',
+  'PLACE_CLOSED': 'Closed',
+  'PLACE_CLOSED_PERMANENTLY': 'Permanently closed',
+  'PLACE_CLOSED_TEMPORARILY': 'Temporarily closed',
+  'PLACE_CLOSES': (closingTime) => `Closes ${closingTime}`,
+  'PLACE_HAS_DELIVERY': 'Delivery',
+  'PLACE_HAS_DINE_IN': 'Dine-in',
+  'PLACE_HAS_TAKEOUT': 'Takeout',
+  'PLACE_NO_DELIVERY': 'No Delivery',
+  'PLACE_NO_DINE_IN': 'No Dine-in',
+  'PLACE_NO_TAKEOUT': 'No Takeout',
+  'PLACE_OPEN_ALWAYS': 'Open 24 hours',
+  'PLACE_OPEN_NOW': 'Open now',
+  'PLACE_OPENING_HOURS_DEFAULT_SUMMARY': 'See opening hours',
+  'PLACE_OPENING_HOURS_ARIA_LABEL': 'Weekly opening hours',
+  'PLACE_OPENS': (openingTime) => `Opens ${openingTime}`,
+  'PLACE_OPERATIONAL': 'Operational',
+  'PLACE_PHOTO_ALT': (placeName) => `Photo of ${placeName || 'place'}`,
+  'PLACE_PHOTO_ATTRIBUTION_PREFIX': 'Photo by',
+  'PLACE_PHOTO_BACK_ARIA_LABEL': 'Back',
+  'PLACE_PHOTO_NEXT_ARIA_LABEL': 'Next',
+  'PLACE_PHOTO_PREV_ARIA_LABEL': 'Previous',
+  'PLACE_PHOTO_TILE_ARIA_LABEL': (i) => `Open photo ${i}`,
+  'PLACE_RATING_ARIA_LABEL': (rating) =>
+      (rating === 1) ? '1 star' : `${rating} stars`,
+  'PLACE_REVIEWS_AUTHOR_PHOTO_ALT': (author) =>
+      `Photo of ${author || 'reviewer'}`,
+  'PLACE_REVIEWS_MORE': 'More reviews',
+  'PLACE_REVIEWS_SECTION_CAPTION': 'Most relevant',
+  'PLACE_REVIEWS_SECTION_HEADING': 'Reviews by Google users',
+  'PLACE_SEARCH_ARIA_LABEL': 'Search',
+  'PLACE_TYPE': (placeType) => {
+    // Example: "hardware_store" -> "Hardware store"
+    if (placeType === '') return '';
+    const capitalized = placeType[0].toUpperCase() + placeType.slice(1);
+    return capitalized.replace(/_/g, ' ');
+  },
+});

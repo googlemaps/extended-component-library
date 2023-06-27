@@ -24,6 +24,7 @@ import {map} from 'lit/directives/map.js';
 import {when} from 'lit/directives/when.js';
 
 import {GMPX_RATING_COLOR, GMPX_RATING_COLOR_EMPTY} from '../../base/common_styles.js';
+import {LocalizationController} from '../../base/localization_controller.js';
 import {PlaceDataConsumer} from '../place_data_consumer.js';
 
 type Place = google.maps.places.Place;
@@ -89,6 +90,8 @@ export class PlaceRating extends PlaceDataConsumer {
    * (4.9 ★★★★★).
    */
   @property({type: Boolean, reflect: true}) condensed = false;
+
+  protected readonly getMsg = LocalizationController.buildLocalizer(this);
 
   protected override render() {
     const rating = this.getRating();

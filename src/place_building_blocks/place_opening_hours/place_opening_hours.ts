@@ -25,10 +25,10 @@ import {css, html, nothing, PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {map} from 'lit/directives/map.js';
 
+import {LocalizationController} from '../../base/localization_controller.js';
 import {WebFont, WebFontController} from '../../base/web_font_controller.js';
 import {formatTimeWithWeekdayMaybe, getUpcomingCloseTime, getUpcomingOpenTime, isSoon, NextCloseTimeStatus, NextOpenTimeStatus} from '../../utils/opening_hours.js';
 import {PlaceDataConsumer} from '../place_data_consumer.js';
-
 
 type Place = google.maps.places.Place;
 
@@ -118,6 +118,8 @@ export class PlaceOpeningHours extends PlaceDataConsumer {
       }, POLLING_INTERVAL_MS);
     }
   }
+
+  protected readonly getMsg = LocalizationController.buildLocalizer(this);
 
   protected override render() {
     const place = this.getPlace();

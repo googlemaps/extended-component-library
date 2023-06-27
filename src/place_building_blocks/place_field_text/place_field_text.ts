@@ -21,6 +21,7 @@
 import {html} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 
+import {LocalizationController} from '../../base/localization_controller.js';
 import {PlaceDataConsumer} from '../place_data_consumer.js';
 
 type Place = google.maps.places.Place;
@@ -242,6 +243,8 @@ export class PlaceFieldText extends PlaceDataConsumer {
    * and `user_ratings_total`.
    */
   @property({type: String, reflect: true}) field?: TextField;
+
+  protected readonly getMsg = LocalizationController.buildLocalizer(this);
 
   protected override render() {
     return html`<span>${this.getDisplayText()}</span>`;

@@ -40,6 +40,7 @@ import {when} from 'lit/directives/when.js';
 import {BaseComponent} from '../base/base_component.js';
 import {getTypeScaleSizeFromPx, GMPX_BORDER_SEPARATOR, GMPX_COLOR_ON_SURFACE, GMPX_COLOR_ON_SURFACE_VARIANT, GMPX_COLOR_PRIMARY, GMPX_COLOR_SURFACE, GMPX_FONT_BODY, GMPX_FONT_CAPTION, GMPX_FONT_HEADLINE, GMPX_FONT_TITLE_LARGE, GMPX_FONT_TITLE_MEDIUM} from '../base/common_styles.js';
 import {RequestErrorEvent} from '../base/events.js';
+import {LocalizationController} from '../base/localization_controller.js';
 import {SlotValidationController} from '../base/slot_validation_controller.js';
 import {WebFont, WebFontController} from '../base/web_font_controller.js';
 import {placeContext} from '../place_building_blocks/place_data_consumer.js';
@@ -373,6 +374,8 @@ export class PlaceOverview extends BaseComponent {
       this.size = 'x-large';
     }
   }
+
+  protected readonly getMsg = LocalizationController.buildLocalizer(this);
 
   protected override render() {
     // clang-format off

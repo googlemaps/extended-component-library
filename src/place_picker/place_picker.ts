@@ -26,6 +26,7 @@ import {BaseComponent} from '../base/base_component.js';
 import {GMPX_COLOR_ON_SURFACE, GMPX_COLOR_PRIMARY, GMPX_COLOR_SURFACE, GMPX_FONT_BODY, GMPX_FONT_SIZE_BASE} from '../base/common_styles.js';
 import {RequestErrorEvent} from '../base/events.js';
 import {FocusController} from '../base/focus_controller.js';
+import {LocalizationController} from '../base/localization_controller.js';
 import {WebFont, WebFontController} from '../base/web_font_controller.js';
 import {LAT_LNG_LITERAL_ATTRIBUTE_CONVERTER, STRING_ARRAY_ATTRIBUTE_CONVERTER} from '../utils/attribute_converters.js';
 import {getDeepActiveElement} from '../utils/deep_element_access.js';
@@ -278,6 +279,8 @@ export class PlacePicker extends BaseComponent {
       this.inputElement?.focus();
     }
   }
+
+  protected readonly getMsg = LocalizationController.buildLocalizer(this);
 
   protected override render() {
     return html`
