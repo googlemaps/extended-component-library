@@ -15,6 +15,7 @@
     "cem": "wireit",
     "docs": "wireit",
     "build": "wireit",
+    "build:react": "wireit",
     "build:ts": "wireit",
     "build:package": "wireit",
     "build:bundle": "wireit",
@@ -45,24 +46,27 @@
     "./place_building_blocks/place_reviews.js": "./lib/place_building_blocks/place_reviews/place_reviews.js",
     "./place_overview.js": "./lib/place_overview/place_overview.js",
     "./place_picker.js": "./lib/place_picker/place_picker.js",
-    "./split_layout.js": "./lib/split_layout/split_layout.js"
+    "./split_layout.js": "./lib/split_layout/split_layout.js",
+    "./react": "./lib/react/index.js"
   },
   "unpkg": "dist/index.min.js",
   "publishConfig": {
     "registry": "https://wombat-dressing-room.appspot.com"
   },
   "dependencies": {
-    "lit": "^2.3.0",
     "@lit-labs/context": "^0.3.1",
+    "lit": "^2.3.0",
     "tslib": "^2.4.0"
   },
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "^0.6.8",
+    "@lit-labs/react": "^1.1.1",
     "@rollup/plugin-node-resolve": "^15.0.1",
     "@rollup/plugin-replace": "^5.0.2",
     "@rollup/plugin-terser": "^0.4.0",
     "@types/google.maps": "^3.51.1",
     "@types/jasmine": "^4.0.3",
+    "@types/react": "^18.2.6",
     "@web/test-runner": "^0.15.0",
     "@web/test-runner-playwright": "^0.9.0",
     "jasmine": "^4.5.0",
@@ -106,8 +110,24 @@
         "build:ts"
       ]
     },
+    "build:react": {
+      "command": "node build/make_react.js",
+      "dependencies": [
+        "cem"
+      ],
+      "files": [
+        "build/make_react.js",
+        "custom-elements.json"
+      ],
+      "output": [
+        "src/react/index.ts"
+      ]
+    },
     "build:ts": {
       "command": "tsc --pretty --rootDir \"src\" --outDir \"lib\"",
+      "dependencies": [
+        "build:react"
+      ],
       "files": [
         "tsconfig.json",
         "src/**/*.ts"

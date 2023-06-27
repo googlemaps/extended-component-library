@@ -104,7 +104,7 @@ declare global {
  * suppress the display of some or all action elements.
  *
  * @event {RequestErrorEvent} gmpx-requesterror - Indicates an error condition
- * in an underlying Google Maps JavaScript API call.
+ * in an underlying Google Maps JavaScript API call. (React: onRequestError)
  *
  * @cssproperty [--gmpx-color-surface] - Background color.
  * @cssproperty [--gmpx-color-on-surface] - Main text color.

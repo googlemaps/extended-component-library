@@ -62,7 +62,7 @@ const CACHE_SIZE = 100;
  * loading data from the Places API.
  *
  * @event {RequestErrorEvent} gmpx-requesterror - Indicates an error condition
- * in an underlying Google Maps JavaScript API call.
+ * in an underlying Google Maps JavaScript API call. (React: onRequestError)
  */
 @customElement('gmpx-place-data-provider')
 export class PlaceDataProvider extends BaseComponent {

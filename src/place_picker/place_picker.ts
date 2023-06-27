@@ -94,8 +94,9 @@ declare global {
  * @event {Event} gmpx-placechange - This event is fired when a Place object is
  * made available for a Place the user has selected, when user clears the input
  * after selection, or when no Place result is found based on the input query.
+ * (React: onPlaceChange)
  * @event {RequestErrorEvent} gmpx-requesterror - Indicates an error condition
- * in an underlying Google Maps JavaScript API call.
+ * in an underlying Google Maps JavaScript API call. (React: onRequestError)
  *
  * @cssproperty [--gmpx-color-surface] - Background color of the input.
  * @cssproperty [--gmpx-color-on-surface] - Main text color.
