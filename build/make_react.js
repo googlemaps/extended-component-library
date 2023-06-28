@@ -63,39 +63,45 @@ function isPublicStaticMethod(member) {
 
 /* ------------------ Find components that need wrappers -------------------- */
 const manifest = JSON.parse(readFileSync('custom-elements.json'));
-const components = manifest.modules.flatMap(
-    (module) => module.declarations?.filter(shouldMakeReactWrapper)
-                    .map((component) => ({
-                           ...component,
-                           path: module.path.replace(/\.ts$/, '.js'),
-                         })) ??
-        []);
+const components =
+    manifest.modules
+        .flatMap(
+            (module) => (module.declarations ?? [])
+                            .filter(shouldMakeReactWrapper)
+                            .map((component) => ({
+                                   ...component,
+                                   path: module.path.replace(/^src/, '..')
+                                             .replace(/\.ts$/, '.js'),
+                                 })))
+        .sort((a, b) => a.name.localeCompare(b.name));
 
 /* ---------------------- Generate wrapper definitions ---------------------- */
 let content = `/**
-* Copyright 2023 Google LLC
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*     http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-* @license
-* Copyright 2023 Google LLC
-* SPDX-License-Identifier: Apache-2.0
-*/
+ * Copyright 2023 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @license
+ * Copyright 2023 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+// This file is generated from component definitions. DO NOT EDIT MANUALLY.
 
 import * as React from 'react';
 import {createComponent} from '@lit-labs/react';
 import type {EventName} from '@lit-labs/react';
-import {RequestErrorEvent} from '../base/events';
+import {RequestErrorEvent} from '../base/events.js';
 `;  // Import new event types here (TS compiler will complain otherwise).
 
 for (const {name: className, tagName, events, path, members} of components) {
@@ -103,7 +109,7 @@ for (const {name: className, tagName, events, path, members} of components) {
   const eventMapping = printEventMapping(events ?? []);
 
   content += `
-import {${className} as ${classAlias}} from '../../${path}';
+import {${className} as ${classAlias}} from '${path}';
 
 export const ${className} = createComponent({
   tagName: '${tagName}',
