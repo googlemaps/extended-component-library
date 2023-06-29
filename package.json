@@ -19,6 +19,7 @@
     "build:ts": "wireit",
     "build:package": "wireit",
     "build:bundle": "wireit",
+    "example": "wireit",
     "test": "wireit"
   },
   "type": "module",
@@ -56,12 +57,12 @@
   },
   "dependencies": {
     "@lit-labs/context": "^0.3.1",
+    "@lit-labs/react": "^1.2.0",
     "lit": "^2.3.0",
     "tslib": "^2.4.0"
   },
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "^0.6.8",
-    "@lit-labs/react": "^1.1.1",
     "@rollup/plugin-node-resolve": "^15.0.1",
     "@rollup/plugin-replace": "^5.0.2",
     "@rollup/plugin-terser": "^0.4.0",
@@ -103,7 +104,8 @@
         "custom-elements.json"
       ],
       "output": [
-        "**/README.md"
+        "README.md",
+        "src/**/README.md"
       ]
     },
     "build": {
@@ -165,6 +167,12 @@
       ],
       "output": [
         "dist/index.min.js"
+      ]
+    },
+    "example": {
+      "command": ". build/start_example.sh",
+      "dependencies": [
+        "build:package"
       ]
     },
     "test": {
