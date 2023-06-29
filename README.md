@@ -143,6 +143,18 @@ Global theming options let you consistently customize the color and typography f
 | `--gmpx-font-family-headings`       | `'Google Sans Text', sans-serif` | Typeface for headings. |
 | `--gmpx-font-size-base`             | `0.875rem`      | Baseline font size, from which other text elements in a component are scaled. For most users with default settings, this will be 14px. |
 
+## Localization
+
+Your application can override the set of string literals used in the Extended Component Library with the `setStringLiterals()` utility function:
+
+```js
+import {setStringLiterals} from '@googlemaps/extended-component-library/utils/localize.js';
+
+setStringLiterals({'PLACE_CLOSED': 'Cerrado'});
+```
+
+Refer to `/src/base/strings.ts` for the full list of available terms.
+
 ## Terms of Service
 
 This library uses Google Maps Platform services, and any use of Google Maps Platform is subject to the [Terms of Service](https://cloud.google.com/maps-platform/terms?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components).

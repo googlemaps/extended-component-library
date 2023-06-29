@@ -35,3 +35,4 @@ export {PlaceReviews} from './place_building_blocks/place_reviews/place_reviews.
 export {PlaceOverview} from './place_overview/place_overview.js';
 export {PlacePicker} from './place_picker/place_picker.js';
 export {SplitLayout} from './split_layout/split_layout.js';
+export {setStringLiterals} from './utils/localize.js';

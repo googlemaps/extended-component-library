@@ -47,7 +47,8 @@
     "./place_overview.js": "./lib/place_overview/place_overview.js",
     "./place_picker.js": "./lib/place_picker/place_picker.js",
     "./split_layout.js": "./lib/split_layout/split_layout.js",
-    "./react": "./lib/react/index.js"
+    "./react": "./lib/react/index.js",
+    "./utils/localize.js": "./lib/utils/localize.js"
   },
   "unpkg": "dist/index.min.js",
   "publishConfig": {
