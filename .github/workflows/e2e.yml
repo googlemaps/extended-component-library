@@ -1,0 +1,30 @@
+name: Playwright E2E Tests
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 18
+        cache: npm
+    - uses: google/wireit@setup-github-actions-caching/v1
+
+    - run: npm ci
+    - run: npx playwright install-deps
+    - run: npm run e2e
+      env:
+        MAPS_API_KEY: ${{secrets.MAPS_API_KEY}}
+        WIREIT_FAILURES: continue
+
+    - uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 30
