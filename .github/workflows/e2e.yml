@@ -3,7 +3,7 @@ name: Playwright E2E Tests
 on: [push]
 
 jobs:
-  test:
+  test-e2e:
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
