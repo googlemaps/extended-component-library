@@ -130,7 +130,7 @@
       ]
     },
     "build:ts": {
-      "command": "tsc --pretty --rootDir \"src\" --outDir \"lib\"",
+      "command": "tsc",
       "dependencies": [
         "build:react"
       ],

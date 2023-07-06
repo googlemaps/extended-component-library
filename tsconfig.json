@@ -25,6 +25,9 @@
     "strict": true,
     "strictNullChecks": true,
     "target": "es2020",
-    "types": ["lit", "jasmine", "google.maps"]
-  }
+    "types": ["lit", "jasmine", "google.maps"],
+    "rootDir": "src/",
+    "outDir": "lib/"
+  },
+  "include": ["src/**/*"]
 }
