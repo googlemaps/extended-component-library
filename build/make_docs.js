@@ -479,10 +479,11 @@ function declarationToMarkdown(declaration, module, headerLevel) {
   }
   if (declaration.events) {
     md += newParagraph(header(headerLevel + 1, 'Events'));
-    const eventsTable = [['Name', 'Type', 'Description']];
+    const eventsTable = [['Name', 'React Prop', 'Type', 'Description']];
     for (const event of declaration.events) {
       eventsTable.push([
         asCode(event.name),
+        asCode(event.reactName),
         asCode(sanitizeForMarkdownTable(event.type.text)),
         sanitizeForMarkdownTable(event.description),
       ]);

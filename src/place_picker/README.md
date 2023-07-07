@@ -52,10 +52,10 @@ biased towards the map’s viewport.
 
 ## Events
 
-| Name                | Type                | Description                                                                                                                                                                                         |
-| ------------------- | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `gmpx-placechange`  | `Event`             | This event is fired when a Place object is made available for a Place the user has selected, when user clears the input after selection, or when no Place result is found based on the input query. |
-| `gmpx-requesterror` | `RequestErrorEvent` | Indicates an error condition in an underlying Google Maps JavaScript API call.                                                                                                                      |
+| Name                | React Prop       | Type                | Description                                                                                                                                                                                         |
+| ------------------- | ---------------- | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `gmpx-placechange`  | `onPlaceChange`  | `Event`             | This event is fired when a Place object is made available for a Place the user has selected, when user clears the input after selection, or when no Place result is found based on the input query. |
+| `gmpx-requesterror` | `onRequestError` | `RequestErrorEvent` | Indicates an error condition in an underlying Google Maps JavaScript API call.                                                                                                                      |
 
 ## Styling
 

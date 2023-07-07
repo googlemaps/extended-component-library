@@ -97,6 +97,8 @@ window.addEventListener('load', () => {
 
 Web Components work well with most popular frontend frameworks such as Angular, React, or Vue.js. Refer to your framework’s documentation for instructions on how to use custom elements.
 
+**React support**: the Extended Component Library ships with native React components for easy integration. Please see [React Support](src/react/README.md) to get started.
+
 ## Components available with Maps JS SDK
 
 Map and marker components can be used with the Extended Component Library, or on their own. See the [guide](https://developers.google.com/maps/documentation/web-components/overview?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components) for more information on Web Components in the Maps JS SDK.

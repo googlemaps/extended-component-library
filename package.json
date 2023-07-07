@@ -108,7 +108,8 @@
       ],
       "output": [
         "README.md",
-        "src/**/README.md"
+        "src/**/README.md",
+        "!src/react/README.md"
       ]
     },
     "build": {

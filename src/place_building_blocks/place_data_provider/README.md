@@ -46,9 +46,9 @@ This component uses [named slots](https://developer.mozilla.org/en-US/docs/Web/A
 
 ## Events
 
-| Name                | Type                | Description                                                                    |
-| ------------------- | ------------------- | ------------------------------------------------------------------------------ |
-| `gmpx-requesterror` | `RequestErrorEvent` | Indicates an error condition in an underlying Google Maps JavaScript API call. |
+| Name                | React Prop       | Type                | Description                                                                    |
+| ------------------- | ---------------- | ------------------- | ------------------------------------------------------------------------------ |
+| `gmpx-requesterror` | `onRequestError` | `RequestErrorEvent` | Indicates an error condition in an underlying Google Maps JavaScript API call. |
 
 
 
