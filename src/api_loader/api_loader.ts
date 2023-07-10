@@ -68,7 +68,6 @@ export class APILoader extends BaseComponent {
   /**
    * An alias for the `key` property. React developers should use this prop to
    * set the API key.
-   * ![upcoming release](https://img.shields.io/badge/upcoming%20release-blue)
    */
   set apiKey(key: string|undefined) {
     this.key = key;
