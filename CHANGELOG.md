@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.2.0](https://github.com/googlemaps/extended-component-library/compare/v0.1.4...v0.2.0) (2023-07-10)
+
+
+### Features
+
+* add apiKey as alias for key property in API Loader ([d4feb17](https://github.com/googlemaps/extended-component-library/commit/d4feb177e1730d898fc8eeffeecde1c6b214b725))
+* add script to auto-generate React wrappers for Web Components ([40b4c8f](https://github.com/googlemaps/extended-component-library/commit/40b4c8f741ec304f1ff97977055ded66db75a8f3))
+* add setStringLiterals to allow for custom setting of translated literals ([ef59c47](https://github.com/googlemaps/extended-component-library/commit/ef59c472ec602ba143f89e7ec566a8d8652464ce))
+* expose utility to customize string literals ([46d4960](https://github.com/googlemaps/extended-component-library/commit/46d49604705416a6cdec2e909d3654441828a297))
+
 ## [0.1.4](https://github.com/googlemaps/extended-component-library/compare/v0.1.3...v0.1.4) (2023-06-21)
 
 
