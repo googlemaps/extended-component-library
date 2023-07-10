@@ -1,0 +1,27 @@
+{
+  "name": "gmpx-js-sample-app",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@googlemaps/extended-component-library": "file:../.."
+  },
+  "scripts": {
+    "start": "cd src; sed -i 's/'YOUR_API_KEY'/'$MAPS_API_KEY'/g' index.html; cd ..; wds --node-resolve --open --watch"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "description": "This directory contains a simple JS app that helps users locate a college in the US or Canada on a map, with place info such as ratings, photos, and reviews displayed on the side.",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC"
+}
