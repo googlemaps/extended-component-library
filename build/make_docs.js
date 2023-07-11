@@ -24,6 +24,7 @@ import {dirname, join, resolve, sep as pathSep} from 'path';
 
 const BASE_PATH = resolve('.');
 const PLACE_BUILDING_BLOCKS_DIR = join('src', 'place_building_blocks');
+const ROUTE_DIR_PREFIX = join('src', 'route_');
 
 const GLOBAL_STYLE_TOKENS = new Set([
   '--gmpx-color-surface',
@@ -605,7 +606,7 @@ function makeDocs(manifest) {
                   placeConsumerInventoryTable, componentName, relativeFilename,
                   declaration.description);
             }
-          } else {
+          } else if (!filename.startsWith(ROUTE_DIR_PREFIX)) {
             addInventoryRow(
                 rootInventoryTable, componentName, filename,
                 declaration.description);
