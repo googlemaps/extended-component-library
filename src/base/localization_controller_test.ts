@@ -35,7 +35,13 @@ class TestLocalizationControllerHost extends BaseComponent {
 
   protected override render(): TemplateResult {
     return html`
+// TODO: go/ts51upgrade - Auto-added to unblock TS5.1 migration.
+//   TS2345: Argument of type '[]' is not assignable to parameter of type 'never'.
+// @ts-ignore
       <span>${this.getMsg('PLACE_OPENING_HOURS_DEFAULT_SUMMARY')}</span>
+// TODO: go/ts51upgrade - Auto-added to unblock TS5.1 migration.
+//   TS2345: Argument of type '[]' is not assignable to parameter of type 'never'.
+// @ts-ignore
       <span>${this.getMsg('PLACE_CLOSED')}</span>
       <span>${this.getMsg('PLACE_OPENS', '9:00 AM')}</span>
     `;

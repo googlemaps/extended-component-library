@@ -305,10 +305,19 @@ export class PlaceFieldText extends PlaceDataConsumer {
     if (!status) return status;
     switch (status) {
       case 'CLOSED_PERMANENTLY' as google.maps.places.BusinessStatus:
+// TODO: go/ts51upgrade - Auto-added to unblock TS5.1 migration.
+//   TS2345: Argument of type '[]' is not assignable to parameter of type 'never'.
+// @ts-ignore
         return this.getMsg('PLACE_CLOSED_PERMANENTLY');
       case 'CLOSED_TEMPORARILY' as google.maps.places.BusinessStatus:
+// TODO: go/ts51upgrade - Auto-added to unblock TS5.1 migration.
+//   TS2345: Argument of type '[]' is not assignable to parameter of type 'never'.
+// @ts-ignore
         return this.getMsg('PLACE_CLOSED_TEMPORARILY');
       case 'OPERATIONAL' as google.maps.places.BusinessStatus:
+// TODO: go/ts51upgrade - Auto-added to unblock TS5.1 migration.
+//   TS2345: Argument of type '[]' is not assignable to parameter of type 'never'.
+// @ts-ignore
         return this.getMsg('PLACE_OPERATIONAL');
       default:
         return undefined;

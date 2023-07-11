@@ -292,6 +292,9 @@ export class PlacePicker extends BaseComponent {
         />
         <div class="overlay">
           <button
+// TODO: go/ts51upgrade - Auto-added to unblock TS5.1 migration.
+//   TS2345: Argument of type '[]' is not assignable to parameter of type 'never'.
+// @ts-ignore
             aria-label=${this.getMsg('PLACE_SEARCH_ARIA_LABEL')}
             class="search-button"
             @click=${this.handleSearch}
@@ -303,6 +306,9 @@ export class PlacePicker extends BaseComponent {
             </span>
           </button>
           <button
+// TODO: go/ts51upgrade - Auto-added to unblock TS5.1 migration.
+//   TS2345: Argument of type '[]' is not assignable to parameter of type 'never'.
+// @ts-ignore
             aria-label=${this.getMsg('PLACE_CLEAR_ARIA_LABEL')}
             class="clear-button"
             @click=${this.handleClear}
