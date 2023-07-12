@@ -1,0 +1,55 @@
+<!--
+  Copyright 2023 Google LLC
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      https://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script type="module" src="https://unpkg.com/@googlemaps/extended-component-library"></script>
+    <link href="./style.css" rel="stylesheet">
+    <title>GMPX - JS Sample App</title>
+  </head>
+  <body>
+    <gmpx-api-loader key="YOUR_API_KEY"></gmpx-api-loader>
+    <gmpx-split-layout row-reverse row-layout-min-width="700">
+      <gmpx-overlay-layout slot="fixed">
+        <div slot="main">
+          <gmpx-place-picker placeholder="Enter a college in the US or Canada" for-map="gmap" type="university" country="us ca">
+          </gmpx-place-picker>
+          <gmpx-place-overview size="large" google-logo-already-displayed>
+            <gmpx-icon-button slot="action" variant="filled" id="open-button">
+              See Reviews
+            </gmpx-icon-button>
+            <gmpx-place-directions-button slot="action" variant="filled">
+              Directions
+            </gmpx-place-directions-button>
+          </gmpx-place-overview>
+        </div>
+        <div slot="overlay">
+          <gmpx-icon-button id="close-button" autofocus>
+            Close
+          </gmpx-icon-button>
+          <gmpx-place-data-provider>
+            <gmpx-place-reviews></gmpx-place-reviews>
+          </gmpx-place-data-provider>
+        </div>
+      </gmpx-overlay-layout>
+      <gmp-map id="gmap" slot="main" center="45,-98" zoom="4" map-id="DEMO_MAP_ID">
+        <gmp-advanced-marker></gmp-advanced-marker>
+      </gmp-map>
+    </gmpx-split-layout>
+    <script src="./index.js"></script>
+  </body>
+</html>
