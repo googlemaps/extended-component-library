@@ -15,14 +15,12 @@
 # limitations under the License.
 # ==============================================================================
 
-NPM_PREFIX="examples/$1"
+# Make a local copy of the Extended Component Library CDN bundle where
+# Web Dev Server can access it.
+cp ../../dist/index.min.js src/extended_component_library.min.js
 
-if [[ -z "${MAPS_API_KEY}" ]]; then
-  echo "*******************************************************************"
-  echo "* Please set the MAPS_API_KEY environment variable and try again! *"
-  echo "*******************************************************************"
-  exit 1
-fi
+# Replace the reference to the CDN bundle with the local file.
+sed -i 's|https://unpkg.com/@googlemaps/extended-component-library|extended_component_library.min.js|' src/index.html
 
-npm --prefix $NPM_PREFIX i
-npm --prefix $NPM_PREFIX start
+# Replace the API key attribute with an environment variable.
+sed -i "s|gmpx-api-loader key=\"[^\"]*\"|gmpx-api-loader key=\"$MAPS_API_KEY\"|" src/index.html

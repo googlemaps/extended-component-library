@@ -174,22 +174,21 @@
       ]
     },
     "example": {
-      "command": "sh build/start_example.sh",
+      "command": "chmod +x build/start_example.sh && ./build/start_example.sh",
       "dependencies": [
-        "build:package"
-      ]
+        "build:bundle"
+      ],
+      "service": true
     },
     "e2e": {
       "command": "playwright test --config ./e2e/playwright.config.js",
-      "dependencies": [
-        "build:package"
-      ],
       "files": [
-        "playwright.config.js",
         "e2e/**/*",
         "examples/**/*",
-        "lib/**/*"
-      ]
+        "lib/**/*",
+        "dist/**/*"
+      ],
+      "output": []
     },
     "test": {
       "command": "wtr",

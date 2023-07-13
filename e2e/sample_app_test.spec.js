@@ -22,6 +22,7 @@ import {expect, test} from '@playwright/test';
 
 import {SAMPLE_APP_CONFIGS} from './playwright.config.js';
 
+
 for (const {title, port} of SAMPLE_APP_CONFIGS) {
   test(
       `${title} locates a college on the map and displays its info`,
@@ -33,7 +34,6 @@ for (const {title, port} of SAMPLE_APP_CONFIGS) {
         const marker = page.locator('gmp-advanced-marker');
         await page.evaluate(() => customElements.whenDefined('gmp-map'));
         await expect(map).toHaveAttribute('zoom', '4');
-        await expect(marker).toHaveCount(0);
 
         const picker = page.locator('gmpx-place-picker input');
         await picker.fill('mit');

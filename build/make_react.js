@@ -105,9 +105,10 @@ import {RequestErrorEvent} from '../base/events.js';
 `;  // Import new event types here (TS compiler will complain otherwise).
 
 for (const {name: className, tagName, events, path, members} of components) {
+  if (className.startsWith('Route')) continue;
+  
   const classAlias = className + 'WC';
   const eventMapping = printEventMapping(events ?? []);
-
   content += `
 import {${className} as ${classAlias}} from '${path}';
 

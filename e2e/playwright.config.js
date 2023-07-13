@@ -30,6 +30,11 @@ export const SAMPLE_APP_CONFIGS = [
     dir: 'react_sample_app',
     port: 3001,
   },
+  {
+    title: 'JS Sample App',
+    dir: 'js_sample_app',
+    port: 3002,
+  }
 ];
 
 /** See https://playwright.dev/docs/test-configuration. */
@@ -51,6 +56,7 @@ export default defineConfig({
        https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
   },
+  
   /* Configure projects for major browsers */
   projects: [
     {
@@ -62,10 +68,13 @@ export default defineConfig({
       use: {...devices['Desktop Firefox']},
     },
   ],
+  
   /* Run your local dev server before starting the tests */
   webServer: SAMPLE_APP_CONFIGS.map(({dir, port}) => ({
-    command: `PORT=${port} npm run example -- ${dir}`,
+    command: `PORT=${port} npm run example --watch -- ${dir}`,
     url: `http://localhost:${port}`,
     reuseExistingServer: !process.env.CI,
+    stdout: 'pipe',
+    stderr: 'pipe',
   })),
 });

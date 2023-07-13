@@ -1,0 +1,15 @@
+{
+  "name": "gmpx-js-sample-app",
+  "version": "1.0.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "description": "Sample app demonstrating use of the Extended Component Library in vanilla JS/HTML.",
+  "scripts": {
+    "prestart": "chmod +x use_local_library.sh && ./use_local_library.sh",
+    "start": "wds --port $PORT"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@web/dev-server": "^0.2.5"
+  }
+}
