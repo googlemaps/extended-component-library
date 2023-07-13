@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/googlemaps/extended-component-library/compare/v0.2.0...v0.2.1) (2023-07-13)
+
+
+### Performance Improvements
+
+* switch to SPDX license identifiers ([2a05694](https://github.com/googlemaps/extended-component-library/commit/2a05694f8e5946c936c4dec1d6b03d2ca10ef9c7))
+
 ## [0.2.0](https://github.com/googlemaps/extended-component-library/compare/v0.1.4...v0.2.0) (2023-07-10)
 
 
