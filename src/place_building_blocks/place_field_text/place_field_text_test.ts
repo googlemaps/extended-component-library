@@ -10,7 +10,8 @@ import {html, TemplateResult} from 'lit';
 import {map} from 'lit/directives/map.js';
 
 import {Environment} from '../../testing/environment.js';
-import {FakeLatLng, makeFakePlace} from '../../testing/fake_place.js';
+import {FakeLatLng} from '../../testing/fake_lat_lng.js';
+import {makeFakePlace} from '../../testing/fake_place.js';
 
 import {PLACE_RESULT_TEXT_FIELDS, PLACE_TEXT_FIELDS, PlaceFieldText, TextField} from './place_field_text.js';
 

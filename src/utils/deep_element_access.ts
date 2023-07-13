@@ -24,6 +24,23 @@ export function getDeepActiveElement(): Element|null {
 }
 
 /**
+ * Generator function that yields the chain of parent nodes upwards in the DOM
+ * starting at `node`, and piercing shadow boundaries.
+ */
+export function* deepParentChain(node: Node) {
+  while (true) {
+    yield node;
+    if (node.parentNode) {
+      node = node.parentNode;
+    } else if (node instanceof ShadowRoot) {
+      node = node.host;
+    } else {
+      return;
+    }
+  }
+}
+
+/**
  * Behaves like Node.contains() but accounts for shadow descendants as well.
  *
  * @param rootNode - A node that might be the ancestor.
@@ -33,7 +50,10 @@ export function getDeepActiveElement(): Element|null {
 export function deepContains(
     rootNode: Node|null|undefined, otherNode: Node|null|undefined): boolean {
   if (!rootNode || !otherNode) return false;
-  return someDeepContains([rootNode], otherNode);
+  for (const node of deepParentChain(otherNode)) {
+    if (node === rootNode) return true;
+  }
+  return false;
 }
 
 /**
@@ -45,16 +65,8 @@ export function someDeepContains(
     rootNodes: Node[], otherNode: Node|null|undefined): boolean {
   if ((rootNodes.length === 0) || !otherNode) return false;
   const rootNodeSet = new Set(rootNodes);
-  let current = otherNode;
-  while (true) {
-    if (rootNodeSet.has(current)) {
-      return true;
-    } else if (current.parentNode) {
-      current = current.parentNode;
-    } else if (current instanceof ShadowRoot) {
-      current = current.host;
-    } else {
-      return false;
-    }
+  for (const node of deepParentChain(otherNode)) {
+    if (rootNodeSet.has(node)) return true;
   }
+  return false;
 }
