@@ -276,6 +276,9 @@ export class PlacePhotoGallery extends PlaceDataConsumer {
     const captionCard = html`
       <div class="info-card">
         <button
+// TODO: go/ts51upgrade - Auto-added to unblock TS5.1 migration.
+//   TS2345: Argument of type '[]' is not assignable to parameter of type 'never'.
+// @ts-ignore
           aria-label=${this.getMsg('PLACE_PHOTO_BACK_ARIA_LABEL')}
           autofocus
           @click=${this.closeLightbox}
@@ -288,6 +291,9 @@ export class PlacePhotoGallery extends PlaceDataConsumer {
           ${when(placeName, () => html`<div class="title">${placeName}</div>`)}
           ${when(selectedPhoto?.attributions.length, () => html`
             <div class="caption">
+// TODO: go/ts51upgrade - Auto-added to unblock TS5.1 migration.
+//   TS2345: Argument of type '[]' is not assignable to parameter of type 'never'.
+// @ts-ignore
               <span>${this.getMsg('PLACE_PHOTO_ATTRIBUTION_PREFIX')}</span>
               ${map(selectedPhoto!.attributions,
                     ({author, authorURI}) =>
@@ -302,6 +308,9 @@ export class PlacePhotoGallery extends PlaceDataConsumer {
     const navControls = html`
       <div class="nav-controls">
         <button
+// TODO: go/ts51upgrade - Auto-added to unblock TS5.1 migration.
+//   TS2345: Argument of type '[]' is not assignable to parameter of type 'never'.
+// @ts-ignore
           aria-label=${this.getMsg('PLACE_PHOTO_PREV_ARIA_LABEL')}
           @click=${this.navigateToPrevious}
           .disabled=${this.selectedIndex === 0}
@@ -311,6 +320,9 @@ export class PlacePhotoGallery extends PlaceDataConsumer {
           </span>
         </button>
         <button
+// TODO: go/ts51upgrade - Auto-added to unblock TS5.1 migration.
+//   TS2345: Argument of type '[]' is not assignable to parameter of type 'never'.
+// @ts-ignore
           aria-label=${this.getMsg('PLACE_PHOTO_NEXT_ARIA_LABEL')}
           @click=${this.navigateToNext}
           .disabled=${this.selectedIndex === photos.length - 1}
