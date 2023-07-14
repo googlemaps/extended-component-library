@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {FakeLatLng} from './fake_lat_lng.js';
+
 type Place = google.maps.places.Place;
 type Photo = google.maps.places.Photo;
 type PlacePhoto = google.maps.places.PlacePhoto;
@@ -56,37 +58,6 @@ export function makeFakePhoto(
 export function makeFakePlacePhoto(
     fields: Omit<PlacePhoto, 'getUrl'>, uri: string): PlacePhoto {
   return {getUrl: () => uri, ...fields};
-}
-
-/**
- * A fake `LatLng` class for testing purposes, that does not depend on the
- * `google.maps.LatLng` constructor loaded by the API.
- */
-export class FakeLatLng implements google.maps.LatLng {
-  constructor(
-      private readonly latitude: number,
-      private readonly longitude: number,
-  ) {}
-
-  lat() {
-    return this.latitude;
-  }
-  lng() {
-    return this.longitude;
-  }
-
-  equals(other: google.maps.LatLng) {
-    return this.lat() === other.lat() && this.lng() === other.lng();
-  }
-  toUrlValue(): string {
-    throw new Error('toUrlValue is not implemented');
-  }
-  toJSON() {
-    return {'lat': this.latitude, 'lng': this.longitude};
-  }
-  toString() {
-    return `(${this.latitude},${this.longitude})`;
-  }
 }
 
 /** A sample `google.maps.places.Place` object for testing purposes. */

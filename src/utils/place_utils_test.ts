@@ -9,7 +9,8 @@
 import {render} from 'lit';
 
 import {Environment} from '../testing/environment.js';
-import {FakeLatLng, makeFakePlace, SAMPLE_FAKE_PLACE, SAMPLE_FAKE_PLACE_RESULT} from '../testing/fake_place.js';
+import {FakeLatLng} from '../testing/fake_lat_lng.js';
+import {makeFakePlace, SAMPLE_FAKE_PLACE, SAMPLE_FAKE_PLACE_RESULT} from '../testing/fake_place.js';
 
 import {isPlaceResult, makePlaceFromPlaceResult, makeWaypoint, numericToPriceLevel, priceLevelToNumeric, renderAttribution} from './place_utils.js';
 

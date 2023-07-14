@@ -10,7 +10,8 @@ import {html} from 'lit';
 
 import {IconButton} from '../../icon_button/icon_button.js';
 import {Environment} from '../../testing/environment.js';
-import {FakeLatLng, makeFakePlace} from '../../testing/fake_place.js';
+import {FakeLatLng} from '../../testing/fake_lat_lng.js';
+import {makeFakePlace} from '../../testing/fake_place.js';
 
 import {PlaceDirectionsButton} from './place_directions_button.js';
 
