@@ -11,7 +11,7 @@ import {customElement, query} from 'lit/decorators.js';
 
 import {Environment} from '../testing/environment.js';
 
-import {deepContains, getDeepActiveElement, someDeepContains} from './deep_element_access.js';
+import {deepContains, deepParentChain, getDeepActiveElement, someDeepContains} from './deep_element_access.js';
 
 @customElement('gmpx-test-component')
 class TestComponent extends LitElement {
@@ -152,6 +152,26 @@ describe('getDeepActiveElement', () => {
   });
 });
 
+describe('deepParentChain', () => {
+  it('generates the deep parent chain', () => {
+    const parent = document.createElement('div');
+    const child1 = parent.appendChild(document.createElement('div'));
+    const shadow1 = child1.attachShadow({mode: 'open'});
+    const child2 = shadow1.appendChild(document.createElement('div'));
+    const shadow2 = child2.attachShadow({mode: 'open'});
+    const child3 = shadow2.appendChild(document.createElement('div'));
+    const chain = deepParentChain(child3);
+
+    expect(chain.next().value).toBe(child3);
+    expect(chain.next().value).toBe(shadow2);
+    expect(chain.next().value).toBe(child2);
+    expect(chain.next().value).toBe(shadow1);
+    expect(chain.next().value).toBe(child1);
+    expect(chain.next().value).toBe(parent);
+    expect(chain.next().done).toBeTrue();
+  });
+});
+
 describe('deepContains', () => {
   it('says that a node deepContains itself', () => {
     const parent = document.createElement('div');
@@ -226,40 +246,40 @@ describe('deepContains', () => {
     expect(deepContains(parent, shadow2)).toBe(true);
     expect(deepContains(parent, child3)).toBe(true);
   });
+});
 
-  describe('someDeepContains', () => {
-    it('returns false when rootNodes is empty', () => {
-      const node = document.createElement('div');
+describe('someDeepContains', () => {
+  it('returns false when rootNodes is empty', () => {
+    const node = document.createElement('div');
 
-      expect(someDeepContains([], node)).toBe(false);
-      expect(someDeepContains([], null)).toBe(false);
-      expect(someDeepContains([], undefined)).toBe(false);
-    });
+    expect(someDeepContains([], node)).toBe(false);
+    expect(someDeepContains([], null)).toBe(false);
+    expect(someDeepContains([], undefined)).toBe(false);
+  });
 
-    it('correctly returns true with multiple root nodes', () => {
-      const parent1 = document.createElement('div');
-      const parent2 = document.createElement('div');
-      const child = document.createElement('div');
-      parent1.appendChild(child);
+  it('correctly returns true with multiple root nodes', () => {
+    const parent1 = document.createElement('div');
+    const parent2 = document.createElement('div');
+    const child = document.createElement('div');
+    parent1.appendChild(child);
 
-      expect(someDeepContains([parent1, parent2], child)).toBe(true);
-    });
+    expect(someDeepContains([parent1, parent2], child)).toBe(true);
+  });
 
-    it('correctly returns false with multiple root nodes', () => {
-      const parent1 = document.createElement('div');
-      const parent2 = document.createElement('div');
-      const child = document.createElement('div');
-      document.body.appendChild(child);
+  it('correctly returns false with multiple root nodes', () => {
+    const parent1 = document.createElement('div');
+    const parent2 = document.createElement('div');
+    const child = document.createElement('div');
+    document.body.appendChild(child);
 
-      expect(someDeepContains([parent1, parent2], child)).toBe(false);
-    });
+    expect(someDeepContains([parent1, parent2], child)).toBe(false);
+  });
 
-    it('correctly returns true with a duplicate root node', () => {
-      const parent = document.createElement('div');
-      const child = document.createElement('div');
-      parent.appendChild(child);
+  it('correctly returns true with a duplicate root node', () => {
+    const parent = document.createElement('div');
+    const child = document.createElement('div');
+    parent.appendChild(child);
 
-      expect(someDeepContains([parent, parent], child)).toBe(true);
-    });
+    expect(someDeepContains([parent, parent], child)).toBe(true);
   });
 });

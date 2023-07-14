@@ -5,11 +5,12 @@
  */
 
 // import 'jasmine'; (google3-only)
+import '../testing/fake_gmp_components.js';
 
-import {html, LitElement, TemplateResult} from 'lit';
-import {customElement} from 'lit/decorators.js';
+import {html, TemplateResult} from 'lit';
 
 import {Environment} from '../testing/environment.js';
+import {FakeMapElement} from '../testing/fake_gmp_components.js';
 import {FakeLatLng, makeFakePlace} from '../testing/fake_place.js';
 import {getDeepActiveElement} from '../utils/deep_element_access.js';
 
@@ -42,11 +43,6 @@ const FAKE_MAPS_LIBRARY = {
 };
 
 const FAKE_MAP = new FAKE_MAPS_LIBRARY.Map() as google.maps.Map;
-
-@customElement('gmp-map')
-class FakeMapElement extends LitElement {
-  readonly innerMap = FAKE_MAP;
-}
 
 let placeSelectionHandler: Function;
 const FAKE_PLACES_LIBRARY = {
