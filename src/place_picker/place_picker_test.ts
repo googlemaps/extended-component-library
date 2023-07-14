@@ -11,7 +11,8 @@ import {html, TemplateResult} from 'lit';
 
 import {Environment} from '../testing/environment.js';
 import {FakeMapElement} from '../testing/fake_gmp_components.js';
-import {FakeLatLng, makeFakePlace} from '../testing/fake_place.js';
+import {FakeLatLng} from '../testing/fake_lat_lng.js';
+import {makeFakePlace} from '../testing/fake_place.js';
 import {getDeepActiveElement} from '../utils/deep_element_access.js';
 
 import {PLACE_DATA_FIELDS, PLACE_RESULT_DATA_FIELDS, PlacePicker} from './place_picker.js';

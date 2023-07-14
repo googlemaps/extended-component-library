@@ -9,7 +9,8 @@
 import {html} from 'lit';
 
 import {Environment} from '../../testing/environment.js';
-import {FakeLatLng, makeFakePlace} from '../../testing/fake_place.js';
+import {FakeLatLng} from '../../testing/fake_lat_lng.js';
+import {makeFakePlace} from '../../testing/fake_place.js';
 
 import {DirectionsController} from './directions_controller.js';
 import {PlaceDistanceLabel} from './place_distance_label.js';
