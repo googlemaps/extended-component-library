@@ -21,8 +21,12 @@ class TestLocalizationControllerHost extends BaseComponent {
 
   protected override render(): TemplateResult {
     return html`
-      <span>${this.getMsg('PLACE_OPENING_HOURS_DEFAULT_SUMMARY')}</span>
-      <span>${this.getMsg('PLACE_CLOSED')}</span>
+      <span>${
+        // @ts-ignore
+        this.getMsg('PLACE_OPENING_HOURS_DEFAULT_SUMMARY')}</span>
+      <span>${
+        // @ts-ignore
+        this.getMsg('PLACE_CLOSED')}</span>
       <span>${this.getMsg('PLACE_OPENS', '9:00 AM')}</span>
     `;
   }
