@@ -6,7 +6,10 @@
 
 import {LitElement, ReactiveController, ReactiveControllerHost, ReactiveElement} from 'lit';
 
-import {STRING_LITERALS_EN_US, StringLiterals} from './strings.js';
+import {STRING_LITERALS_EN_US, StringFunction, StringLiterals} from './strings.js';
+
+type ParametersOrEmpty<T extends string|StringFunction> =
+    T extends StringFunction ? Parameters<T>: [];
 
 /**
  * Controller that provides localized string literals (`en-US` by default)
@@ -35,7 +38,7 @@ export class LocalizationController implements ReactiveController {
    * one or more inputs as function arguments.
    */
   getStringLiteral<T extends keyof StringLiterals>(
-      id: T, ...args: Parameters<Exclude<StringLiterals[T], string>>): string {
+      id: T, ...args: ParametersOrEmpty<StringLiterals[T]>): string {
     const literal = LocalizationController.translatedStringLiterals[id] ??
         STRING_LITERALS_EN_US[id];
     return (typeof literal === 'string') ? literal : literal(...args);
