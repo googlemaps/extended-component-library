@@ -76,12 +76,13 @@ export class Environment {
 
   /**
    * Waits for the page to become stable; including waiting for any Lit elements
-   * to finish rendering.
+   * to finish rendering and for fonts to load.
    */
   async waitForStability() {
     if (this.environmentRoot) {
       await this.waitForLitRender(this.environmentRoot);
     }
+    await document.fonts.ready;
   }
 
   /**
