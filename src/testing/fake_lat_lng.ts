@@ -15,8 +15,8 @@ type LatLngBoundsLiteral = google.maps.LatLngBoundsLiteral;
  */
 export class FakeLatLng implements LatLng {
   constructor(
-      private readonly latitude: number,
-      private readonly longitude: number,
+      private readonly latitude = 0,
+      private readonly longitude = 0,
   ) {}
 
   lat(): number {

@@ -5,7 +5,6 @@
  */
 
 // import 'jasmine'; (google3-only)
-import '../testing/fake_gmp_components.js';
 
 import {html, TemplateResult} from 'lit';
 
@@ -67,6 +66,10 @@ const FAKE_PLACES_LIBRARY = {
 
 describe('PlacePicker', () => {
   const env = new Environment();
+
+  beforeAll(() => {
+    env.defineFakeMapElement();
+  });
 
   async function prepareState(template?: TemplateResult) {
     const root =
