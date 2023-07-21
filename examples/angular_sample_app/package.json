@@ -1,0 +1,35 @@
+{
+  "name": "gmpx-angular-sample-app",
+  "version": "1.0.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "NG_APP_MAPS_API_KEY=$MAPS_API_KEY ng serve --port=$PORT",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development"
+  },
+  "type": "module",
+  "dependencies": {
+    "@angular/animations": "^16.0.0",
+    "@angular/common": "^16.0.0",
+    "@angular/compiler": "^16.0.0",
+    "@angular/core": "^16.0.0",
+    "@angular/forms": "^16.0.0",
+    "@angular/platform-browser": "^16.0.0",
+    "@angular/platform-browser-dynamic": "^16.0.0",
+    "@angular/router": "^16.0.0",
+    "@googlemaps/extended-component-library": "file:../..",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.13.0"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^16.0.2",
+    "@angular/cli": "~16.0.2",
+    "@angular/compiler-cli": "^16.0.0",
+    "@ngx-env/builder": "^16.1.2",
+    "@types/google.maps": "^3.53.2",
+    "typescript": "~5.0.2"
+  }
+}

@@ -1,0 +1,46 @@
+/**
+ * Copyright 2023 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+:host {
+  --gmpx-color-surface: #f6f5ff;
+  --gmpx-color-on-primary: #f8e8ff;
+  --gmpx-color-on-surface: #000;
+  --gmpx-color-on-surface-variant: #636268;
+  --gmpx-color-primary: #8a5cf4;
+  --gmpx-fixed-panel-height-column-layout: 420px;
+  --gmpx-fixed-panel-width-row-layout: 340px;
+  background: var(--gmpx-color-surface);
+  height: 100%;
+  inset: 0;
+  position: fixed;
+  width: 100%;
+}
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+}
+
+gmpx-place-picker {
+  --gmpx-color-surface: #fff;
+  flex-grow: 1;
+  margin: 1rem;
+}
+
+.close-button {
+  display: block;
+  margin: 1rem;
+}
