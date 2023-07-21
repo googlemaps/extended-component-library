@@ -59,7 +59,7 @@ function isPlace(data: LatLng|LatLngLiteral|Place): data is Place {
   return data.hasOwnProperty('id');
 }
 
-function isLatLng(data: LatLng|LatLngLiteral): data is LatLng {
+export function isLatLng(data: LatLng|LatLngLiteral): data is LatLng {
   return typeof data.lat === 'function';
 }
 
