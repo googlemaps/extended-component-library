@@ -9,7 +9,9 @@
 import {ReactiveElement, render as litRender, TemplateResult} from 'lit';
 
 import {APILoader} from '../api_loader/api_loader.js';
-import {FAKE_GOOGLE_MAPS} from '../testing/fake_google_maps.js';
+
+import {FakeMapElement} from './fake_gmp_components.js';
+import {FAKE_GOOGLE_MAPS} from './fake_google_maps.js';
 
 declare global {
   module jasmine {
@@ -97,6 +99,11 @@ export class Environment {
     return root;
   }
 
+  defineFakeMapElement() {
+    if (!customElements.get('gmp-map')) {
+      customElements.define('gmp-map', FakeMapElement);
+    }
+  }
 
   /**
    * Waits for all Lit `ReactiveElement` children of the given parent node to

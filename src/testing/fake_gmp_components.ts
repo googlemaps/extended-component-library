@@ -19,7 +19,6 @@
  */
 
 import {LitElement} from 'lit';
-import {customElement} from 'lit/decorators.js';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -27,7 +26,6 @@ declare global {
   }
 }
 
-@customElement('gmp-map')
 export class FakeMapElement extends LitElement {
   readonly innerMap = {} as google.maps.Map;
 }
