@@ -6,8 +6,24 @@
 
 import {expect, test} from '@playwright/test';
 
-import {SAMPLE_APP_CONFIGS} from './playwright.config.js';
-
+/**
+ * List of sample apps that will be tested. Each of these should
+ * be started before executing the Playwright tests.
+ */
+const SAMPLE_APP_CONFIGS = [
+  {
+    title: 'React Sample App',
+    port: 8001,
+  },
+  {
+    title: 'JS Sample App',
+    port: 8002,
+  },
+  {
+    title: 'Angular Sample App',
+    port: 8003,
+  }
+];
 
 for (const {title, port} of SAMPLE_APP_CONFIGS) {
   test(

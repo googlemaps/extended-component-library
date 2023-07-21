@@ -6,23 +6,6 @@
 
 import {defineConfig, devices} from '@playwright/test';
 
-/**
- * List of sample apps that can be started using `npm run example`.
- * Note that each app should claim a unique port number.
- */
-export const SAMPLE_APP_CONFIGS = [
-  {
-    title: 'React Sample App',
-    dir: 'react_sample_app',
-    port: 3001,
-  },
-  {
-    title: 'JS Sample App',
-    dir: 'js_sample_app',
-    port: 3002,
-  }
-];
-
 /** See https://playwright.dev/docs/test-configuration. */
 export default defineConfig({
   testDir: '.',
@@ -54,13 +37,4 @@ export default defineConfig({
       use: {...devices['Desktop Firefox']},
     },
   ],
-  
-  /* Run your local dev server before starting the tests */
-  webServer: SAMPLE_APP_CONFIGS.map(({dir, port}) => ({
-    command: `PORT=${port} npm run example --watch -- ${dir}`,
-    url: `http://localhost:${port}`,
-    reuseExistingServer: !process.env.CI,
-    stdout: 'pipe',
-    stderr: 'pipe',
-  })),
 });

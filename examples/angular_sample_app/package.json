@@ -26,8 +26,8 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^16.0.2",
-    "@angular/cli": "~16.0.2",
-    "@angular/compiler-cli": "^16.0.0",
+    "@angular/cli": "16.0.6",
+    "@angular/compiler-cli": "16.1.6",
     "@ngx-env/builder": "^16.1.2",
     "@types/google.maps": "^3.53.2",
     "typescript": "~5.0.2"

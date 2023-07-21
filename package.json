@@ -19,7 +19,9 @@
     "build:ts": "wireit",
     "build:package": "wireit",
     "build:bundle": "wireit",
-    "example": "wireit",
+    "example:react_sample_app": "wireit",
+    "example:js_sample_app": "wireit",
+    "example:angular_sample_app": "wireit",
     "e2e": "wireit",
     "test": "wireit"
   },
@@ -173,20 +175,63 @@
         "dist/index.min.js"
       ]
     },
-    "example": {
-      "command": "chmod +x build/start_example.sh && ./build/start_example.sh",
+    "example:prepare": {
+      "command": "chmod +x build/start_example.sh"
+    },
+    "example:react_sample_app": {
+      "command": "./build/start_example.sh react_sample_app",
+      "env": {
+        "PORT": "8001"
+      },
       "dependencies": [
-        "build:bundle"
+        "build:package",
+        "example:prepare"
       ],
-      "service": true
+      "service": {
+        "readyWhen": {
+          "lineMatches": "You can now view \\S+ in the browser"
+        }
+      }
+    },
+    "example:js_sample_app": {
+      "command": "./build/start_example.sh js_sample_app",
+      "env": {
+        "PORT": "8002"
+      },
+      "dependencies": [
+        "build:bundle",
+        "example:prepare"
+      ],
+      "service": {
+        "readyWhen": {
+          "lineMatches": "Web Dev Server started"
+        }
+      }
+    },
+    "example:angular_sample_app": {
+      "command": "./build/start_example.sh angular_sample_app",
+      "env": {
+        "PORT": "8003"
+      },
+      "dependencies": [
+        "build:package",
+        "example:prepare"
+      ],
+      "service": {
+        "readyWhen": {
+          "lineMatches": "Angular Live Development Server is listening on localhost"
+        }
+      }
     },
     "e2e": {
       "command": "playwright test --config ./e2e/playwright.config.js",
+      "dependencies": [
+        "example:react_sample_app",
+        "example:js_sample_app",
+        "example:angular_sample_app"
+      ],
       "files": [
-        "e2e/**/*",
-        "examples/**/*",
-        "lib/**/*",
-        "dist/**/*"
+        "e2e/**/*.js"
       ],
       "output": []
     },

@@ -10,6 +10,6 @@
   },
   "type": "module",
   "devDependencies": {
-    "@web/dev-server": "^0.2.5"
+    "@web/dev-server": "0.2.5"
   }
 }
