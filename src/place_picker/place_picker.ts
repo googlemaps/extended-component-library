@@ -17,11 +17,11 @@ import {WebFont, WebFontController} from '../base/web_font_controller.js';
 import {LAT_LNG_LITERAL_ATTRIBUTE_CONVERTER, STRING_ARRAY_ATTRIBUTE_CONVERTER} from '../utils/attribute_converters.js';
 import {getDeepActiveElement} from '../utils/deep_element_access.js';
 import {Deferred} from '../utils/deferred.js';
+import type {Place} from '../utils/googlemaps_types.js';
 import {makePlaceFromPlaceResult} from '../utils/place_utils.js';
 
 type Autocomplete = google.maps.places.Autocomplete;
 type AutocompleteOptions = google.maps.places.AutocompleteOptions;
-type Place = google.maps.places.Place;
 
 /** Data field names in a `Place` that are fetched by Place Picker. */
 export const PLACE_DATA_FIELDS = Object.freeze([
@@ -232,7 +232,7 @@ export class PlacePicker extends BaseComponent {
    * This property is undefined when user input is empty, and null when no
    * results are found based on user input.
    */
-  get value(): google.maps.places.Place|null|undefined {
+  get value(): Place|null|undefined {
     return this.valueInternal;
   }
   @state() private valueInternal?: Place|null;
@@ -397,18 +397,20 @@ export class PlacePicker extends BaseComponent {
    * one of the Place Autocomplete predictions, or null if no result is found.
    */
   private async search(query: string): Promise<Place|null> {
-    const {Place} = await APILoader.importLibrary('places', this) as
+    // tslint:disable-next-line:enforce-name-casing
+    const {Place: OrigPlace} = await APILoader.importLibrary('places', this) as
         typeof google.maps.places;
     // A Find Place request containing only the Place ID field incurs no charge:
     // https://developers.google.com/maps/documentation/places/web-service/usage-and-billing?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#find-place-id-only.
-    const {places} = await Place.findPlaceFromQuery({
+    const {places} = await OrigPlace.findPlaceFromQuery({
       query,
       fields: ['id'],
       locationBias: this.autocomplete.value?.getBounds(),
     });
     return places.length === 0 ?
         null :
-        (await places[0].fetchFields({fields: [...PLACE_DATA_FIELDS]})).place;
+        (await places[0].fetchFields({fields: [...PLACE_DATA_FIELDS]})).place as
+            Place;
   }
 
   private handleClear() {

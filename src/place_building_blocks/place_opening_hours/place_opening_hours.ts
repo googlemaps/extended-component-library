@@ -13,10 +13,10 @@ import {map} from 'lit/directives/map.js';
 
 import {LocalizationController} from '../../base/localization_controller.js';
 import {WebFont, WebFontController} from '../../base/web_font_controller.js';
+import type {Place} from '../../utils/googlemaps_types.js';
 import {formatTimeWithWeekdayMaybe, getUpcomingCloseTime, getUpcomingOpenTime, isSoon, NextCloseTimeStatus, NextOpenTimeStatus} from '../../utils/opening_hours.js';
 import {PlaceDataConsumer} from '../place_data_consumer.js';
 
-type Place = google.maps.places.Place;
 
 const POLLING_INTERVAL_MS = 60 * 1000;
 

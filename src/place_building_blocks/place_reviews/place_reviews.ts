@@ -12,9 +12,8 @@ import {when} from 'lit/directives/when.js';
 import {getTypeScaleSizeFromPx, GMPX_BORDER_SEPARATOR, GMPX_COLOR_ON_SURFACE, GMPX_COLOR_ON_SURFACE_VARIANT, GMPX_FONT_BODY, GMPX_FONT_CAPTION, GMPX_FONT_TITLE_MEDIUM, GMPX_RATING_COLOR, GMPX_RATING_COLOR_EMPTY} from '../../base/common_styles.js';
 import {LocalizationController} from '../../base/localization_controller.js';
 import {WebFont, WebFontController} from '../../base/web_font_controller.js';
+import type {Place, Review} from '../../utils/googlemaps_types.js';
 import {PlaceDataConsumer} from '../place_data_consumer.js';
-
-type Place = google.maps.places.Place;
 
 const MAX_RATING = 5;
 
@@ -120,25 +119,27 @@ export class PlaceReviews extends PlaceDataConsumer {
     return !!(place.reviews && place.reviews.length > 0);
   }
 
-  private renderOneReview(review: google.maps.places.Review) {
+  private renderOneReview(review: Review) {
+    const attribution = review.authorAttribution;
     const header = html`
       <div class="header">
         ${
         when(
-            review.author && review.authorPhotoURI,
+            attribution?.photoURI,
             () => html`
-          <a target="_blank" href="${review.authorURI ?? ''}">
+          <a target="_blank" href="${attribution?.uri ?? ''}">
             <img class="author-photo"
                 alt=${
                 this.getMsg(
-                    'PLACE_REVIEWS_AUTHOR_PHOTO_ALT', review.author ?? '')}
-                src=${review.authorPhotoURI!}>
+                    'PLACE_REVIEWS_AUTHOR_PHOTO_ALT',
+                    attribution?.displayName ?? '')}
+                src=${attribution!.photoURI!}>
           </a>
         `)}
         <a class="author-name"
           target="_blank"
-          href="${review.authorURI ?? ''}">
-          ${review.author ?? ''}
+          href="${attribution?.uri ?? ''}">
+          ${attribution?.displayName ?? ''}
         </a>
       </div>
     `;
@@ -176,7 +177,7 @@ export class PlaceReviews extends PlaceDataConsumer {
     `;
   }
 
-  private getReviews(): google.maps.places.Review[]|null {
+  private getReviews(): Review[]|null {
     const reviews = this.getPlace()?.reviews;
     if (!reviews) return null;
     if (this.maxReviews === undefined) return reviews;

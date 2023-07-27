@@ -12,10 +12,10 @@ import {map} from 'lit/directives/map.js';
 import {Environment} from '../../testing/environment.js';
 import {makeFakePlace} from '../../testing/fake_place.js';
 import {LifecycleSpyController} from '../../testing/lifecycle_spy.js';
+import type {PlaceResult} from '../../utils/googlemaps_types.js';
 
 import {BooleanField, PLACE_BOOLEAN_FIELDS, PlaceFieldBoolean} from './place_field_boolean.js';
 
-type PlaceResult = google.maps.places.PlaceResult;
 
 function expectTrueSlot(el: PlaceFieldBoolean) {
   const slots = el.renderRoot.querySelectorAll('slot');

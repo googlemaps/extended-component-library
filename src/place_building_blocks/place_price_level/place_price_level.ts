@@ -7,10 +7,10 @@
 import {html} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 
+import type {Place} from '../../utils/googlemaps_types.js';
 import {priceLevelToNumeric} from '../../utils/place_utils.js';
 import {PlaceDataConsumer} from '../place_data_consumer.js';
 
-type Place = google.maps.places.Place;
 
 function renderPriceLevel(priceLevel: number|null, symbol: string): string {
   if (priceLevel == null || priceLevel < 0 || symbol.length === 0) return '';

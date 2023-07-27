@@ -12,6 +12,7 @@ import {IconButton} from '../../icon_button/icon_button.js';
 import {Environment} from '../../testing/environment.js';
 import {FakeLatLng} from '../../testing/fake_lat_lng.js';
 import {makeFakePlace} from '../../testing/fake_place.js';
+import type {LatLng, LatLngLiteral, Place, PlaceResult} from '../../utils/googlemaps_types.js';
 
 import {PlaceDirectionsButton} from './place_directions_button.js';
 
@@ -19,9 +20,8 @@ describe('PlaceDirectionsButton', () => {
   const env = new Environment();
 
   async function prepareState(config?: {
-    origin?: google.maps.LatLng|google.maps.LatLngLiteral|
-          google.maps.places.Place,
-    place?: google.maps.places.Place|google.maps.places.PlaceResult,
+    origin?: LatLng|LatLngLiteral|Place,
+    place?: Place|PlaceResult,
     reversed?: boolean,
   }): Promise<IconButton> {
     const root = env.render(html`
@@ -92,7 +92,7 @@ describe('PlaceDirectionsButton', () => {
   it(`always includes the destination URL param when a Place ID is specified`,
      async () => {
        // tslint:disable-next-line:prefer-type-annotation
-       const place = {id: 'FAKE_PLACE_ID'} as google.maps.places.Place;
+       const place = {id: 'FAKE_PLACE_ID'} as Place;
        const iconButton = await prepareState({place});
 
        expect(iconButton.href)

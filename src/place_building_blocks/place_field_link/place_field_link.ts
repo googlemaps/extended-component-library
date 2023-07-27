@@ -8,9 +8,9 @@ import {css, html} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 
+import type {Place} from '../../utils/googlemaps_types.js';
 import {PlaceDataConsumer} from '../place_data_consumer.js';
 
-type Place = google.maps.places.Place;
 
 /**
  * Supported field names for `PlaceFieldLink`, formatted as `Place` fields.

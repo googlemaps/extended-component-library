@@ -11,13 +11,12 @@ import {html} from 'lit';
 import {Environment} from '../../testing/environment.js';
 import {makeFakePlace} from '../../testing/fake_place.js';
 import {LifecycleSpyController} from '../../testing/lifecycle_spy.js';
+import type {Place, PlaceResult} from '../../utils/googlemaps_types.js';
 import {PlaceFieldBoolean} from '../place_field_boolean/place_field_boolean.js';
 import {PlaceFieldText} from '../place_field_text/place_field_text.js';
 
 import {PlaceOpeningHours} from './place_opening_hours.js';
 
-type Place = google.maps.places.Place;
-type PlaceResult = google.maps.places.PlaceResult;
 
 const FAKE_PLACE_PROPS: Pick<Place, 'id'>&Partial<Place> = {
   id: '1234567890',

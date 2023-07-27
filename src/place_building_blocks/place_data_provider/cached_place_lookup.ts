@@ -5,9 +5,9 @@
  */
 
 import {APILoader} from '../../api_loader/api_loader.js';
+import type {Place} from '../../utils/googlemaps_types.js';
 import {LRUMap} from '../../utils/lru_map.js';
 
-type Place = google.maps.places.Place;
 
 /**
  * Makes a promise that will resolve to a new `Place` with the given ID, or
@@ -18,7 +18,7 @@ async function makeNewPlacePromise(
     id: string, consumer?: HTMLElement): Promise<Place> {
   const {Place} = await APILoader.importLibrary('places', consumer) as
       typeof google.maps.places;
-  return new Place({id});
+  return new Place({id}) as Place;
 }
 
 /**

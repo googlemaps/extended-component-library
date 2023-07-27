@@ -4,10 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import type {Photo, Place} from '../utils/googlemaps_types.js';
+
 import {FakeLatLng} from './fake_lat_lng.js';
 
-type Place = google.maps.places.Place;
-type Photo = google.maps.places.Photo;
 type PlacePhoto = google.maps.places.PlacePhoto;
 
 /**
@@ -104,14 +104,14 @@ export const SAMPLE_FAKE_PLACE = makeFakePlace({
   photos: [
     makeFakePhoto(
         {
-          attributions: [
+          authorAttributions: [
             {
-              author: 'Author A1',
-              authorURI: 'https://www.google.com/maps/contrib/A1',
+              displayName: 'Author A1',
+              uri: 'https://www.google.com/maps/contrib/A1',
             },
             {
-              author: 'Author A2',
-              authorURI: null,
+              displayName: 'Author A2',
+              uri: undefined,
             },
           ],
           heightPx: 1000,
@@ -120,10 +120,10 @@ export const SAMPLE_FAKE_PLACE = makeFakePlace({
         'https://lh3.googlusercontent.com/places/A'),
     makeFakePhoto(
         {
-          attributions: [
+          authorAttributions: [
             {
-              author: 'Author B1',
-              authorURI: 'https://www.google.com/maps/contrib/B1',
+              displayName: 'Author B1',
+              uri: 'https://www.google.com/maps/contrib/B1',
             },
           ],
           heightPx: 1000,
@@ -132,7 +132,7 @@ export const SAMPLE_FAKE_PLACE = makeFakePlace({
         'https://lh3.googlusercontent.com/places/B'),
     makeFakePhoto(
         {
-          attributions: [],
+          authorAttributions: [],
           heightPx: 1000,
           widthPx: 2000,
         },
@@ -146,9 +146,11 @@ export const SAMPLE_FAKE_PLACE = makeFakePlace({
   rating: 4.5,
   reviews: [
     {
-      author: 'Author 1',
-      authorPhotoURI: 'https://lh3.googlusercontent.com/a/1',
-      authorURI: 'https://www.google.com/maps/contrib/1/reviews',
+      authorAttribution: {
+        displayName: 'Author 1',
+        uri: 'https://www.google.com/maps/contrib/1/reviews',
+        photoURI: 'https://lh3.googlusercontent.com/a/1',
+      },
       publishTime: new Date(1234567890),
       rating: 5,
       relativePublishTimeDescription: '1 month ago',
@@ -156,9 +158,11 @@ export const SAMPLE_FAKE_PLACE = makeFakePlace({
       textLanguageCode: 'en',
     },
     {
-      author: 'Author 2',
-      authorPhotoURI: 'https://lh3.googlusercontent.com/a/2',
-      authorURI: 'https://www.google.com/maps/contrib/2/reviews',
+      authorAttribution: {
+        displayName: 'Author 2',
+        uri: 'https://www.google.com/maps/contrib/2/reviews',
+        photoURI: 'https://lh3.googlusercontent.com/a/2',
+      },
       publishTime: new Date(1234567890),
       rating: null,
       relativePublishTimeDescription: '2 months ago',
@@ -166,9 +170,11 @@ export const SAMPLE_FAKE_PLACE = makeFakePlace({
       textLanguageCode: 'es',
     },
     {
-      author: 'Author 3',
-      authorPhotoURI: 'https://lh3.googlusercontent.com/a/3',
-      authorURI: null,
+      authorAttribution: {
+        displayName: 'Author 3',
+        uri: undefined,
+        photoURI: 'https://lh3.googlusercontent.com/a/3',
+      },
       publishTime: new Date(1234567890),
       rating: 4,
       relativePublishTimeDescription: '3 months ago',

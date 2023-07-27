@@ -10,10 +10,10 @@ import {html, TemplateResult} from 'lit';
 
 import {Environment} from '../../testing/environment.js';
 import {makeFakePlace} from '../../testing/fake_place.js';
+import type {PlaceResult} from '../../utils/googlemaps_types.js';
 
 import {PlaceFieldLink} from './place_field_link.js';
 
-type PlaceResult = google.maps.places.PlaceResult;
 
 const fakePlace = makeFakePlace({
   id: '1234567890',

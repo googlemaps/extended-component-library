@@ -14,10 +14,10 @@ import {PlaceDataConsumer} from '../place_building_blocks/place_data_consumer.js
 import {PlaceDataProvider} from '../place_building_blocks/place_data_provider/place_data_provider.js';
 import {Environment} from '../testing/environment.js';
 import {makeFakePlace, SAMPLE_FAKE_PLACE} from '../testing/fake_place.js';
+import type {Place} from '../utils/googlemaps_types.js';
 
 import {PlaceOverview} from './place_overview.js';
 
-type Place = google.maps.places.Place;
 
 @customElement('gmpx-test-place-overview-child')
 class TestPlaceOverviewChild extends PlaceDataConsumer {

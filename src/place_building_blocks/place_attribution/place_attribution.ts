@@ -9,10 +9,10 @@ import {customElement} from 'lit/decorators.js';
 import {join} from 'lit/directives/join.js';
 import {map} from 'lit/directives/map.js';
 
+import type {Place} from '../../utils/googlemaps_types.js';
 import {renderAttribution} from '../../utils/place_utils.js';
 import {PlaceDataConsumer} from '../place_data_consumer.js';
 
-type Place = google.maps.places.Place;
 type Attribution = google.maps.places.Attribution;
 
 

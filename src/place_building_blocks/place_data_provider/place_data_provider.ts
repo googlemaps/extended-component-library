@@ -13,14 +13,13 @@ import {BaseComponent} from '../../base/base_component.js';
 import {RequestErrorEvent} from '../../base/events.js';
 import {SlotValidationController} from '../../base/slot_validation_controller.js';
 import {STRING_ARRAY_ATTRIBUTE_CONVERTER} from '../../utils/attribute_converters.js';
+import type {Place, PlaceResult} from '../../utils/googlemaps_types.js';
 import {isPlaceResult, makePlaceFromPlaceResult} from '../../utils/place_utils.js';
 import {PlaceAttribution} from '../place_attribution/place_attribution.js';
 import {PlaceConsumerRegistration, placeConsumerRegistrationContext, placeContext, PlaceDataConsumer} from '../place_data_consumer.js';
 
 import {CachedPlaceLookup} from './cached_place_lookup.js';
 
-type Place = google.maps.places.Place;
-type PlaceResult = google.maps.places.PlaceResult;
 
 enum LoadingState {
   EMPTY = 'EMPTY',

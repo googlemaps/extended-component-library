@@ -33,7 +33,8 @@ const DEFAULT_ZOOM_WITH_LOCATION = 16;
 export class AppComponent {
   readonly mapsApiKey = import.meta.env.NG_APP_MAPS_API_KEY;
 
-  college?: google.maps.places.Place;
+  // TODO: revert to google.maps.places.Place when Maps JS typings updated.
+  college?: any;  // google.maps.places.Place;
 
   @ViewChild('overlay') overlay!: ElementRef<OverlayLayout>;
 

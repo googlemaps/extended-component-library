@@ -12,8 +12,10 @@ import {ifDefined} from 'lit/directives/if-defined.js';
 import {Environment} from '../../testing/environment.js';
 import {makeFakePhoto, makeFakePlace, makeFakePlacePhoto} from '../../testing/fake_place.js';
 import {getDeepActiveElement} from '../../utils/deep_element_access.js';
+import type {Place, PlaceResult} from '../../utils/googlemaps_types.js';
 
 import {PlacePhotoGallery} from './place_photo_gallery.js';
+
 
 const fakePlace = makeFakePlace({
   id: '1234567890',
@@ -21,14 +23,13 @@ const fakePlace = makeFakePlace({
   photos: [
     makeFakePhoto(
         {
-          attributions: [
+          authorAttributions: [
             {
-              author: 'Author A1',
-              authorURI: 'https://www.google.com/maps/contrib/A1',
+              displayName: 'Author A1',
+              uri: 'https://www.google.com/maps/contrib/A1',
             },
             {
-              author: 'Author A2',
-              authorURI: null,
+              displayName: 'Author A2',
             },
           ],
           heightPx: 1000,
@@ -37,10 +38,10 @@ const fakePlace = makeFakePlace({
         'https://lh3.googleusercontent.com/places/A'),
     makeFakePhoto(
         {
-          attributions: [
+          authorAttributions: [
             {
-              author: 'Author B1',
-              authorURI: 'https://www.google.com/maps/contrib/B1',
+              displayName: 'Author B1',
+              uri: 'https://www.google.com/maps/contrib/B1',
             },
           ],
           heightPx: 2000,
@@ -49,7 +50,7 @@ const fakePlace = makeFakePlace({
         'https://lh3.googleusercontent.com/places/B'),
     makeFakePhoto(
         {
-          attributions: [],
+          authorAttributions: [],
           heightPx: 1340,
           widthPx: 1420,
         },
@@ -57,7 +58,7 @@ const fakePlace = makeFakePlace({
   ],
 });
 
-const fakePlaceResult: google.maps.places.PlaceResult = {
+const fakePlaceResult: PlaceResult = {
   place_id: '1234567890',
   name: 'Place Name',
   photos: [
@@ -96,7 +97,7 @@ describe('PlacePhotoGallery', () => {
   async function prepareState(config?: {
     rtl?: boolean,
     maxTiles?: number,
-    place?: google.maps.places.Place|google.maps.places.PlaceResult,
+    place?: Place|PlaceResult,
     clickOnTile?: number,
   }) {
     const root = env.render(html`

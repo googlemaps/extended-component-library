@@ -12,11 +12,11 @@ import {customElement, property} from 'lit/decorators.js';
 
 import {Environment} from '../testing/environment.js';
 import {makeFakePlace} from '../testing/fake_place.js';
+import type {Place} from '../utils/googlemaps_types.js';
 
 import {PlaceDataConsumer} from './place_data_consumer.js';
 import {PlaceDataProvider} from './place_data_provider/place_data_provider.js';
 
-type Place = google.maps.places.Place;
 
 const FAKE_PLACE =
     makeFakePlace({id: 'FAKE_PLACE_ID', displayName: 'Fake Place'});

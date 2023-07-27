@@ -12,9 +12,9 @@ import {Environment} from '../testing/environment.js';
 import {FakeLatLng} from '../testing/fake_lat_lng.js';
 import {makeFakePlace, SAMPLE_FAKE_PLACE, SAMPLE_FAKE_PLACE_RESULT} from '../testing/fake_place.js';
 
+import type {PlaceResult} from './googlemaps_types.js';
 import {isPlaceResult, makePlaceFromPlaceResult, makeWaypoint, numericToPriceLevel, priceLevelToNumeric, renderAttribution} from './place_utils.js';
 
-type PlaceResult = google.maps.places.PlaceResult;
 type PriceLevel = google.maps.places.PriceLevel;
 
 describe('isPlaceResult', () => {
@@ -171,17 +171,25 @@ describe('makePlaceFromPlaceResult', () => {
     expect(place.plusCode).toEqual(SAMPLE_FAKE_PLACE.plusCode);
     expect(place.priceLevel).toEqual(SAMPLE_FAKE_PLACE.priceLevel);
     expect(place.rating).toEqual(SAMPLE_FAKE_PLACE.rating);
-    expect(place.reviews).toEqual(SAMPLE_FAKE_PLACE.reviews);
     expect(place.svgIconMaskURI).toEqual(SAMPLE_FAKE_PLACE.svgIconMaskURI);
     expect(place.types).toEqual(SAMPLE_FAKE_PLACE.types);
     expect(place.userRatingCount).toEqual(SAMPLE_FAKE_PLACE.userRatingCount);
     expect(place.utcOffsetMinutes).toEqual(SAMPLE_FAKE_PLACE.utcOffsetMinutes);
     expect(place.websiteURI).toEqual(SAMPLE_FAKE_PLACE.websiteURI);
 
+    expect(place.reviews!.length).toEqual(SAMPLE_FAKE_PLACE.reviews!.length);
+    SAMPLE_FAKE_PLACE.reviews!.forEach((expectedReview, i) => {
+      const review = place.reviews![i];
+      expect(review.authorAttribution)
+          .toEqual(expectedReview.authorAttribution);
+      expect(review).toEqual(expectedReview);
+    });
+
     expect(place.photos!.length).toEqual(SAMPLE_FAKE_PLACE.photos!.length);
     SAMPLE_FAKE_PLACE.photos!.forEach((expectedPhoto, i) => {
       const photo = place.photos![i];
-      expect(photo.attributions).toEqual(expectedPhoto.attributions);
+      expect(photo.authorAttributions)
+          .toEqual(expectedPhoto.authorAttributions);
       expect(photo.heightPx).toEqual(expectedPhoto.heightPx);
       expect(photo.widthPx).toEqual(expectedPhoto.widthPx);
       expect(photo.getURI()).toEqual(expectedPhoto.getURI());

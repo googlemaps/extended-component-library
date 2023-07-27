@@ -31,11 +31,8 @@ import {SlotValidationController} from '../base/slot_validation_controller.js';
 import {WebFont, WebFontController} from '../base/web_font_controller.js';
 import {placeContext} from '../place_building_blocks/place_data_consumer.js';
 import {PlaceDataProvider} from '../place_building_blocks/place_data_provider/place_data_provider.js';
+import type {LatLng, LatLngLiteral, Place, PlaceResult} from '../utils/googlemaps_types.js';
 
-type LatLng = google.maps.LatLng;
-type LatLngLiteral = google.maps.LatLngLiteral;
-type Place = google.maps.places.Place;
-type PlaceResult = google.maps.places.PlaceResult;
 
 /** Names of sizes supported by the Place Overview component. */
 const PLACE_OVERVIEW_SIZES =

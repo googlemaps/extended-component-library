@@ -9,10 +9,10 @@ import '../../icon_button/icon_button.js';
 import {html} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 
+import type {Place} from '../../utils/googlemaps_types.js';
 import {makeWaypoint, WaypointInfo} from '../../utils/place_utils.js';
 import {PlaceDataConsumer} from '../place_data_consumer.js';
 
-type Place = google.maps.places.Place;
 
 /**
  * Creates a Google Maps URL for directions from origin to destination

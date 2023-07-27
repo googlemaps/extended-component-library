@@ -20,6 +20,7 @@ export const FAKE_MARKER_LIBRARY: google.maps.MarkerLibrary = {} as unknown as
 
 /** Fake implementation of the Maps JS Places Library for testing. */
 export const FAKE_PLACES_LIBRARY: google.maps.PlacesLibrary = {
+  // tslint:disable-next-line:enforce-name-casing
   Place: class {
     constructor(options: google.maps.places.PlaceOptions) {
       return makeFakePlace({id: options.id});

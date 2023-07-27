@@ -64,9 +64,11 @@ describe('PlaceReviews', () => {
     const place = makeFakePlace({
       id: '',
       reviews: [{
-        author: 'Author',
-        authorPhotoURI: 'https://lh3.googlusercontent.com/a/1',
-        authorURI: 'https://www.google.com/maps/contrib/1/reviews',
+        authorAttribution: {
+          displayName: 'Author',
+          photoURI: 'https://lh3.googlusercontent.com/a/1',
+          uri: 'https://www.google.com/maps/contrib/1/reviews',
+        },
         publishTime: new Date(1234567890),
         rating: 5,
         relativePublishTimeDescription: '1 month ago',

@@ -4,10 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import type {Place} from './googlemaps_types.js';
+
 const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
 const ONE_WEEK_IN_MS = 7 * ONE_DAY_IN_MS;
 
-type Place = google.maps.places.Place;
 type OpeningHours = google.maps.places.OpeningHours;
 type OpeningHoursPeriod = google.maps.places.OpeningHoursPeriod;
 type OpeningHoursPoint = google.maps.places.OpeningHoursPoint;

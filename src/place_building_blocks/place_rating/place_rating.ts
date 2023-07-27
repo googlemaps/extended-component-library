@@ -11,9 +11,9 @@ import {when} from 'lit/directives/when.js';
 
 import {GMPX_RATING_COLOR, GMPX_RATING_COLOR_EMPTY} from '../../base/common_styles.js';
 import {LocalizationController} from '../../base/localization_controller.js';
+import type {Place} from '../../utils/googlemaps_types.js';
 import {PlaceDataConsumer} from '../place_data_consumer.js';
 
-type Place = google.maps.places.Place;
 
 const MIN_RATING = 1;
 const MAX_RATING = 5;

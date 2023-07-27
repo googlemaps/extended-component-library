@@ -15,17 +15,15 @@ import {GMPX_FONT_CAPTION, GMPX_FONT_SIZE_BASE, GMPX_FONT_TITLE_MEDIUM} from '..
 import {FocusController} from '../../base/focus_controller.js';
 import {LocalizationController} from '../../base/localization_controller.js';
 import {WebFont, WebFontController} from '../../base/web_font_controller.js';
+import type {AuthorAttribution, Photo, Place} from '../../utils/googlemaps_types.js';
 import {renderAttribution} from '../../utils/place_utils.js';
 import {PlaceDataConsumer} from '../place_data_consumer.js';
 
-type Place = google.maps.places.Place;
-type Photo = google.maps.places.Photo;
-type PhotoAttribution = google.maps.places.PhotoAttribution;
 
 interface FormattedPhoto {
   uri: string;
   tileUri: string;
-  attributions: PhotoAttribution[];
+  attributions: AuthorAttribution[];
 }
 
 interface TileSize {
@@ -62,7 +60,7 @@ function formatPhoto(photo: Photo, tileSize: TileSize): FormattedPhoto {
   return {
     uri: photo.getURI(),
     tileUri: photo.getURI(tilePhotoOptions),
-    attributions: photo.attributions,
+    attributions: photo.authorAttributions,
   };
 }
 
@@ -276,8 +274,8 @@ export class PlacePhotoGallery extends PlaceDataConsumer {
             <div class="caption">
               <span>${this.getMsg('PLACE_PHOTO_ATTRIBUTION_PREFIX')}</span>
               ${map(selectedPhoto!.attributions,
-                    ({author, authorURI}) =>
-                        html`${renderAttribution(author, authorURI)} `)}
+                    ({displayName, uri}) =>
+                        html`${renderAttribution(displayName, uri ?? null)} `)}
             </div>
           `)}
         </div>

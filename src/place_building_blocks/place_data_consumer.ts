@@ -10,15 +10,13 @@ import {property, state} from 'lit/decorators.js';
 
 import {BaseComponent} from '../base/base_component.js';
 import {attachContextRoot} from '../utils/context_utils.js';
+import type {Place, PlaceResult} from '../utils/googlemaps_types.js';
 import {isPlaceResult, makePlaceFromPlaceResult} from '../utils/place_utils.js';
 
 // If this module is loaded before the definitions of other elements
 // (specifically, Place data providers), adding a context root ensures
 // registration of data consumers by late-upgraded data providers.
 attachContextRoot();
-
-type Place = google.maps.places.Place;
-type PlaceResult = google.maps.places.PlaceResult;
 
 /**
  * Registration functions passed from a `PlaceDataProvider` via context. The
@@ -60,7 +58,7 @@ export abstract class PlaceDataConsumer extends BaseComponent {
    */
   @consume({context: placeContext, subscribe: true})
   @property({attribute: false})
-  contextPlace: google.maps.places.Place|undefined;
+  contextPlace: Place|undefined;
 
   /**
    * Place data to render, overriding anything provided by context.
@@ -68,7 +66,7 @@ export abstract class PlaceDataConsumer extends BaseComponent {
   get place():
       // Accept data in the form of either the new `Place` class from Places API
       // or the legacy `PlaceResult` class and convert to the former internally.
-      google.maps.places.Place|google.maps.places.PlaceResult|null|undefined {
+      Place|PlaceResult|null|undefined {
     return this.placeInternal;
   }
   set place(value: Place|PlaceResult|null|undefined) {

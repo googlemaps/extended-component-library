@@ -10,8 +10,10 @@ import {html, TemplateResult} from 'lit';
 
 import {Environment} from '../../testing/environment.js';
 import {makeFakePlace} from '../../testing/fake_place.js';
+import type {PlaceResult} from '../../utils/googlemaps_types.js';
 
 import {PlaceRating} from './place_rating.js';
+
 
 function getTextComponents(rating: PlaceRating): string[] {
   return rating.renderRoot.textContent!.trim().split(/[\s]+/);
@@ -59,7 +61,7 @@ describe('PlaceRating', () => {
   });
 
   it('renders with a PlaceResult', async () => {
-    const placeResult: google.maps.places.PlaceResult = {rating: 4.5};
+    const placeResult: PlaceResult = {rating: 4.5};
     // clang-format off
     const [rating] = await prepareState(html`
       <gmpx-place-rating .place=${placeResult}></gmpx-place-rating>

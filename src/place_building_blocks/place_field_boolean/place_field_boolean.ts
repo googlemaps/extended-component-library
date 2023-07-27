@@ -9,10 +9,10 @@ import {customElement, property, state} from 'lit/decorators.js';
 import {choose} from 'lit/directives/choose.js';
 
 import {Deferred} from '../../utils/deferred.js';
+import type {Place} from '../../utils/googlemaps_types.js';
 import {hasDataForOpeningCalculations} from '../../utils/place_utils.js';
 import {PlaceDataConsumer} from '../place_data_consumer.js';
 
-type Place = google.maps.places.Place;
 
 
 const PLACE_BOOLEAN_FIELDS_SYNC_ACCESS = [

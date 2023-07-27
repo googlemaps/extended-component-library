@@ -11,13 +11,12 @@ import {html} from 'lit';
 import {Environment} from '../../testing/environment.js';
 import {FakeLatLng} from '../../testing/fake_lat_lng.js';
 import {makeFakePlace} from '../../testing/fake_place.js';
+import type {LatLng, LatLngLiteral, Place} from '../../utils/googlemaps_types.js';
 
 import {DirectionsController} from './directions_controller.js';
 import {PlaceDistanceLabel} from './place_distance_label.js';
 
-type LatLng = google.maps.LatLng;
-type LatLngLiteral = google.maps.LatLngLiteral;
-type Place = google.maps.places.Place;
+
 type TravelMode = google.maps.TravelMode;
 
 const FAKE_ORIGIN_LAT_LNG = new FakeLatLng(-1.23, 1.23);

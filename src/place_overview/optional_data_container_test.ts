@@ -12,10 +12,10 @@ import {customElement} from 'lit/decorators.js';
 import {PlaceDataConsumer} from '../place_building_blocks/place_data_consumer.js';
 import {Environment} from '../testing/environment.js';
 import {makeFakePlace} from '../testing/fake_place.js';
+import type {Place} from '../utils/googlemaps_types.js';
 
 import {OptionalDataContainer} from './optional_data_container.js';
 
-type Place = google.maps.places.Place;
 
 const FAKE_PLACE = makeFakePlace({id: 'FAKE_PLACE_ID', displayName: 'Foo Bar'});
 

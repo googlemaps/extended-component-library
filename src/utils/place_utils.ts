@@ -9,12 +9,7 @@ import {html} from 'lit';
 import {APILoader} from '../api_loader/api_loader.js';
 
 import {extractTextAndURL} from './dom_utils.js';
-
-type LatLng = google.maps.LatLng;
-type LatLngLiteral = google.maps.LatLngLiteral;
-type Place = google.maps.places.Place;
-type PlaceResult = google.maps.places.PlaceResult;
-type PriceLevel = google.maps.places.PriceLevel;
+import type {LatLng, LatLngLiteral, Place, PlaceResult, PriceLevel} from './googlemaps_types.js';
 
 /**
  * Returns true if `place` is a `PlaceResult`, and false if it's a `Place`.
@@ -111,9 +106,10 @@ export function renderAttribution(text: string, url: string|null) {
  */
 export async function makePlaceFromPlaceResult(
     placeResult: PlaceResult, consumer?: HTMLElement): Promise<Place> {
-  const {Place} = await APILoader.importLibrary('places', consumer) as
+  const placesLibrary = await APILoader.importLibrary('places', consumer) as
       typeof google.maps.places;
-  const place = new Place({id: placeResult.place_id ?? 'PLACE_ID_MISSING'});
+  const place = new placesLibrary.Place(
+                    {id: placeResult.place_id ?? 'PLACE_ID_MISSING'}) as Place;
   const predefinedFields = convertToPlaceFields(placeResult);
 
   // Override Place object's getters to return data from PlaceResult if defined.
@@ -207,10 +203,10 @@ function convertToPlaceFields(placeResult: PlaceResult): Partial<Place> {
         placeResult.photos.map((photo: google.maps.places.PlacePhoto) => {
           const attributions = photo.html_attributions.map((html) => {
             const {text, url} = extractTextAndURL(html);
-            return {author: text ?? '', authorURI: url ?? null};
+            return {displayName: text ?? '', uri: url};
           });
           return {
-            attributions,
+            authorAttributions: attributions,
             getURI: photo.getUrl,
             heightPx: photo.height,
             widthPx: photo.width,
@@ -235,9 +231,11 @@ function convertToPlaceFields(placeResult: PlaceResult): Partial<Place> {
   if (placeResult.reviews !== undefined) {
     place.reviews = placeResult.reviews.map(
         (review: google.maps.places.PlaceReview) => ({
-          author: review.author_name,
-          authorPhotoURI: review.profile_photo_url,
-          authorURI: review.author_url ?? null,
+          authorAttribution: {
+            displayName: review.author_name,
+            photoURI: review.profile_photo_url,
+            uri: review.author_url,
+          },
           // Convert publish time from milliseconds to a Date object.
           publishTime: new Date(review.time),
           rating: review.rating ?? null,

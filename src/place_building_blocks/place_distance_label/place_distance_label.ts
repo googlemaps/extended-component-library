@@ -8,14 +8,13 @@ import {css, html, PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 
 import {WebFont, WebFontController} from '../../base/web_font_controller.js';
+import type {LatLng, LatLngLiteral, Place} from '../../utils/googlemaps_types.js';
 import {makeWaypoint} from '../../utils/place_utils.js';
 import {PlaceDataConsumer} from '../place_data_consumer.js';
 
 import {DirectionsController} from './directions_controller.js';
 
-type LatLng = google.maps.LatLng;
-type LatLngLiteral = google.maps.LatLngLiteral;
-type Place = google.maps.places.Place;
+
 type TravelMode = google.maps.TravelMode;
 type TravelModeAttribute = Lowercase<TravelMode>;
 

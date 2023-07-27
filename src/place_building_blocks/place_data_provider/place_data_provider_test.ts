@@ -14,11 +14,11 @@ import {Environment} from '../../testing/environment.js';
 import {FAKE_PLACES_LIBRARY} from '../../testing/fake_google_maps.js';
 import {makeFakePlace} from '../../testing/fake_place.js';
 import {Deferred} from '../../utils/deferred.js';
+import type {Place, PlaceResult} from '../../utils/googlemaps_types.js';
 import {PlaceDataConsumer} from '../place_data_consumer.js';
 
 import {PlaceDataProvider} from './place_data_provider.js';
 
-type Place = google.maps.places.Place;
 
 @customElement('gmpx-test-consumer')
 class TestConsumer extends PlaceDataConsumer {
@@ -172,7 +172,7 @@ describe('PlaceDataProvider', () => {
   });
 
   it('fetches missing fields on a PlaceResult', async () => {
-    const placeResult: google.maps.places.PlaceResult = {
+    const placeResult: PlaceResult = {
       place_id: 'id5',
       rating: 4.5,
     };
