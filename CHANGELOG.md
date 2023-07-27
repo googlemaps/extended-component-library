@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/googlemaps/extended-component-library/compare/v0.2.1...v0.2.2) (2023-07-27)
+
+
+### Bug Fixes
+
+* fix broken photo gallery and reviews widgets ([ab25721](https://github.com/googlemaps/extended-component-library/commit/ab2572151b8e6d0a41690cadcea5d52fe6c47b3b))
+
 ## [0.2.1](https://github.com/googlemaps/extended-component-library/compare/v0.2.0...v0.2.1) (2023-07-13)
 
 
