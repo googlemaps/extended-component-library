@@ -79,7 +79,7 @@ export class PlaceDistanceLabel extends PlaceDataConsumer {
   protected readonly fontLoader =
       new WebFontController(this, [WebFont.MATERIAL_SYMBOLS_OUTLINED]);
 
-  private readonly directionsService = new DirectionsController(this);
+  private readonly directionsController = new DirectionsController(this);
   private isFetchingDirectionsData = false;
 
   protected override willUpdate(changedProperties: PropertyValues) {
@@ -132,7 +132,7 @@ export class PlaceDistanceLabel extends PlaceDataConsumer {
     const destination = makePlaceForDirectionsRequest(place);
     if (origin && destination) {
       this.isFetchingDirectionsData = true;
-      const result = await this.directionsService.route({
+      const result = await this.directionsController.route({
         origin,
         destination,
         travelMode: (this.travelMode?.toUpperCase() ?? 'DRIVING') as TravelMode,
