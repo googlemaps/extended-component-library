@@ -40,14 +40,22 @@ export class FakeLatLng implements LatLng {
   }
 }
 
+function isLatLngBoundsLiteral(bounds: LatLngBounds|LatLngBoundsLiteral):
+    bounds is LatLngBoundsLiteral {
+  return (typeof (bounds as LatLngBoundsLiteral).north === 'number');
+}
+
 /**
  * A fake `LatLngBounds` class for testing purposes, that does not depend on the
  * `google.maps.LatLngBounds` constructor loaded by the API.
  */
 export class FakeLatLngBounds implements LatLngBounds {
-  constructor(
-      private readonly boundsLiteral:
-          LatLngBoundsLiteral = {north: 0, south: 0, east: 0, west: 0}) {}
+  constructor(private readonly boundsLiteral: LatLngBoundsLiteral = {
+    north: -90,
+    south: 90,
+    east: -180,
+    west: 180
+  }) {}
 
   getNorthEast(): LatLng {
     return new FakeLatLng(this.boundsLiteral.north, this.boundsLiteral.east);
@@ -57,6 +65,15 @@ export class FakeLatLngBounds implements LatLngBounds {
   }
   toJSON(): LatLngBoundsLiteral {
     return this.boundsLiteral;
+  }
+  union(other: LatLngBounds|LatLngBoundsLiteral): LatLngBounds {
+    const {north, south, east, west} = this.boundsLiteral;
+    const otherLiteral = isLatLngBoundsLiteral(other) ? other : other.toJSON();
+    this.boundsLiteral.north = Math.max(north, otherLiteral.north);
+    this.boundsLiteral.south = Math.min(south, otherLiteral.south);
+    this.boundsLiteral.east = Math.max(east, otherLiteral.east);
+    this.boundsLiteral.west = Math.min(west, otherLiteral.west);
+    return this;
   }
 
   contains(latLng: LatLng|LatLngLiteral): boolean {
@@ -82,8 +99,5 @@ export class FakeLatLngBounds implements LatLngBounds {
   }
   toUrlValue(precision?: number): string {
     throw new Error('toUrlValue is not implemented');
-  }
-  union(other: LatLngBounds|LatLngBoundsLiteral): LatLngBounds {
-    throw new Error('union is not implemented');
   }
 }
