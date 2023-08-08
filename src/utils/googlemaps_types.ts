@@ -10,26 +10,26 @@
  */
 
 /** Attribution object for Place photos and reviews. */
-export interface AuthorAttribution {
+export declare interface AuthorAttribution {
   displayName: string;
   photoURI?: string;
   uri?: string;
 }
 
 /** Place Photo object. */
-export type Photo = Omit<google.maps.places.Photo, 'attributions'>&{
+export declare type Photo = Omit<google.maps.places.Photo, 'attributions'>& {
   authorAttributions: AuthorAttribution[];
 };
 
 /** Place Review object. */
-export type Review =
-    Omit<google.maps.places.Review, 'author'|'authorURI'|'authorPhotoURI'>&{
+export declare type Review =
+    Omit<google.maps.places.Review, 'author'|'authorURI'|'authorPhotoURI'>& {
   authorAttribution?: AuthorAttribution;
 };
 
 /** Updated Place class with new attribution schema. */
-export type Place =
-    Omit<google.maps.places.Place, 'photos'|'reviews'|'fetchFields'>&{
+export declare type Place =
+    Omit<google.maps.places.Place, 'photos'|'reviews'|'fetchFields'>& {
   photos?: Photo[];
   reviews?: Review[];
   fetchFields: (options: google.maps.places.FetchFieldsRequest) =>
