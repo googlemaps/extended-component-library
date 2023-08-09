@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.0](https://github.com/googlemaps/extended-component-library/compare/v0.2.2...v0.3.0) (2023-08-09)
+
+
+### Features
+
+* improve Places components' compatibility with GA versions of the Maps JS SDK ([08a269b](https://github.com/googlemaps/extended-component-library/commit/08a269bc16dfcf270ee69800db1974752227a2d7))
+
+
+### Bug Fixes
+
+* fix an internal issue with photos ([ba61ae5](https://github.com/googlemaps/extended-component-library/commit/ba61ae5e14d26d8d232db0528adf2029d03ac636))
+
 ## [0.2.2](https://github.com/googlemaps/extended-component-library/compare/v0.2.1...v0.2.2) (2023-07-27)
 
 
