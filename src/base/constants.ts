@@ -5,7 +5,7 @@
  */
 
 /** Package version of this component library. */
-export const LIBRARY_VERSION = '0.2.2';  // x-release-please-version
+export const LIBRARY_VERSION = '0.3.0';  // x-release-please-version
 
 /** Identifier of where this component library is sourced from. */
 export const ATTRIBUTION_SOURCE_ID = 'GIT';
