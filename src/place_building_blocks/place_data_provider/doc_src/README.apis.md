@@ -4,7 +4,10 @@ Used when fetching Places data for the place specified via attribute/property.
 
 #### Documentation
 
-Places API [Place class documentation](https://developers.google.com/maps/documentation/javascript/place?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components). Please be sure to check this documentation for additional requirements and recommendations regarding your use.
+* When using the Maps JavaScript API beta version (default): [Place class documentation](https://developers.google.com/maps/documentation/javascript/place?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components)
+* When using the Maps JavaScript API GA version: [Place details documentation](https://developers.google.com/maps/documentation/javascript/examples/place-details?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components)
+
+Please be sure to check this documentation for additional requirements and recommendations regarding your use.
 
 #### Pricing
 

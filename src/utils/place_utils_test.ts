@@ -242,4 +242,79 @@ describe('makePlaceFromPlaceResult', () => {
         {fields: ['displayName', 'location', 'photos', 'servesLunch']});
     expect(fetchFieldsSpy).toHaveBeenCalledOnceWith({fields: ['servesLunch']});
   });
+
+  it('uses the Places Details API when Place doesn\'t support fetchFields',
+     async () => {
+       const fetchFieldsSpy =
+           jasmine.createSpy('fetchFields')
+               .and.rejectWith(new Error(
+                   'Place.prototype.fetchFields() is not available, try the beta channel.'));
+       const fakeGetDetails =
+           (options: google.maps.places.PlaceDetailsRequest,
+            callback: (
+                a: PlaceResult|null,
+                b: google.maps.places.PlacesServiceStatus) => void) => {
+             callback(
+                 {price_level: 2},
+                 'OK' as google.maps.places.PlacesServiceStatus);
+           };
+       const placeDetailsSpy =
+           jasmine.createSpy('placeDetails').and.callFake(fakeGetDetails);
+       const fakePlacesLibrary = {
+         Place: class {
+           constructor(options: google.maps.places.PlaceOptions) {
+             return makeFakePlace(
+                 {id: options.id, fetchFields: fetchFieldsSpy});
+           }
+         },
+
+         PlacesService: class {
+           getDetails = placeDetailsSpy;
+         }
+       };
+       env.importLibrarySpy?.and.resolveTo(fakePlacesLibrary);
+
+       const place = await makePlaceFromPlaceResult(
+           {place_id: '123', url: 'http://foo/bar', rating: 3.5});
+
+       await place.fetchFields({fields: ['rating', 'priceLevel']});
+       expect(placeDetailsSpy)
+           .toHaveBeenCalledOnceWith(
+               {placeId: '123', fields: ['price_level']},
+               jasmine.any(Function));
+       expect(place.priceLevel)
+           .toEqual('MODERATE' as google.maps.places.PriceLevel);
+     });
+
+  it('calls the built-in isOpen method when available on Place', async () => {
+    const isOpenSpy = jasmine.createSpy('isOpen').and.resolveTo(true);
+    const fakePlacesLibrary = {
+      Place: class {
+        constructor(options: google.maps.places.PlaceOptions) {
+          return makeFakePlace({id: options.id, isOpen: isOpenSpy});
+        }
+      },
+    };
+    env.importLibrarySpy?.and.resolveTo(fakePlacesLibrary);
+    const place = await makePlaceFromPlaceResult({place_id: '123'});
+
+    expect(await place.isOpen()).toBe(true);
+  });
+
+  it('calls the utility isOpen function when isOpen() isn\'t implemented on Place',
+     async () => {
+       const isOpenSpy = jasmine.createSpy('isOpen').and.rejectWith(new Error(
+           'Place.prototype.isOpen() is not available, try the beta channel.'));
+       const fakePlacesLibrary = {
+         Place: class {
+           constructor(options: google.maps.places.PlaceOptions) {
+             return makeFakePlace({id: options.id, isOpen: isOpenSpy});
+           }
+         },
+       };
+       env.importLibrarySpy?.and.resolveTo(fakePlacesLibrary);
+       const place = await makePlaceFromPlaceResult({place_id: '123'});
+
+       expect(await place.isOpen()).toBe(undefined);
+     });
 });

@@ -156,7 +156,12 @@ Used when fetching Places data for the place specified via attribute/property.
 
 #### Documentation
 
-Places API [Place class documentation](https://developers.google.com/maps/documentation/javascript/place?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components) and Places API [Photos documentation](https://developers.google.com/maps/documentation/javascript/places?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#places_photos) (photos used in medium, large, and x-large sizes). Please be sure to check this documentation for additional requirements and recommendations regarding your use.
+* Fetching Places data:
+    * Maps JavaScript API beta version (default): [Place class documentation](https://developers.google.com/maps/documentation/javascript/place?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components)
+    * Maps JavaScript API GA version: [Place details documentation](https://developers.google.com/maps/documentation/javascript/examples/place-details?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components)
+* Displaying Places photos (used in medium, large, and x-large sizes): [Photos documentation](https://developers.google.com/maps/documentation/javascript/places?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#places_photos)
+
+Please be sure to check this documentation for additional requirements and recommendations regarding your use.
 
 #### Pricing
 

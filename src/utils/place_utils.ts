@@ -10,6 +10,7 @@ import {APILoader} from '../api_loader/api_loader.js';
 
 import {extractTextAndURL} from './dom_utils.js';
 import type {LatLng, LatLngLiteral, Place, PlaceResult, PriceLevel} from './googlemaps_types.js';
+import {isOpen} from './opening_hours.js';
 
 /**
  * Returns true if `place` is a `PlaceResult`, and false if it's a `Place`.
@@ -110,7 +111,7 @@ export async function makePlaceFromPlaceResult(
       typeof google.maps.places;
   const place = new placesLibrary.Place(
                     {id: placeResult.place_id ?? 'PLACE_ID_MISSING'}) as Place;
-  const predefinedFields = convertToPlaceFields(placeResult);
+  let predefinedFields = convertToPlaceFields(placeResult);
 
   // Override Place object's getters to return data from PlaceResult if defined.
   return new Proxy(place, {
@@ -118,10 +119,44 @@ export async function makePlaceFromPlaceResult(
       // Intercept calls to the `fetchFields()` method and filter out any field
       // names in the request that already have values derived from PlaceResult.
       if (name === 'fetchFields') {
-        return (request: google.maps.places.FetchFieldsRequest) => {
-          const forwardedFields = request.fields.filter(
-              (field) => predefinedFields[field as keyof Place] === undefined);
-          return target.fetchFields({...request, fields: forwardedFields});
+        return async (request: google.maps.places.FetchFieldsRequest) => {
+          const requestFields = request.fields as [keyof Place];
+          const forwardedFields = requestFields.filter(
+              (field) => predefinedFields[field] === undefined);
+          try {
+            return await target.fetchFields(
+                {...request, fields: forwardedFields});
+          } catch (e: unknown) {
+            // Place.fetchFields() is only available in beta versions of the
+            // Maps JS SDK. If a stable version of the SDK is loaded, fall
+            // back to the Place Details API.
+            if (isNotAvailableError(e, 'fetchFields()')) {
+              const placeResultFields =
+                  mapPlaceFieldsToPlaceResultFields(forwardedFields);
+              if (!placeResultFields.length) return {place};
+              const response = await fetchFromPlaceDetails(
+                  placesLibrary, place.id, placeResultFields);
+              predefinedFields = {
+                ...convertToPlaceFields(response),
+                ...predefinedFields,
+              };
+              return {place};
+            }
+            throw e;
+          }
+        };
+      } else if (name === 'isOpen') {
+        return async (d?: Date) => {
+          try {
+            // Must redirect the original isOpen() method's `this` to point to
+            // the proxy object.
+            return await Reflect.get(target, name, receiver).apply(receiver, [
+              d
+            ]);
+          } catch (e: unknown) {
+            if (isNotAvailableError(e, 'isOpen()')) return isOpen(receiver, d);
+            throw e;
+          }
         };
       }
       const value = predefinedFields[name as keyof Place];
@@ -270,4 +305,62 @@ function makeOpeningHoursPoint(
     {day, hours, minutes}: google.maps.places.PlaceOpeningHoursTime):
     google.maps.places.OpeningHoursPoint {
   return {day, hour: hours, minute: minutes};
+}
+
+const PLACE_TO_PLACE_RESULT_FIELDS:
+    Partial<Record<keyof Place, keyof PlaceResult>> = {
+      'addressComponents': 'address_components',
+      'adrFormatAddress': 'adr_address',
+      'businessStatus': 'business_status',
+      'formattedAddress': 'formatted_address',
+      'nationalPhoneNumber': 'formatted_phone_number',
+      'location': 'geometry',
+      'viewport': 'geometry',
+      'attributions': 'html_attributions',
+      'iconBackgroundColor': 'icon_background_color',
+      'svgIconMaskURI': 'icon_mask_base_uri',
+      'internationalPhoneNumber': 'international_phone_number',
+      'displayName': 'name',
+      'openingHours': 'opening_hours',
+      'photos': 'photos',
+      'plusCode': 'plus_code',
+      'priceLevel': 'price_level',
+      'rating': 'rating',
+      'reviews': 'reviews',
+      'types': 'types',
+      'googleMapsURI': 'url',
+      'userRatingCount': 'user_ratings_total',
+      'utcOffsetMinutes': 'utc_offset_minutes',
+      'websiteURI': 'website'
+    };
+
+function mapPlaceFieldsToPlaceResultFields(fields: Array<keyof Place>):
+    Array<keyof PlaceResult> {
+  const placeResultFields: Array<keyof PlaceResult> = [];
+  for (const placeField of fields) {
+    const mapped = PLACE_TO_PLACE_RESULT_FIELDS[placeField];
+    if (mapped) placeResultFields.push(mapped);
+  }
+  return placeResultFields;
+}
+
+function isNotAvailableError(e: unknown, property: string): boolean {
+  const message = (e as Error).message || '';
+  return message.startsWith(`Place.prototype.${property} is not available`);
+}
+
+async function fetchFromPlaceDetails(
+    placesLibrary: typeof google.maps.places, placeId: string,
+    fields: string[]): Promise<PlaceResult> {
+  const placesService =
+      new placesLibrary.PlacesService(document.createElement('div'));
+  return new Promise((resolve, reject) => {
+    placesService.getDetails({placeId, fields}, (result, status) => {
+      if (result && status === 'OK') {
+        resolve(result);
+      } else {
+        reject(status);
+      }
+    });
+  });
 }

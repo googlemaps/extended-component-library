@@ -8,7 +8,7 @@
 
 import {makeFakePlace} from '../testing/fake_place.js';
 
-import {formatTimeWithWeekdayMaybe, getUpcomingCloseTime, getUpcomingOpenTime, isSoon, NextCloseTimeStatus, NextOpenTimeStatus} from './opening_hours.js';
+import {formatTimeWithWeekdayMaybe, getUpcomingCloseTime, getUpcomingOpenTime, isOpen, isSoon, NextCloseTimeStatus, NextOpenTimeStatus} from './opening_hours.js';
 
 type OpeningHours = google.maps.places.OpeningHours;
 type OpeningHoursPeriod = google.maps.places.OpeningHoursPeriod;
@@ -320,6 +320,43 @@ describe('Opening hours utilities', () => {
         openPoint: openingHours.periods[0].open,
         openDate: makeDateInLocale('2023-04-19T09:00', SF_OFFSET)  // 9am Wed
       });
+    });
+  });
+
+  describe('isOpen', () => {
+    it('returns undefined if opening hours are not available', () => {
+      const place = makeFakePlace({id: '123'});
+      expect(isOpen(place)).toBeUndefined();
+    });
+
+    it('returns true if the place is always open', () => {
+      const place = makeFakePlace(
+          {id: '123', openingHours: ALWAYS_OPEN_HOURS, utcOffsetMinutes: 0});
+      expect(isOpen(place)).toBeTrue();
+    });
+
+    it('returns true if the place is open now', () => {
+      const mondayNoonSf = makeDateInLocale('2023-08-07T12:00', SF_OFFSET);
+      const openingHours: OpeningHours = {
+        periods: [makePeriod(MON, 9, MON, 17)],  // Wed 9am - 5pm
+        weekdayDescriptions: []
+      };
+      const place =
+          makeFakePlace({id: '123', openingHours, utcOffsetMinutes: SF_OFFSET});
+
+      expect(isOpen(place, mondayNoonSf)).toBeTrue();
+    });
+
+    it('returns false if the place is not open now', () => {
+      const mondayEarlySf = makeDateInLocale('2023-08-07T06:00', SF_OFFSET);
+      const openingHours: OpeningHours = {
+        periods: [makePeriod(MON, 9, MON, 17)],  // Wed 9am - 5pm
+        weekdayDescriptions: []
+      };
+      const place =
+          makeFakePlace({id: '123', openingHours, utcOffsetMinutes: SF_OFFSET});
+
+      expect(isOpen(place, mondayEarlySf)).toBeFalse();
     });
   });
 });

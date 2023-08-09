@@ -259,3 +259,17 @@ export function getUpcomingOpenTime(
   }
   return bestResult;
 }
+
+/**
+ * Temporary (until Place is GA) replacement for the built-in isOpen() method.
+ */
+export function isOpen(place: Place, now = new Date()): boolean|undefined {
+  if (!place.openingHours || place.utcOffsetMinutes == null) {
+    return undefined;
+  } else if (isPlaceAlwaysOpen(place.openingHours)) {
+    return true;
+  }
+  const {period} =
+      getCurrentPeriod(place.openingHours, place.utcOffsetMinutes, now);
+  return !!period;
+}

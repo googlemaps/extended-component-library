@@ -8,6 +8,12 @@ for Extended Components.
 To use this component, make sure you [sign up for Google Maps Platform and
 create an API
 key](https://console.cloud.google.com/google/maps-apis/start?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components).
+By default, the API loader component will request the beta version of the
+Maps JavaScript API, giving you access to additional components <a
+href="https://developers.google.com/maps/documentation/javascript/web-components/overview?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components">`<gmp-map>`
+and `<gmp-advanced-marker>`</a>. However, you can set the `version` attribute
+to select a stable (General Availability) version of the SDK such as
+`weekly`.
 
 ## Importing
 
