@@ -13,19 +13,21 @@ import {makeFakePlace} from './fake_place.js';
  * modified in tests.
  */
 export class FakeGoogleMapsHarness {
-  /** Override this function to customize how Place is instantiated. */
+  /**
+   * Override this function to customize how `google.maps.places.Place` is
+   * instantiated.
+   */
   placeConstructor = (options: google.maps.places.PlaceOptions) =>
       makeFakePlace({id: options.id});
 
   /**
-   * Override this function to control the response of a getDetails() request.
+   * Override this function to control the response of a
+   * `google.maps.places.PlacesService.getDetails()` request.
    */
-  getDetailsHandler = (request: google.maps.places.PlaceDetailsRequest) => {
-    return {
-      result: {} as PlaceResult,
-      status: 'OK',
-    };
-  };
+  getDetailsHandler = (request: google.maps.places.PlaceDetailsRequest) => ({
+    result: {} as PlaceResult,
+    status: 'OK',
+  });
 
   /**
    * Collection of libraries that are dispatched via `importLibrary()`.

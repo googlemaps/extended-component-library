@@ -14,7 +14,7 @@ import {RequestErrorEvent} from '../../base/events.js';
 import {SlotValidationController} from '../../base/slot_validation_controller.js';
 import {STRING_ARRAY_ATTRIBUTE_CONVERTER} from '../../utils/attribute_converters.js';
 import type {Place, PlaceResult} from '../../utils/googlemaps_types.js';
-import {isPlaceResult, makePlaceFromPlaceResult} from '../../utils/place_utils.js';
+import {isNotAvailableError, isPlaceResult, makePlaceFromPlaceResult} from '../../utils/place_utils.js';
 import {PlaceAttribution} from '../place_attribution/place_attribution.js';
 import {PlaceConsumerRegistration, placeConsumerRegistrationContext, placeContext, PlaceDataConsumer} from '../place_data_consumer.js';
 
@@ -174,7 +174,21 @@ export class PlaceDataProvider extends BaseComponent {
         await 0;
         fields = this.getConsumerFields();
       }
-      await this.contextPlace.fetchFields({fields});
+      try {
+        await this.contextPlace.fetchFields({fields});
+      } catch (error: unknown) {
+        if (isNotAvailableError(error, 'fetchFields()')) {
+          // If the SDK doesn't support fetchFields(), replace the Place with a
+          // shimmed version, taking advantage of the fallback capabilities of
+          // `makePlaceFromPlaceResult()`.
+          this.contextPlace =
+              await makePlaceFromPlaceResult({place_id: this.contextPlace.id});
+          PlaceDataProvider.placeLookup.updatePlace(this.contextPlace);
+          await this.contextPlace.fetchFields({fields});
+        } else {
+          throw error;
+        }
+      }
       // Manually update consumers of the context Place, since the object has
       // been mutated
       for (const consumer of this.placeConsumers) {

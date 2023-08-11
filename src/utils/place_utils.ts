@@ -344,9 +344,13 @@ function mapPlaceFieldsToPlaceResultFields(fields: Array<keyof Place>):
   return placeResultFields;
 }
 
-function isNotAvailableError(e: unknown, property: string): boolean {
-  const message = (e as Error).message || '';
-  return message.startsWith(`Place.prototype.${property} is not available`);
+/**
+ * Determines if the error results from a specified property not being
+ * available on `Place.prototype`.
+ */
+export function isNotAvailableError(e: unknown, property: string): e is Error {
+  if (!(e instanceof Error)) return false;
+  return e.message.startsWith(`Place.prototype.${property} is not available`);
 }
 
 async function fetchFromPlaceDetails(

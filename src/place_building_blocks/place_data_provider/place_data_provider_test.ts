@@ -458,7 +458,7 @@ describe('PlaceDataProvider', () => {
   it('shows error slot when API loading fails, with PlaceResult', async () => {
     const deferred = new Deferred();
     env.importLibrarySpy?.and.returnValue(deferred.promise);
-    const placeResult = {place_id: 'id19-C'};
+    const placeResult: PlaceResult = {place_id: 'id19-C'};
     const {provider} = await prepareState(html`
       <gmpx-place-data-provider .place=${placeResult}>
         <span slot="initial-loading">Loading</span>
@@ -505,4 +505,26 @@ describe('PlaceDataProvider', () => {
 
     expect(provider.querySelectorAll('gmpx-place-attribution')).toHaveSize(1);
   });
+
+  it('fetches from Place Details when Place.fetchFields() is not available',
+     async () => {
+       spyOn(env.fakeGoogleMapsHarness!, 'getDetailsHandler')
+           .and.returnValue({result: {name: 'Foo Inc'}, status: 'OK'});
+
+       const {provider} = await prepareState(
+           html`
+            <gmpx-place-data-provider place="id21">
+              <gmpx-test-consumer field="displayName">
+              </gmpx-test-consumer>
+            </gmpx-place-data-provider>`,
+           () => {
+             throw new Error(
+                 'Place.prototype.fetchFields() is not available in the SDK!');
+           });
+
+       expect(env.fakeGoogleMapsHarness!.getDetailsHandler)
+           .toHaveBeenCalledOnceWith({placeId: 'id21', fields: ['name']});
+       const consumer = provider.children[0] as TestConsumer;
+       expect(consumer.contextPlace?.displayName).toBe('Foo Inc');
+     });
 });
