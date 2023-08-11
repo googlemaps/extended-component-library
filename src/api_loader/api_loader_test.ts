@@ -13,7 +13,6 @@ import {when} from 'lit/directives/when.js';
 import {BaseComponent} from '../base/base_component.js';
 import {ATTRIBUTION_SOURCE_ID, LIBRARY_VERSION} from '../base/constants.js';
 import {Environment} from '../testing/environment.js';
-import {FAKE_CORE_LIBRARY, FAKE_GOOGLE_MAPS} from '../testing/fake_google_maps.js';
 
 import {APILoader} from './api_loader.js';
 import inlineScript from './inline_script.js';
@@ -37,13 +36,13 @@ describe('APILoader', () => {
   async function prepareState(
       config?: {loaderHTML?: TemplateResult, renderConsumerEl?: boolean}) {
     env.importLibrarySpy?.and.callThrough();
+    const fakeSdk = env.fakeGoogleMapsHarness!.sdk;
     const scriptLoadSpy = spyOn(inlineScript, 'load').and.callFake(() => {
-      window.google = {maps: FAKE_GOOGLE_MAPS};
-      return FAKE_GOOGLE_MAPS;
+      window.google = {maps: fakeSdk};
+      return fakeSdk;
     });
     const consoleWarnSpy = spyOn(console, 'warn');
-    const importLibrarySpy =
-        spyOn(FAKE_GOOGLE_MAPS, 'importLibrary').and.callThrough();
+    const importLibrarySpy = spyOn(fakeSdk, 'importLibrary').and.callThrough();
 
     const root = env.render(html`
       ${config?.loaderHTML ?? html`<gmpx-api-loader></gmpx-api-loader>`}
@@ -113,7 +112,8 @@ describe('APILoader', () => {
           `
     });
 
-    expect(consumerEl!.coreLibrary).toBe(FAKE_CORE_LIBRARY);
+    expect(consumerEl!.coreLibrary)
+        .toBe(env.fakeGoogleMapsHarness!.libraries['core']);
     expect(scriptLoadSpy).toHaveBeenCalledOnceWith({
       key: 'TEST_API_KEY',
       v: 'weekly',
@@ -140,7 +140,8 @@ describe('APILoader', () => {
     loaderEl!.authReferrerPolicy = 'origin';
     await env.waitForStability();
 
-    expect(consumerEl!.coreLibrary).toBe(FAKE_CORE_LIBRARY);
+    expect(consumerEl!.coreLibrary)
+        .toBe(env.fakeGoogleMapsHarness!.libraries['core']);
     expect(scriptLoadSpy).toHaveBeenCalledOnceWith({
       key: 'TEST_API_KEY',
       v: 'quarterly',
@@ -163,19 +164,22 @@ describe('APILoader', () => {
 
     expect(loaderEl!.apiKey).toBe('TEST_API_KEY');
     expect(loaderEl!.key).toBe('TEST_API_KEY');
-    expect(consumerEl!.coreLibrary).toBe(FAKE_CORE_LIBRARY);
+    expect(consumerEl!.coreLibrary)
+        .toBe(env.fakeGoogleMapsHarness!.libraries['core']);
     expect(scriptLoadSpy).toHaveBeenCalledOnceWith(jasmine.objectContaining({
       key: 'TEST_API_KEY',
     }));
   });
 
   it('logs warning when `google.maps` is already defined', async () => {
-    window.google = {maps: FAKE_GOOGLE_MAPS};
+    const fakeSdk = env.fakeGoogleMapsHarness!.sdk;
+    window.google = {maps: fakeSdk};
     const {consumerEl, consoleWarnSpy, importLibrarySpy} = await prepareState({
       loaderHTML: html`<gmpx-api-loader key="TEST_API_KEY"></gmpx-api-loader>`
     });
 
-    expect(consumerEl!.coreLibrary).toBe(FAKE_CORE_LIBRARY);
+    expect(consumerEl!.coreLibrary)
+        .toBe(env.fakeGoogleMapsHarness!.libraries['core']);
     expect(importLibrarySpy).toHaveBeenCalledWith('maps');
     expect(importLibrarySpy).toHaveBeenCalledWith('marker');
 
@@ -190,11 +194,12 @@ describe('APILoader', () => {
   });
 
   it('logs warning when `google.maps` is available after delay', async () => {
+    const fakeSdk = env.fakeGoogleMapsHarness!.sdk;
     const {consoleWarnSpy, importLibrarySpy} =
         await prepareState({loaderHTML: html``});
 
     jasmine.clock().tick(500);
-    window.google = {maps: FAKE_GOOGLE_MAPS};
+    window.google = {maps: fakeSdk};
     waitForAnyPolling();
 
     expect(importLibrarySpy).toHaveBeenCalledWith('maps');
@@ -303,9 +308,9 @@ describe('APILoader', () => {
        loaderEl!.key = 'TEST_API_KEY';
 
        waitForAnyPolling();
+       const coreLibrary = await APILoader.importLibrary('core');
 
-       await expectAsync(APILoader.importLibrary('core'))
-           .toBeResolvedTo(FAKE_CORE_LIBRARY);
+       expect(coreLibrary).toBe(env.fakeGoogleMapsHarness!.libraries['core']);
        expect(consoleWarnSpy).not.toHaveBeenCalled();
      });
 

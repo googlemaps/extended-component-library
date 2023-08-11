@@ -4,44 +4,79 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {PlaceResult} from '../utils/googlemaps_types.js';
+
 import {makeFakePlace} from './fake_place.js';
 
-/** Fake implementation of the Maps JS Core Library for testing. */
-export const FAKE_CORE_LIBRARY: google.maps.CoreLibrary = {} as unknown as
-    google.maps.CoreLibrary;
+/**
+ * Sets up a fake instance of the Google Maps SDK which can be used as-is or
+ * modified in tests.
+ */
+export class FakeGoogleMapsHarness {
+  /** Override this function to customize how Place is instantiated. */
+  placeConstructor = (options: google.maps.places.PlaceOptions) =>
+      makeFakePlace({id: options.id});
 
-/** Fake implementation of the Maps JS Maps Library for testing. */
-export const FAKE_MAPS_LIBRARY: google.maps.MapsLibrary = {} as unknown as
-    google.maps.MapsLibrary;
+  /**
+   * Override this function to control the response of a getDetails() request.
+   */
+  getDetailsHandler = (request: google.maps.places.PlaceDetailsRequest) => {
+    return {
+      result: {} as PlaceResult,
+      status: 'OK',
+    };
+  };
 
-/** Fake implementation of the Maps JS Marker Library for testing. */
-export const FAKE_MARKER_LIBRARY: google.maps.MarkerLibrary = {} as unknown as
-    google.maps.MarkerLibrary;
+  /**
+   * Collection of libraries that are dispatched via `importLibrary()`.
+   * Override libraries in this structure to augment or modify the behavior of
+   * Fake Google Maps.
+   */
+  readonly libraries: {[libraryName: string]: any};
 
-/** Fake implementation of the Maps JS Places Library for testing. */
-export const FAKE_PLACES_LIBRARY: google.maps.PlacesLibrary = {
-  // tslint:disable-next-line:enforce-name-casing
-  Place: class {
-    constructor(options: google.maps.places.PlaceOptions) {
-      return makeFakePlace({id: options.id});
+  /** This is an object that can be substituted for `google.maps`. */
+  readonly sdk: typeof google.maps;
+
+  constructor() {
+    const harness = this;
+    this.libraries = {
+      'core': {},
+      'maps': {},
+      'marker': {},
+      'places': {
+        // tslint:disable-next-line:enforce-name-casing
+        Place: class {
+          constructor(options: google.maps.places.PlaceOptions) {
+            return harness.placeConstructor(options);
+          }
+        },
+
+        // tslint:disable-next-line:enforce-name-casing
+        PlacesService: class {
+          getDetails(
+              options: google.maps.places.PlaceDetailsRequest,
+              callback: (
+                  a: PlaceResult|null,
+                  b: google.maps.places.PlacesServiceStatus) => void) {
+            const {result, status} = harness.getDetailsHandler(options);
+            callback(result, status as google.maps.places.PlacesServiceStatus);
+          }
+        }
+      },
+    };
+
+    this.sdk = {
+      importLibrary: (libraryName: string) => this.importLibrary(libraryName),
+    } as typeof google.maps;
+  }
+
+  importLibrary(libraryName: string):
+      ReturnType<typeof google.maps.importLibrary> {
+    const library = this.libraries[libraryName];
+    if (library) {
+      return Promise.resolve(
+          library as Awaited<ReturnType<typeof google.maps.importLibrary>>);
     }
-  },
-} as unknown as google.maps.PlacesLibrary;
-
-/** Fake implementation of the Maps JavaScript API for testing. */
-export const FAKE_GOOGLE_MAPS = {
-  importLibrary: (libraryName: string) => {
-    switch (libraryName) {
-      case 'core':
-        return Promise.resolve(FAKE_CORE_LIBRARY);
-      case 'maps':
-        return Promise.resolve(FAKE_MAPS_LIBRARY);
-      case 'marker':
-        return Promise.resolve(FAKE_MARKER_LIBRARY);
-      case 'places':
-        return Promise.resolve(FAKE_PLACES_LIBRARY);
-      default:
-        throw new Error('Not implemented');
-    }
-  },
-} as unknown as typeof google.maps;
+    throw new Error(`Fake Maps library ${library} not implemented.`);
+  }
+}

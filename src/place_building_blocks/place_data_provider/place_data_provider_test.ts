@@ -11,7 +11,6 @@ import {html, TemplateResult} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 
 import {Environment} from '../../testing/environment.js';
-import {FAKE_PLACES_LIBRARY} from '../../testing/fake_google_maps.js';
 import {makeFakePlace} from '../../testing/fake_place.js';
 import {Deferred} from '../../utils/deferred.js';
 import type {Place, PlaceResult} from '../../utils/googlemaps_types.js';
@@ -78,17 +77,15 @@ describe('PlaceDataProvider', () => {
       template: TemplateResult, fetchFields?: () => Promise<{place: Place}>):
       Promise<{provider: PlaceDataProvider, fetchFieldsSpy: jasmine.Spy}> {
     const fetchFieldsSpy = jasmine.createSpy('fetchFields');
-    (FAKE_PLACES_LIBRARY as any).Place = class {
-      constructor(options: google.maps.places.PlaceOptions) {
-        const place = makeFakePlace({
-          id: options.id,
-          fetchFields,
-        });
-        if (!fetchFields) {
-          attachFetchFieldsSpy(place, fetchFieldsSpy);
-        }
-        return place;
+    env.fakeGoogleMapsHarness!.placeConstructor = (options) => {
+      const place = makeFakePlace({
+        id: options.id,
+        fetchFields,
+      });
+      if (!fetchFields) {
+        attachFetchFieldsSpy(place, fetchFieldsSpy);
       }
+      return place;
     };
 
     const root = env.render(template);

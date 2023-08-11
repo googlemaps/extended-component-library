@@ -11,7 +11,7 @@ import {ReactiveElement, render as litRender, TemplateResult} from 'lit';
 import {APILoader} from '../api_loader/api_loader.js';
 
 import {FakeMapElement} from './fake_gmp_components.js';
-import {FAKE_GOOGLE_MAPS} from './fake_google_maps.js';
+import {FakeGoogleMapsHarness} from './fake_google_maps.js';
 
 declare global {
   module jasmine {
@@ -43,6 +43,7 @@ const customMatchers: jasmine.CustomMatcherFactories = {
 /** This class manages the Jasmine test environment. */
 export class Environment {
   importLibrarySpy?: jasmine.Spy;
+  fakeGoogleMapsHarness?: FakeGoogleMapsHarness;
 
   private environmentRoot?: HTMLElement;
   private readonly documentHeadChildren: Set<Element>;
@@ -57,11 +58,14 @@ export class Environment {
     beforeEach(() => {
       jasmine.clock().install();
 
+      this.fakeGoogleMapsHarness = new FakeGoogleMapsHarness();
+
       // Stub calls to the APILoader.importLibrary static method.
       this.importLibrarySpy =
           spyOn(APILoader, 'importLibrary')
               .and.callFake(
-                  (library: string) => FAKE_GOOGLE_MAPS.importLibrary(library));
+                  (library: string) =>
+                      this.fakeGoogleMapsHarness!.importLibrary(library));
     });
 
     afterEach(() => {
