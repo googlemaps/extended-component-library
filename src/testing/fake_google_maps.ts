@@ -7,6 +7,7 @@
 import {PlaceResult} from '../utils/googlemaps_types.js';
 
 import {makeFakePlace} from './fake_place.js';
+import {makeFakeRoute} from './fake_route.js';
 
 /**
  * Sets up a fake instance of the Google Maps SDK which can be used as-is or
@@ -28,6 +29,14 @@ export class FakeGoogleMapsHarness {
     result: {} as PlaceResult,
     status: 'OK',
   });
+
+  /**
+   * Override this function to control the response of a
+   * `google.maps.DirectionsService.route()` request.
+   */
+  routeHandler = (request: google.maps.DirectionsRequest) => Promise.resolve({
+    routes: [makeFakeRoute()],
+  } as google.maps.DirectionsResult);
 
   /**
    * Collection of libraries that are dispatched via `importLibrary()`.
@@ -64,6 +73,14 @@ export class FakeGoogleMapsHarness {
             callback(result, status as google.maps.places.PlacesServiceStatus);
           }
         }
+      },
+      'routes': {
+        // tslint:disable-next-line:enforce-name-casing
+        DirectionsService: class {
+          route(request: google.maps.DirectionsRequest) {
+            return harness.routeHandler(request);
+          }
+        },
       },
     };
 

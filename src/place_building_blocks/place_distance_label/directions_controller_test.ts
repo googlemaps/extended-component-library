@@ -19,14 +19,6 @@ const FAKE_REQUEST: google.maps.DirectionsRequest = {
   travelMode: 'DRIVING' as google.maps.TravelMode,
 };
 
-const FAKE_ROUTES_LIBRARY = {
-  DirectionsService: class {
-    route() {
-      return Promise.resolve(jasmine.anything());
-    }
-  },
-};
-
 @customElement('gmpx-test-directions-controller-host')
 class TestDirectionsControllerHost extends LitElement {
   directionsController = new DirectionsController(this);
@@ -79,12 +71,8 @@ describe('DirectionsController', () => {
        async () => {
          const host = await prepareControllerHostElement();
 
-         env.importLibrarySpy?.withArgs('routes', jasmine.anything())
-             .and.returnValue(FAKE_ROUTES_LIBRARY);
-
-         const routesSpy =
-             spyOn(FAKE_ROUTES_LIBRARY.DirectionsService.prototype, 'route')
-                 .and.rejectWith(error);
+         const routesSpy = spyOn(env.fakeGoogleMapsHarness!, 'routeHandler')
+                               .and.rejectWith(error);
          await host.directionsController.route(FAKE_REQUEST);
          await host.directionsController.route(FAKE_REQUEST);
 
@@ -103,12 +91,8 @@ describe('DirectionsController', () => {
       message: 'The webpage is not allowed to use the directions service'
     };
 
-    env.importLibrarySpy?.withArgs('routes', jasmine.anything())
-        .and.returnValue(FAKE_ROUTES_LIBRARY);
-
     const routesSpy =
-        spyOn(FAKE_ROUTES_LIBRARY.DirectionsService.prototype, 'route')
-            .and.rejectWith(error);
+        spyOn(env.fakeGoogleMapsHarness!, 'routeHandler').and.rejectWith(error);
     await host.directionsController.route(FAKE_REQUEST);
     await host.directionsController.route(FAKE_REQUEST);
 

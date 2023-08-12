@@ -139,12 +139,7 @@ describe('PlaceOverview', () => {
   it(`emits request error event when Directions request fails`, async () => {
     const consoleErrorSpy = spyOn(console, 'error');
     const error = new Error('no direction results');
-    env.importLibrarySpy?.withArgs('routes', jasmine.anything())
-        .and.returnValue({
-          DirectionsService: class {
-            route = () => Promise.reject(error);
-          }
-        });
+    spyOn(env.fakeGoogleMapsHarness!, 'routeHandler').and.rejectWith(error);
     const overview = await prepareState({});
     const dispatchEventSpy = spyOn(overview, 'dispatchEvent');
     overview.place = SAMPLE_FAKE_PLACE;
