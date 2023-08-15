@@ -36,14 +36,27 @@ export declare type Place =
       Promise<{place: Place}>;
 };
 
+/**
+ * google.maps.marker.AdvancedMarkerElement, renamed from AdvancedMarkerView.
+ */
+export type AdvancedMarkerElement = google.maps.marker.AdvancedMarkerView;
+
 /** google.maps.LatLng */
 export type LatLng = google.maps.LatLng;
 
 /** google.maps.LatLngLiteral */
 export type LatLngLiteral = google.maps.LatLngLiteral;
 
+/** google.maps.MapElement */
+export type MapElement = HTMLElement&{innerMap: google.maps.Map};
+
 /** google.maps.places.PlaceResult */
 export type PlaceResult = google.maps.places.PlaceResult;
 
 /** google.maps.places.PriceLevel */
 export type PriceLevel = google.maps.places.PriceLevel;
+
+/** HTML tag names for Maps JS web components. */
+export interface HTMLElementTagNameMap {
+  'gmp-map': MapElement,
+}
