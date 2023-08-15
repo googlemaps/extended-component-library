@@ -34,8 +34,8 @@ const EMPTY_FAKE_LEG: DirectionsLeg = {
  * Makes a fake `google.maps.DirectionsRoute` object for testing purposes.
  *
  * @param fields - An object of fields of the `DirectionsRoute`. Any fields not
- *     provided will default to empty strings, empty arrays, or the LatLngBounds
- *     0/0/0/0.
+ *     provided will default to empty strings, empty arrays, or an empty
+ *     LatLngBounds.
  */
 export function makeFakeRoute(fields: Partial<DirectionsRoute> = {}):
     DirectionsRoute {

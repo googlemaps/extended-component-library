@@ -27,5 +27,8 @@ declare global {
 }
 
 export class FakeMapElement extends LitElement {
-  readonly innerMap = {} as google.maps.Map;
+  readonly innerMap = {
+    fitBounds:
+        (bounds: google.maps.LatLngBounds|google.maps.LatLngBoundsLiteral) => {}
+  } as google.maps.Map;
 }
