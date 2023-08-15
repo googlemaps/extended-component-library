@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.1](https://github.com/googlemaps/extended-component-library/compare/v0.3.0...v0.3.1) (2023-08-15)
+
+
+### Bug Fixes
+
+* fix Place Data Provider behavior when fetching a Place from a Place ID ([e14dfb2](https://github.com/googlemaps/extended-component-library/commit/e14dfb2036d0e047c48265c9186d5a2b294a8f85))
+* make Place Picker compatible with stable SDK ([0848017](https://github.com/googlemaps/extended-component-library/commit/0848017a67701691199e905c5905fac18c116c6d))
+
 ## [0.3.0](https://github.com/googlemaps/extended-component-library/compare/v0.2.2...v0.3.0) (2023-08-09)
 
 
