@@ -331,10 +331,12 @@ const PLACE_TO_PLACE_RESULT_FIELDS:
       'googleMapsURI': 'url',
       'userRatingCount': 'user_ratings_total',
       'utcOffsetMinutes': 'utc_offset_minutes',
-      'websiteURI': 'website'
+      'websiteURI': 'website',
+      'id': 'place_id'
     };
 
-function mapPlaceFieldsToPlaceResultFields(fields: Array<keyof Place>):
+/** Maps a list of Place field names to equivalent PlaceResult field names. */
+export function mapPlaceFieldsToPlaceResultFields(fields: Array<keyof Place>):
     Array<keyof PlaceResult> {
   const placeResultFields: Array<keyof PlaceResult> = [];
   for (const placeField of fields) {
@@ -346,11 +348,13 @@ function mapPlaceFieldsToPlaceResultFields(fields: Array<keyof Place>):
 
 /**
  * Determines if the error results from a specified property not being
- * available on `Place.prototype`.
+ * available on the Place class (or an instance of that class).
  */
 export function isNotAvailableError(e: unknown, property: string): e is Error {
   if (!(e instanceof Error)) return false;
-  return e.message.startsWith(`Place.prototype.${property} is not available`);
+  return e.message.startsWith(`Place.prototype.${property} is not available`) ||
+      e.message.startsWith(
+          `google.maps.places.Place.${property} is not available`);
 }
 
 async function fetchFromPlaceDetails(

@@ -13,6 +13,7 @@ import {FakeMapElement} from '../testing/fake_gmp_components.js';
 import {FakeLatLng} from '../testing/fake_lat_lng.js';
 import {makeFakePlace} from '../testing/fake_place.js';
 import {getDeepActiveElement} from '../utils/deep_element_access.js';
+import type {PlaceResult} from '../utils/googlemaps_types.js';
 
 import {PLACE_DATA_FIELDS, PLACE_RESULT_DATA_FIELDS, PlacePicker} from './place_picker.js';
 
@@ -23,7 +24,7 @@ const FAKE_BOUNDS = {
   north: 1,
   south: -1,
   west: -1,
-};
+} as unknown as google.maps.LatLngBounds;
 
 const FAKE_PLACE_RESULT_FROM_AUTOCOMPLETE = {
   place_id: 'FAKE_AUTOCOMPLETE_PLACE_ID',
@@ -35,51 +36,36 @@ const FAKE_PLACE_RESULT_FROM_AUTOCOMPLETE = {
 
 const FAKE_PLACE_FROM_QUERY = makeFakePlace({id: 'FAKE_QUERY_PLACE_ID'});
 
-const FAKE_MAPS_LIBRARY = {
-  Map: class {},
-  Circle: class {
-    getBounds = () => FAKE_BOUNDS;
-  },
-};
-
-const FAKE_MAP = new FAKE_MAPS_LIBRARY.Map() as google.maps.Map;
-
-let placeSelectionHandler: Function;
-const FAKE_PLACES_LIBRARY = {
-  Autocomplete: class {
-    addListener(eventName: string, handler: Function) {
-      if (eventName !== 'place_changed') throw new Error('Not implemented');
-      placeSelectionHandler = handler;
-    }
-    bindTo(key: string, target: google.maps.MVCObject) {}
-    getBounds = () => FAKE_BOUNDS;
-    getPlace = () => FAKE_PLACE_RESULT_FROM_AUTOCOMPLETE;
-    setOptions(options: google.maps.places.AutocompleteOptions) {}
-  },
-  Place: class {
-    static findPlaceFromQuery(
-        request: google.maps.places.FindPlaceFromQueryRequest) {
-      return Promise.resolve({places: [FAKE_PLACE_FROM_QUERY]});
-    }
-  },
-};
-
 describe('PlacePicker', () => {
   const env = new Environment();
+  let fakeAutocomplete: jasmine.SpyObj<google.maps.places.Autocomplete>;
 
   beforeAll(() => {
     env.defineFakeMapElement();
   });
 
+  beforeEach(() => {
+    // Create a custom stub for `Place.findPlaceFromQuery()`
+    spyOn(env.fakeGoogleMapsHarness!, 'findPlaceFromQueryHandler')
+        .and.returnValue({places: [FAKE_PLACE_FROM_QUERY]});
+
+    // Define a fake Circle class
+    const fakeCircle = jasmine.createSpyObj('Circle', ['getBounds']);
+    env.fakeGoogleMapsHarness!.libraries['maps'].Circle =
+        jasmine.createSpy().and.returnValue(fakeCircle);
+
+    // Create a fake Autocomplete class with test-specific logic.
+    fakeAutocomplete = jasmine.createSpyObj<google.maps.places.Autocomplete>(
+        'Autocomplete',
+        ['addListener', 'bindTo', 'getBounds', 'getPlace', 'setOptions']);
+    spyOn(env.fakeGoogleMapsHarness!, 'autocompleteConstructor')
+        .and.returnValue(fakeAutocomplete);
+  });
+
   async function prepareState(template?: TemplateResult) {
     const root =
         env.render(template ?? html`<gmpx-place-picker></gmpx-place-picker>`);
-
     const picker = root.querySelector<PlacePicker>('gmpx-place-picker')!;
-    env.importLibrarySpy?.withArgs('maps', picker)
-        .and.returnValue(FAKE_MAPS_LIBRARY);
-    env.importLibrarySpy?.withArgs('places', picker)
-        .and.returnValue(FAKE_PLACES_LIBRARY);
 
     await env.waitForStability();
 
@@ -111,15 +97,15 @@ describe('PlacePicker', () => {
   });
 
   it('initializes Autocomplete widget with minimum configs', async () => {
-    spyOn(FAKE_PLACES_LIBRARY, 'Autocomplete').and.callThrough();
     const {picker, input, searchButton, clearButton} = await prepareState();
 
-    expect(FAKE_PLACES_LIBRARY.Autocomplete).toHaveBeenCalledOnceWith(input, {
-      bounds: undefined,
-      componentRestrictions: undefined,
-      fields: [...PLACE_RESULT_DATA_FIELDS],
-      strictBounds: false,
-    });
+    expect(env.fakeGoogleMapsHarness!.autocompleteConstructor)
+        .toHaveBeenCalledOnceWith(input, {
+          bounds: undefined,
+          componentRestrictions: undefined,
+          fields: [...PLACE_RESULT_DATA_FIELDS],
+          strictBounds: false,
+        });
     expect(input.placeholder).toBe('');
     expect(picker.value).toBeUndefined();
     expect(searchButton.disabled).toBeTrue();
@@ -127,8 +113,12 @@ describe('PlacePicker', () => {
   });
 
   it(`initializes Autocomplete widget based on attributes`, async () => {
-    spyOn(FAKE_MAPS_LIBRARY, 'Circle').and.callThrough();
-    spyOn(FAKE_PLACES_LIBRARY, 'Autocomplete').and.callThrough();
+    // The call to `.Circle.and.exec()` grabs a reference to the Circle
+    // spy object without recording a call to the constructor spy (e.g.
+    // `.Circle()`)
+    env.fakeGoogleMapsHarness!.libraries['maps']
+        .Circle.and.exec()
+        .getBounds.and.returnValue(FAKE_BOUNDS);
     const {input} = await prepareState(html`
       <gmpx-place-picker
         country="us ca"
@@ -140,22 +130,23 @@ describe('PlacePicker', () => {
       ></gmpx-place-picker>
     `);
 
-    expect(FAKE_MAPS_LIBRARY.Circle)
+    expect(env.fakeGoogleMapsHarness!.libraries['maps'].Circle)
         .toHaveBeenCalledOnceWith({center: {lat: 12, lng: 34}, radius: 1000});
-    expect(FAKE_PLACES_LIBRARY.Autocomplete).toHaveBeenCalledOnceWith(input, {
-      bounds: FAKE_BOUNDS,
-      componentRestrictions: {country: ['us', 'ca']},
-      fields: [...PLACE_RESULT_DATA_FIELDS],
-      strictBounds: true,
-      types: ['street_address'],
-    });
+    expect(env.fakeGoogleMapsHarness!.autocompleteConstructor)
+        .toHaveBeenCalledOnceWith(input, {
+          bounds: FAKE_BOUNDS,
+          componentRestrictions: {country: ['us', 'ca']},
+          fields: [...PLACE_RESULT_DATA_FIELDS],
+          strictBounds: true,
+          types: ['street_address'],
+        });
     expect(input.placeholder).toBe('Search nearby places');
   });
 
   it(`updates Autocomplete options when relevant props change`, async () => {
-    const setOptionsSpy =
-        spyOn(FAKE_PLACES_LIBRARY.Autocomplete.prototype, 'setOptions')
-            .and.callThrough();
+    env.fakeGoogleMapsHarness!.libraries['maps']
+        .Circle.and.exec()
+        .getBounds.and.returnValue(FAKE_BOUNDS);
     const {picker} = await prepareState();
 
     picker.country = ['uk'];
@@ -165,7 +156,7 @@ describe('PlacePicker', () => {
     picker.type = 'restaurant';
     await env.waitForStability();
 
-    expect(setOptionsSpy).toHaveBeenCalledOnceWith({
+    expect(fakeAutocomplete.setOptions).toHaveBeenCalledOnceWith({
       bounds: FAKE_BOUNDS,
       componentRestrictions: {country: ['uk']},
       fields: [...PLACE_RESULT_DATA_FIELDS],
@@ -175,43 +166,36 @@ describe('PlacePicker', () => {
   });
 
   it(`doesn't define bounds when only location bias is specified`, async () => {
-    const setOptionsSpy =
-        spyOn(FAKE_PLACES_LIBRARY.Autocomplete.prototype, 'setOptions')
-            .and.callThrough();
     const {picker} = await prepareState();
 
     picker.locationBias = {lat: 12, lng: 34};
     await env.waitForStability();
 
-    expect(setOptionsSpy).toHaveBeenCalledOnceWith(jasmine.objectContaining({
-      bounds: undefined,
-    }));
+    expect(fakeAutocomplete.setOptions)
+        .toHaveBeenCalledOnceWith(jasmine.objectContaining({
+          bounds: undefined,
+        }));
   });
 
   it(`doesn't define bounds when only radius is specified`, async () => {
-    const setOptionsSpy =
-        spyOn(FAKE_PLACES_LIBRARY.Autocomplete.prototype, 'setOptions')
-            .and.callThrough();
     const {picker} = await prepareState();
 
     picker.radius = 1000;
     await env.waitForStability();
 
-    expect(setOptionsSpy).toHaveBeenCalledOnceWith(jasmine.objectContaining({
-      bounds: undefined,
-    }));
+    expect(fakeAutocomplete.setOptions)
+        .toHaveBeenCalledOnceWith(jasmine.objectContaining({
+          bounds: undefined,
+        }));
   });
 
   it(`doesn't update Autocomplete when no relevant props change`, async () => {
-    const setOptionsSpy =
-        spyOn(FAKE_PLACES_LIBRARY.Autocomplete.prototype, 'setOptions')
-            .and.callThrough();
     const {picker} = await prepareState();
 
     picker.placeholder = 'Search nearby places';
     await env.waitForStability();
 
-    expect(setOptionsSpy).not.toHaveBeenCalled();
+    expect(fakeAutocomplete.setOptions).not.toHaveBeenCalled();
   });
 
   it(`enables search & clear buttons on user input`, async () => {
@@ -241,10 +225,18 @@ describe('PlacePicker', () => {
 
   it(`sets value based on user selection and fires event`, async () => {
     const dispatchEventSpy = spyOn(PlacePicker.prototype, 'dispatchEvent');
+    let autocompleteSelectionHandler: Function;
+    fakeAutocomplete.addListener.withArgs('place_changed', jasmine.anything())
+        .and.callFake((eventName, handler) => {
+          autocompleteSelectionHandler = handler;
+          return {} as google.maps.MapsEventListener;
+        });
+    fakeAutocomplete.getPlace.and.returnValue(
+        FAKE_PLACE_RESULT_FROM_AUTOCOMPLETE);
     const {picker, input, searchButton, clearButton} = await prepareState();
 
     await enterQueryText(input);
-    placeSelectionHandler();
+    autocompleteSelectionHandler!();
     await env.waitForStability();
 
     const place = picker.value;
@@ -259,10 +251,16 @@ describe('PlacePicker', () => {
   });
 
   it(`sets value to undefined when place's cleared & fires event`, async () => {
+    let autocompleteSelectionHandler: Function;
+    fakeAutocomplete.addListener.withArgs('place_changed', jasmine.anything())
+        .and.callFake((eventName, handler) => {
+          autocompleteSelectionHandler = handler;
+          return {} as google.maps.MapsEventListener;
+        });
     const {picker, input, searchButton, clearButton} = await prepareState();
 
     await enterQueryText(input);
-    placeSelectionHandler();
+    autocompleteSelectionHandler!();
     await env.waitForStability();
 
     const dispatchEventSpy = spyOn(PlacePicker.prototype, 'dispatchEvent');
@@ -278,23 +276,24 @@ describe('PlacePicker', () => {
   });
 
   it(`sets value based on place returned by Find Place request`, async () => {
+    (env.fakeGoogleMapsHarness!.findPlaceFromQueryHandler as jasmine.Spy)
+        .and.returnValue({places: [FAKE_PLACE_FROM_QUERY]});
+    fakeAutocomplete.getBounds.and.returnValue(FAKE_BOUNDS);
     const {picker, input, searchButton, clearButton} = await prepareState();
 
     await enterQueryText(input, '123 Main St');
 
-    const findPlaceFromQuerySpy =
-        spyOn(FAKE_PLACES_LIBRARY.Place, 'findPlaceFromQuery')
-            .and.callThrough();
     const fetchFieldsSpy =
         spyOn(FAKE_PLACE_FROM_QUERY, 'fetchFields').and.callThrough();
     searchButton.click();
     await env.waitForStability();
 
-    expect(findPlaceFromQuerySpy).toHaveBeenCalledOnceWith({
-      query: '123 Main St',
-      fields: ['id'],
-      locationBias: FAKE_BOUNDS,
-    });
+    expect(env.fakeGoogleMapsHarness!.findPlaceFromQueryHandler)
+        .toHaveBeenCalledOnceWith({
+          query: '123 Main St',
+          fields: ['id'],
+          locationBias: FAKE_BOUNDS,
+        });
     expect(fetchFieldsSpy).toHaveBeenCalledOnceWith({
       fields: [...PLACE_DATA_FIELDS],
     });
@@ -304,14 +303,44 @@ describe('PlacePicker', () => {
     expect(clearButton.hidden).toBeFalse();
   });
 
+  it('sets value from fallback GA API when Place.findPlaceFromQuery is not available',
+     async () => {
+       fakeAutocomplete.getBounds.and.returnValue(FAKE_BOUNDS);
+       const {picker, input, searchButton, clearButton} = await prepareState();
+       (env.fakeGoogleMapsHarness!.findPlaceFromQueryHandler as jasmine.Spy)
+           .and.throwError(new Error(
+               'google.maps.places.Place.findPlaceFromQuery() is not available in the SDK!'));
+       spyOn(env.fakeGoogleMapsHarness!, 'findPlaceFromQueryGAHandler')
+           .and.returnValue(
+               {results: [{place_id: 'ga123'} as PlaceResult], status: 'OK'});
+
+       await enterQueryText(input, '123 Main St');
+       searchButton.click();
+       await env.waitForStability();
+       await env.waitForStability();  // Seems like this takes two updates
+
+       expect(env.fakeGoogleMapsHarness!.findPlaceFromQueryGAHandler)
+           .toHaveBeenCalledOnceWith({
+             query: '123 Main St',
+             fields: ['place_id'],
+             locationBias: FAKE_BOUNDS,
+           });
+
+       const place = picker.value;
+       expect(place!.id).toBe('ga123');
+       expect(searchButton.disabled).toBeTrue();
+       expect(clearButton.hidden).toBeFalse();
+     });
+
   it(`sets value to null if no search results and fires event`, async () => {
     const {picker, input, searchButton, clearButton} = await prepareState();
 
     await enterQueryText(input, '123 Main St');
 
-    spyOn(FAKE_PLACES_LIBRARY.Place, 'findPlaceFromQuery').and.resolveTo({
-      places: [],
-    });
+    (env.fakeGoogleMapsHarness!.findPlaceFromQueryHandler as jasmine.Spy)
+        .and.returnValue({
+          places: [],
+        });
     const dispatchEventSpy = spyOn(PlacePicker.prototype, 'dispatchEvent');
     searchButton.click();
     await env.waitForStability();
@@ -329,8 +358,8 @@ describe('PlacePicker', () => {
     await enterQueryText(input, '123 Main St');
 
     const error = new Error('some network error');
-    spyOn(FAKE_PLACES_LIBRARY.Place, 'findPlaceFromQuery')
-        .and.rejectWith(error);
+    (env.fakeGoogleMapsHarness!.findPlaceFromQueryHandler as jasmine.Spy)
+        .and.throwError(error);
     const dispatchEventSpy = spyOn(picker, 'dispatchEvent');
     searchButton.click();
     await env.waitForStability();
@@ -368,45 +397,39 @@ describe('PlacePicker', () => {
   });
 
   it(`binds to map bounds imperatively via method`, async () => {
-    const bindToSpy =
-        spyOn(FAKE_PLACES_LIBRARY.Autocomplete.prototype, 'bindTo');
     const {picker} = await prepareState();
+    const fakeMap = {} as google.maps.Map;
 
-    await picker.bindTo(FAKE_MAP);
+    await picker.bindTo(fakeMap);
 
-    expect(bindToSpy).toHaveBeenCalledOnceWith('bounds', FAKE_MAP);
+    expect(fakeAutocomplete.bindTo).toHaveBeenCalledOnceWith('bounds', fakeMap);
   });
 
   it(`binds to map bounds declaratively via attribute`, async () => {
-    const bindToSpy =
-        spyOn(FAKE_PLACES_LIBRARY.Autocomplete.prototype, 'bindTo');
     const {root} = await prepareState(html`
       <gmpx-place-picker for-map="my-map"></gmpx-place-picker>
       <gmp-map id="my-map"></gmp-map>
     `);
     const mapElement = root.querySelector<FakeMapElement>('gmp-map')!;
 
-    expect(bindToSpy).toHaveBeenCalledOnceWith('bounds', mapElement.innerMap);
+    expect(fakeAutocomplete.bindTo)
+        .toHaveBeenCalledOnceWith('bounds', mapElement.innerMap);
   });
 
   it(`doesn't bind to map bounds when id matches no element`, async () => {
-    const bindToSpy =
-        spyOn(FAKE_PLACES_LIBRARY.Autocomplete.prototype, 'bindTo');
     await prepareState(html`
       <gmpx-place-picker for-map="my-map"></gmpx-place-picker>
     `);
 
-    expect(bindToSpy).not.toHaveBeenCalled();
+    expect(fakeAutocomplete.bindTo).not.toHaveBeenCalled();
   });
 
   it(`doesn't bind to map bounds when id matches non-Map element`, async () => {
-    const bindToSpy =
-        spyOn(FAKE_PLACES_LIBRARY.Autocomplete.prototype, 'bindTo');
     await prepareState(html`
       <gmpx-place-picker for-map="my-map"></gmpx-place-picker>
       <div id="my-map"></div>
     `);
 
-    expect(bindToSpy).not.toHaveBeenCalled();
+    expect(fakeAutocomplete.bindTo).not.toHaveBeenCalled();
   });
 });

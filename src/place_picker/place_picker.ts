@@ -17,8 +17,8 @@ import {WebFont, WebFontController} from '../base/web_font_controller.js';
 import {LAT_LNG_LITERAL_ATTRIBUTE_CONVERTER, STRING_ARRAY_ATTRIBUTE_CONVERTER} from '../utils/attribute_converters.js';
 import {getDeepActiveElement} from '../utils/deep_element_access.js';
 import {Deferred} from '../utils/deferred.js';
-import type {Place} from '../utils/googlemaps_types.js';
-import {makePlaceFromPlaceResult} from '../utils/place_utils.js';
+import type {Place, PlaceResult} from '../utils/googlemaps_types.js';
+import {isNotAvailableError, makePlaceFromPlaceResult, mapPlaceFieldsToPlaceResultFields} from '../utils/place_utils.js';
 
 type Autocomplete = google.maps.places.Autocomplete;
 type AutocompleteOptions = google.maps.places.AutocompleteOptions;
@@ -402,15 +402,56 @@ export class PlacePicker extends BaseComponent {
         typeof google.maps.places;
     // A Find Place request containing only the Place ID field incurs no charge:
     // https://developers.google.com/maps/documentation/places/web-service/usage-and-billing?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#find-place-id-only.
-    const {places} = await OrigPlace.findPlaceFromQuery({
+    const findRequest: google.maps.places.FindPlaceFromQueryRequest = {
       query,
       fields: ['id'],
       locationBias: this.autocomplete.value?.getBounds(),
-    });
+    };
+    let places;
+    try {
+      ({places} = await OrigPlace.findPlaceFromQuery(findRequest));
+    } catch (error: unknown) {
+      if (isNotAvailableError(error, 'findPlaceFromQuery()')) {
+        // `Place.findPlaceFromQuery()` isn't available in GA; use
+        // `PlacesService.findPlaceFromQuery()` as a fallback.
+        const results = await this.searchWithFindPlaceFromQuery(findRequest);
+        places = [];
+        for (const placeResult of results) {
+          places.push(await makePlaceFromPlaceResult(placeResult, this));
+          break;
+        }
+      } else {
+        throw error;
+      }
+    }
     return places.length === 0 ?
         null :
         (await places[0].fetchFields({fields: [...PLACE_DATA_FIELDS]})).place as
             Place;
+  }
+
+  /** Looks up a Place using the GA API. */
+  private async searchWithFindPlaceFromQuery(
+      request: google.maps.places.FindPlaceFromQueryRequest):
+      Promise<PlaceResult[]> {
+    const {PlacesService} = await APILoader.importLibrary('places', this) as
+        google.maps.PlacesLibrary;
+    const service = new PlacesService(document.createElement('div'));
+    return new Promise((resolve, reject) => {
+      service.findPlaceFromQuery(
+          {
+            ...request,
+            fields: mapPlaceFieldsToPlaceResultFields(
+                request.fields as Array<keyof Place>)
+          },
+          (results, status) => {
+            if (results && status === 'OK') {
+              resolve(results);
+            } else {
+              reject(status);
+            }
+          });
+    });
   }
 
   private handleClear() {

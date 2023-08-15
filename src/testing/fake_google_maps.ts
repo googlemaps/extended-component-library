@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {PlaceResult} from '../utils/googlemaps_types.js';
+import {Place, PlaceResult} from '../utils/googlemaps_types.js';
 
 import {makeFakePlace} from './fake_place.js';
 import {makeFakeRoute} from './fake_route.js';
@@ -39,6 +39,33 @@ export class FakeGoogleMapsHarness {
   } as google.maps.DirectionsResult);
 
   /**
+   * Override this function to control the response of a
+   * `google.maps.places.PlacesService.findPlaceFromQuery()` request.
+   */
+  findPlaceFromQueryGAHandler =
+      (request: google.maps.places.FindPlaceFromQueryRequest) =>
+          ({results: [] as PlaceResult[], status: 'OK'});
+
+  /**
+   * Override this function to control the response of
+   * `Place.findPlaceFromQuery()`.
+   */
+  findPlaceFromQueryHandler:
+      (request: google.maps.places.FindPlaceFromQueryRequest) => {
+        places: Place[]
+      } = (request) => ({places: []});
+
+  /**
+   * Override this function to customize how `google.maps.places.Autocomplete`
+   * is instantiated.
+   */
+  autocompleteConstructor:
+      (input: HTMLInputElement,
+       options?: google.maps.places.AutocompleteOptions) =>
+          google.maps.places.Autocomplete = () =>
+              ({} as google.maps.places.Autocomplete);
+
+  /**
    * Collection of libraries that are dispatched via `importLibrary()`.
    * Override libraries in this structure to augment or modify the behavior of
    * Fake Google Maps.
@@ -52,13 +79,30 @@ export class FakeGoogleMapsHarness {
     const harness = this;
     this.libraries = {
       'core': {},
-      'maps': {},
+      'maps': {
+        // tslint:disable-next-line:enforce-name-casing
+        Map: class {},
+      },
       'marker': {},
       'places': {
+        // tslint:disable-next-line:enforce-name-casing
+        Autocomplete: class {
+          constructor(
+              input: HTMLInputElement,
+              options?: google.maps.places.AutocompleteOptions) {
+            return harness.autocompleteConstructor(input, options);
+          }
+        },
+
         // tslint:disable-next-line:enforce-name-casing
         Place: class {
           constructor(options: google.maps.places.PlaceOptions) {
             return harness.placeConstructor(options);
+          }
+
+          static findPlaceFromQuery(
+              request: google.maps.places.FindPlaceFromQueryRequest) {
+            return Promise.resolve(harness.findPlaceFromQueryHandler(request));
           }
         },
 
@@ -71,6 +115,16 @@ export class FakeGoogleMapsHarness {
                   b: google.maps.places.PlacesServiceStatus) => void) {
             const {result, status} = harness.getDetailsHandler(options);
             callback(result, status as google.maps.places.PlacesServiceStatus);
+          }
+
+          findPlaceFromQuery(
+              options: google.maps.places.FindPlaceFromQueryRequest,
+              callback: (
+                  a: PlaceResult[],
+                  b: google.maps.places.PlacesServiceStatus) => void) {
+            const {results, status} =
+                harness.findPlaceFromQueryGAHandler(options);
+            callback(results, status as google.maps.places.PlacesServiceStatus);
           }
         }
       },
