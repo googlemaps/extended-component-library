@@ -277,7 +277,10 @@ describe('makePlaceFromPlaceResult', () => {
        const place = await makePlaceFromPlaceResult(
            {place_id: '123', url: 'http://foo/bar', rating: 3.5});
 
-       await place.fetchFields({fields: ['rating', 'priceLevel']});
+       // NOTE: `attributions` -> `html_attributions` should *not* be requested,
+       // as the Places Details API considers it an invalid field mask.
+       await place.fetchFields(
+           {fields: ['rating', 'priceLevel', 'attributions']});
        expect(placeDetailsSpy)
            .toHaveBeenCalledOnceWith(
                {placeId: '123', fields: ['price_level']},

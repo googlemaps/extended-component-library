@@ -316,7 +316,6 @@ const PLACE_TO_PLACE_RESULT_FIELDS:
       'nationalPhoneNumber': 'formatted_phone_number',
       'location': 'geometry',
       'viewport': 'geometry',
-      'attributions': 'html_attributions',
       'iconBackgroundColor': 'icon_background_color',
       'svgIconMaskURI': 'icon_mask_base_uri',
       'internationalPhoneNumber': 'international_phone_number',
