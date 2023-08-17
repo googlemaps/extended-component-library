@@ -10,7 +10,7 @@ import {dirname, join, resolve, sep as pathSep} from 'path';
 
 const BASE_PATH = resolve('.');
 const PLACE_BUILDING_BLOCKS_DIR = join('src', 'place_building_blocks');
-const ROUTE_DIR_PREFIX = join('src', 'route_');
+const ROUTE_BUILDING_BLOCKS_DIR = join('src', 'route_building_blocks');
 
 const GLOBAL_STYLE_TOKENS = new Set([
   '--gmpx-color-surface',
@@ -559,6 +559,8 @@ function makeDocs(manifest) {
   const rootInventoryTable = [['Component', 'Description']];
   const placeDataProviderInventoryTable = [['Component', 'Description']];
   const placeConsumerInventoryTable = [['Component', 'Description']];
+  const routeDataProviderInventoryTable = [['Component', 'Description']];
+  const routeConsumerInventoryTable = [['Component', 'Description']];
   for (const [filename, modules] of moduleReadmes.entries()) {
     let md = '';
     for (const module of modules) {
@@ -592,7 +594,19 @@ function makeDocs(manifest) {
                   placeConsumerInventoryTable, componentName, relativeFilename,
                   declaration.description);
             }
-          } else if (!filename.startsWith(ROUTE_DIR_PREFIX)) {
+          } else if (filename.startsWith(ROUTE_BUILDING_BLOCKS_DIR)) {
+            const relativeFilename =
+                filename.substring(ROUTE_BUILDING_BLOCKS_DIR.length + 1);
+            if (declaration.name === 'RouteDataProvider') {
+              addInventoryRow(
+                  routeDataProviderInventoryTable, componentName,
+                  relativeFilename, declaration.description);
+            } else {
+              addInventoryRow(
+                  routeConsumerInventoryTable, componentName, relativeFilename,
+                  declaration.description);
+            }
+          } else {
             addInventoryRow(
                 rootInventoryTable, componentName, filename,
                 declaration.description);
@@ -618,12 +632,20 @@ function makeDocs(manifest) {
   }
 
   // Write a group README for Place Building Blocks components.
-  const buildingBlocksInventory = newParagraph(header(2, 'Data provider')) +
+  const placeBuildingBlocksInventory = newParagraph(header(2, 'Data provider')) +
       newParagraph(markdownTable(sortTable(placeDataProviderInventoryTable))) +
       newParagraph(header(2, 'Details components')) +
       newParagraph(markdownTable(sortTable(placeConsumerInventoryTable)));
   writeReadme(
-      join(BASE_PATH, PLACE_BUILDING_BLOCKS_DIR), buildingBlocksInventory);
+      join(BASE_PATH, PLACE_BUILDING_BLOCKS_DIR), placeBuildingBlocksInventory);
+
+  // Write a group README for Route Building Blocks components.
+  const routeBuldingBlocksInventory = newParagraph(header(2, 'Data provider')) +
+      newParagraph(markdownTable(sortTable(routeDataProviderInventoryTable))) +
+      newParagraph(header(2, 'Building block components')) +
+      newParagraph(markdownTable(sortTable(routeConsumerInventoryTable)));
+  writeReadme(
+      join(BASE_PATH, ROUTE_BUILDING_BLOCKS_DIR), routeBuldingBlocksInventory);
 
   // Finally, write a package-level README with a table of contents.
   writeReadme(
@@ -632,6 +654,10 @@ function makeDocs(manifest) {
         [
           `[Place building blocks](${PLACE_BUILDING_BLOCKS_DIR}/README.md)`,
           'The place data provider component, along with individual place details components, lets you choose how to display Google Maps place information like opening hours, star reviews, and photos in a new, custom view. '
+        ],
+        [
+          `[Route building blocks](${ROUTE_BUILDING_BLOCKS_DIR}/README.md)`,
+          'The route data provider component, along with the route marker and polyline components, lets you choose how to display a route on a map using custom markers and polyline styles. '
         ]
       ]));
 }

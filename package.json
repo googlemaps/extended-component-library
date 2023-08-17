@@ -50,6 +50,10 @@
     "./place_building_blocks/place_reviews.js": "./lib/place_building_blocks/place_reviews/place_reviews.js",
     "./place_overview.js": "./lib/place_overview/place_overview.js",
     "./place_picker.js": "./lib/place_picker/place_picker.js",
+    "./route_building_blocks/route_data_provider.js": "./lib/route_building_blocks/route_data_provider/route_data_provider.js",
+    "./route_building_blocks/route_marker.js": "./lib/route_building_blocks/route_marker/route_marker.js",
+    "./route_building_blocks/route_polyline.js": "./lib/route_building_blocks/route_polyline/route_polyline.js",
+    "./route_overview.js": "./lib/route_overview/route_overview.js",
     "./split_layout.js": "./lib/split_layout/split_layout.js",
     "./react": "./lib/react/index.js",
     "./utils/localize.js": "./lib/utils/localize.js"

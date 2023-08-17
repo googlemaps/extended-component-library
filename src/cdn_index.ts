@@ -20,5 +20,9 @@ export {PlaceRating} from './place_building_blocks/place_rating/place_rating.js'
 export {PlaceReviews} from './place_building_blocks/place_reviews/place_reviews.js';
 export {PlaceOverview} from './place_overview/place_overview.js';
 export {PlacePicker} from './place_picker/place_picker.js';
+export {RouteDataProvider} from './route_building_blocks/route_data_provider/route_data_provider.js';
+export {RouteMarker} from './route_building_blocks/route_marker/route_marker.js';
+export {RoutePolyline} from './route_building_blocks/route_polyline/route_polyline.js';
+export {RouteOverview} from './route_overview/route_overview.js';
 export {SplitLayout} from './split_layout/split_layout.js';
 export {setStringLiterals} from './utils/localize.js';
