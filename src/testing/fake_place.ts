@@ -107,11 +107,13 @@ export const SAMPLE_FAKE_PLACE = makeFakePlace({
           authorAttributions: [
             {
               displayName: 'Author A1',
+              photoURI: '',
               uri: 'https://www.google.com/maps/contrib/A1',
             },
             {
               displayName: 'Author A2',
-              uri: undefined,
+              photoURI: '',
+              uri: '',
             },
           ],
           heightPx: 1000,
@@ -123,6 +125,7 @@ export const SAMPLE_FAKE_PLACE = makeFakePlace({
           authorAttributions: [
             {
               displayName: 'Author B1',
+              photoURI: '',
               uri: 'https://www.google.com/maps/contrib/B1',
             },
           ],
@@ -172,7 +175,7 @@ export const SAMPLE_FAKE_PLACE = makeFakePlace({
     {
       authorAttribution: {
         displayName: 'Author 3',
-        uri: undefined,
+        uri: '',
         photoURI: 'https://lh3.googlusercontent.com/a/3',
       },
       publishTime: new Date(1234567890),

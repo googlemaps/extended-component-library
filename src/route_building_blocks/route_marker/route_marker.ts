@@ -15,7 +15,7 @@ import {RouteDataConsumer} from '../route_data_consumer.js';
 
 interface MarkerLibrary {
   // tslint:disable-next-line:enforce-name-casing
-  AdvancedMarkerElement: typeof google.maps.marker.AdvancedMarkerView;
+  AdvancedMarkerElement: typeof google.maps.marker.AdvancedMarkerElement;
 }
 
 /**
