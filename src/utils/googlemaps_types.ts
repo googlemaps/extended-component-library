@@ -36,10 +36,8 @@ export declare type Place =
       Promise<{place: Place}>;
 };
 
-/**
- * google.maps.marker.AdvancedMarkerElement, renamed from AdvancedMarkerView.
- */
-export type AdvancedMarkerElement = google.maps.marker.AdvancedMarkerView;
+/** google.maps.marker.AdvancedMarkerElement. */
+export type AdvancedMarkerElement = google.maps.marker.AdvancedMarkerElement;
 
 /** google.maps.LatLng */
 export type LatLng = google.maps.LatLng;
