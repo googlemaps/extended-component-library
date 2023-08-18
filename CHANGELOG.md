@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.4.0](https://github.com/googlemaps/extended-component-library/compare/v0.3.1...v0.4.0) (2023-08-18)
+
+
+### Features
+
+* add route components ([6dea995](https://github.com/googlemaps/extended-component-library/commit/6dea99571eb55a67d1700d206c3dea13ed3b3492))
+* adjust route component property nullability ([c64db7b](https://github.com/googlemaps/extended-component-library/commit/c64db7b0b5d22030b6866b927ec6aca38700fb2c))
+
+
+### Bug Fixes
+
+* place details API should not request attributions ([907add7](https://github.com/googlemaps/extended-component-library/commit/907add786bbbe583a31b51afca9e2b22139d1686))
+
 ## [0.3.1](https://github.com/googlemaps/extended-component-library/compare/v0.3.0...v0.3.1) (2023-08-15)
 
 
