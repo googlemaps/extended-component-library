@@ -213,7 +213,7 @@ describe('RouteMarker', () => {
     const {innerMarker} = await prepareState(html`
       <gmpx-route-marker><div id="slotted"></div></gmpx-route-marker>`);
 
-    expect(innerMarker.content!.id).toEqual('slotted');
+    expect((innerMarker.content as Element).id).toEqual('slotted');
   });
 
   it('updates custom content added dynamically', async () => {

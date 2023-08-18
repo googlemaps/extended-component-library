@@ -238,7 +238,7 @@ function convertToPlaceFields(placeResult: PlaceResult): Partial<Place> {
         placeResult.photos.map((photo: google.maps.places.PlacePhoto) => {
           const attributions = photo.html_attributions.map((html) => {
             const {text, url} = extractTextAndURL(html);
-            return {displayName: text ?? '', uri: url};
+            return {displayName: text ?? '', photoURI: '', uri: url || ''};
           });
           return {
             authorAttributions: attributions,
@@ -269,7 +269,7 @@ function convertToPlaceFields(placeResult: PlaceResult): Partial<Place> {
           authorAttribution: {
             displayName: review.author_name,
             photoURI: review.profile_photo_url,
-            uri: review.author_url,
+            uri: review.author_url || '',
           },
           // Convert publish time from milliseconds to a Date object.
           publishTime: new Date(review.time),

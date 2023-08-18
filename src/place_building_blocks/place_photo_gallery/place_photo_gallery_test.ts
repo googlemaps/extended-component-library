@@ -26,10 +26,13 @@ const fakePlace = makeFakePlace({
           authorAttributions: [
             {
               displayName: 'Author A1',
+              photoURI: '',
               uri: 'https://www.google.com/maps/contrib/A1',
             },
             {
               displayName: 'Author A2',
+              photoURI: '',
+              uri: '',
             },
           ],
           heightPx: 1000,
@@ -41,6 +44,7 @@ const fakePlace = makeFakePlace({
           authorAttributions: [
             {
               displayName: 'Author B1',
+              photoURI: '',
               uri: 'https://www.google.com/maps/contrib/B1',
             },
           ],
