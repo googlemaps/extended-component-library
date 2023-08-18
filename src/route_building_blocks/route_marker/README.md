@@ -22,14 +22,14 @@ import { RouteMarker } from '@googlemaps/extended-component-library/route_buildi
 
 ## Attributes and properties
 
-| Attribute  | Property             | Property type                        | Description                                                                                                                                                              | Default    | Reflects? |
-| ---------- | -------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- | --------- |
-| `waypoint` | `waypoint`           | `'origin'\|'destination'`            | Which waypoint of the route to position the marker on. For now, this is either "origin" or "destination"; intermediate waypoints are not yet supported.                  | `'origin'` | ✅         |
-| `title`    | `title`              | `string`                             | Rollover text for the marker, displayed on mouse hover.                                                                                                                  | `''`       | ✅         |
-|            | `zIndex`             | `number\|null \| undefined`          | The z-index of the marker relative to other Advanced Markers.                                                                                                            |            | ❌         |
-|            | `innerMarker`        | `AdvancedMarkerElement\|undefined`   | The inner `google.maps.marker.AdvancedMarkerElement` from the Maps JS API. This value is set once `innerMarkerPromise` is resolved.                                      |            | ❌         |
-|            | `innerMarkerPromise` | `Promise<AdvancedMarkerElement>`     | Resolves to the inner marker when it's ready. It might not be ready immediately becasue the `AdvancedMarkerElement` class is loaded asynchronously from the Maps JS API. |            | ❌         |
-|            | `route`              | `DirectionsRoute\|null \| undefined` | Route data to render, overriding anything provided by context.                                                                                                           |            | ❌         |
+| Attribute  | Property             | Property type                      | Description                                                                                                                                                              | Default    | Reflects? |
+| ---------- | -------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- | --------- |
+| `waypoint` | `waypoint`           | `'origin'\|'destination'`          | Which waypoint of the route to position the marker on. For now, this is either "origin" or "destination"; intermediate waypoints are not yet supported.                  | `'origin'` | ✅         |
+| `title`    | `title`              | `string`                           | Rollover text for the marker, displayed on mouse hover.                                                                                                                  | `''`       | ✅         |
+|            | `zIndex`             | `number \| undefined`              | The z-index of the marker relative to other Advanced Markers.                                                                                                            |            | ❌         |
+|            | `innerMarker`        | `AdvancedMarkerElement\|undefined` | The inner `google.maps.marker.AdvancedMarkerElement` from the Maps JS API. This value is set once `innerMarkerPromise` is resolved.                                      |            | ❌         |
+|            | `innerMarkerPromise` | `Promise<AdvancedMarkerElement>`   | Resolves to the inner marker when it's ready. It might not be ready immediately becasue the `AdvancedMarkerElement` class is loaded asynchronously from the Maps JS API. |            | ❌         |
+|            | `route`              | `DirectionsRoute \| undefined`     | Route data to render, overriding anything provided by context.                                                                                                           |            | ❌         |
 
 ## Slots
 

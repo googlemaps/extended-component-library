@@ -15,7 +15,6 @@ import {routeContext} from '../route_data_consumer.js';
 type DirectionsRoute = google.maps.DirectionsRoute;
 type LatLng = google.maps.LatLng;
 type LatLngLiteral = google.maps.LatLngLiteral;
-type TravelMode = google.maps.TravelMode;
 
 /**
  * Provides route data to child components as context.
@@ -99,13 +98,13 @@ export class RouteDataProvider extends BaseComponent {
    * Route data to be provided to consumers directly, instead of making an API
    * call.
    */
-  @property({attribute: false}) route?: DirectionsRoute|null;
+  @property({attribute: false}) route?: DirectionsRoute;
 
   /**
    * The travel mode of the directions request.
    */
   @property({type: String, attribute: 'travel-mode', reflect: true})
-  travelMode?: Lowercase<TravelMode>;
+  travelMode: Lowercase<google.maps.TravelMode> = 'driving';
 
   private readonly directionsController = new DirectionsController(this);
 
@@ -148,7 +147,7 @@ export class RouteDataProvider extends BaseComponent {
     const result = await this.directionsController.route({
       origin: this.getOriginRequestObject(),
       destination: this.getDestinationRequestObject(),
-      travelMode: (this.travelMode?.toUpperCase() || 'DRIVING') as TravelMode,
+      travelMode: this.travelMode?.toUpperCase() as google.maps.TravelMode,
     });
     return result?.routes ? result.routes[0] : undefined;
   }

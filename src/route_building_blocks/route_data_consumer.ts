@@ -36,7 +36,7 @@ export abstract class RouteDataConsumer extends BaseComponent {
   /**
    * Route data to render, overriding anything provided by context.
    */
-  @property({attribute: false}) route?: DirectionsRoute|null;
+  @property({attribute: false}) route?: DirectionsRoute;
 
   /**
    * Returns the `DirectionsRoute` to be used when rendering.

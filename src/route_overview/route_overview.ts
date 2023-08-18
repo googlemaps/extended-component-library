@@ -17,7 +17,6 @@ import {LAT_LNG_LITERAL_ATTRIBUTE_CONVERTER} from '../utils/attribute_converters
 type DirectionsRoute = google.maps.DirectionsRoute;
 type LatLng = google.maps.LatLng;
 type LatLngLiteral = google.maps.LatLngLiteral;
-type TravelMode = google.maps.TravelMode;
 
 const INNER_POLYLINE_BLUE = '#1faefb';
 const OUTER_POLYLINE_BLUE = '#2565cd';
@@ -90,13 +89,13 @@ export class RouteOverview extends BaseComponent {
   /**
    * Route data to render directly, instead of making an API call.
    */
-  @property({attribute: false}) route?: DirectionsRoute|null;
+  @property({attribute: false}) route?: DirectionsRoute;
 
   /**
    * The travel mode of the directions request.
    */
   @property({type: String, attribute: 'travel-mode', reflect: true})
-  travelMode?: Lowercase<TravelMode>;
+  travelMode: Lowercase<google.maps.TravelMode> = 'driving';
 
   private static numConstructed = 0;
 

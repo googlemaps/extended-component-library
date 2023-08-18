@@ -43,7 +43,7 @@ export class RouteMarker extends RouteDataConsumer {
   /**
    * The z-index of the marker relative to other Advanced Markers.
    */
-  @property({type: Number, attribute: false}) zIndex?: number|null;
+  @property({type: Number, attribute: false}) zIndex?: number;
 
   private readonly innerMarkerDeferred = new Deferred<AdvancedMarkerElement>();
 
