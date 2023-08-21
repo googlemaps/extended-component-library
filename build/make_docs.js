@@ -381,6 +381,12 @@ function declarationToMarkdown(declaration, module, headerLevel) {
         '> This component is designed to work with a Place Data Provider; please see [Place Building Blocks](../README.md) for more information.');
   }
 
+  if (declaration.superclass &&
+      declaration.superclass.name === 'RouteDataConsumer') {
+    md += newParagraph(
+        '> This component is designed to work with a Route Data Provider; please see [Route Building Blocks](../README.md) for more information.');
+  }
+
   const importSection = makeImportSection(
       headerLevel + 1, module.path, declaration.name, declaration.tagName);
   if (importSection) {

@@ -4,6 +4,8 @@
 
 Renders a polyline indicating the path of a route.
 
+> This component is designed to work with a Route Data Provider; please see [Route Building Blocks](../README.md) for more information.
+
 ## Importing
 
 When loading the library with a &lt;script&gt; tag (referencing the CDN bundle), please refer to the instructions in the root-level Readme. You do not need to take additional steps to use this component.
