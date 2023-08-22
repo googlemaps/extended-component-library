@@ -20,15 +20,23 @@
 
 import {LitElement} from 'lit';
 
+import {LatLng, LatLngBounds, LatLngBoundsLiteral, LatLngLiteral} from '../utils/googlemaps_types.js';
+
 declare global {
   interface HTMLElementTagNameMap {
     'gmp-map': FakeMapElement;
   }
 }
 
+/** A fake google.maps.MapElement class for testing purposes. */
 export class FakeMapElement extends LitElement {
+  center: LatLng|LatLngLiteral|null = null;
+
+  // tslint:disable-next-line:prefer-type-annotation
   readonly innerMap = {
-    fitBounds:
-        (bounds: google.maps.LatLngBounds|google.maps.LatLngBoundsLiteral) => {}
+    fitBounds: (bounds: LatLngBounds|LatLngBoundsLiteral) => {}
   } as google.maps.Map;
+
+  mapId: string|null = null;
+  zoom: number|null = null;
 }

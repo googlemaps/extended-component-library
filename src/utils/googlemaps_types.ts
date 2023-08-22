@@ -42,11 +42,17 @@ export type AdvancedMarkerElement = google.maps.marker.AdvancedMarkerElement;
 /** google.maps.LatLng */
 export type LatLng = google.maps.LatLng;
 
+/** google.maps.LatLngBounds */
+export type LatLngBounds = google.maps.LatLngBounds;
+
+/** google.maps.LatLngBoundsLiteral */
+export type LatLngBoundsLiteral = google.maps.LatLngBoundsLiteral;
+
 /** google.maps.LatLngLiteral */
 export type LatLngLiteral = google.maps.LatLngLiteral;
 
 /** google.maps.MapElement */
-export type MapElement = HTMLElement&{innerMap: google.maps.Map};
+export type MapElement = google.maps.MapElement;
 
 /** google.maps.places.PlaceResult */
 export type PlaceResult = google.maps.places.PlaceResult;
