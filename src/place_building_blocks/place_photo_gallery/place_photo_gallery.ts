@@ -20,6 +20,9 @@ import {renderAttribution} from '../../utils/place_utils.js';
 import {PlaceDataConsumer} from '../place_data_consumer.js';
 
 
+/** Spacing for margins and paddings based on baseline font size. */
+const SPACING_BASE = css`calc(${GMPX_FONT_SIZE_BASE} * 0.5)`;
+
 interface FormattedPhoto {
   uri: string;
   tileUri: string;
@@ -64,8 +67,9 @@ function formatPhoto(photo: Photo, tileSize: TileSize): FormattedPhoto {
   };
 }
 
-/** Spacing for margins and paddings based on baseline font size. */
-const SPACING_BASE = css`calc(${GMPX_FONT_SIZE_BASE} * 0.5)`;
+function stopEscapePropagation(event: KeyboardEvent) {
+  if (event.key === 'Escape') event.stopPropagation();
+}
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -232,9 +236,6 @@ export class PlacePhotoGallery extends PlaceDataConsumer {
       case 'ArrowRight':
         this.isRTL() ? this.navigateToPrevious() : this.navigateToNext();
         break;
-      case 'Escape':
-        this.closeLightbox();
-        break;
       default:
     }
   };
@@ -320,10 +321,14 @@ export class PlacePhotoGallery extends PlaceDataConsumer {
     `;
     // clang-format on
 
+    // Note on the <dialog>'s keydown listener: Prevent escape keydowns from
+    // propagating beyond the lightbox so that they don't cause things like
+    // closing an overlay layout. The <dialog> will close automatically on
+    // escape, so we don't have to worry about catching the event ourselves.
     return html`
       <div class="container">
         <div>${map(photos.slice(0, this.maxTiles), renderTileButton)}</div>
-        <dialog class="lightbox">
+        <dialog class="lightbox" @keydown=${stopEscapePropagation}>
           <div class="backdrop" @click=${this.closeLightbox}></div>
           <img
             alt=${this.getMsg('PLACE_PHOTO_ALT', placeName ?? '')}

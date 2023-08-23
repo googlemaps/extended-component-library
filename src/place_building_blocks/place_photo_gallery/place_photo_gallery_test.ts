@@ -253,14 +253,6 @@ describe('PlacePhotoGallery', () => {
     expect(lightbox?.open).toBeFalse();
   });
 
-  it('closes lightbox when ESC key is pressed', async () => {
-    const {lightbox} = await prepareState({place: fakePlace, clickOnTile: 1});
-
-    document.dispatchEvent(new KeyboardEvent('keydown', {'key': 'Escape'}));
-
-    expect(lightbox?.open).toBeFalse();
-  });
-
   it('navigates to previous photo via left arrow key', async () => {
     const {lightbox} = await prepareState({place: fakePlace, clickOnTile: 1});
 
