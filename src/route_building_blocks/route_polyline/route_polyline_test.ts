@@ -10,8 +10,8 @@ import {html, TemplateResult} from 'lit';
 
 import {Environment} from '../../testing/environment.js';
 import {FakeMapElement} from '../../testing/fake_gmp_components.js';
-import {FakeLatLngBounds} from '../../testing/fake_lat_lng.js';
-import {makeFakeRoute} from '../../testing/fake_route.js';
+import {FakeLatLng, FakeLatLngBounds} from '../../testing/fake_lat_lng.js';
+import {makeFakeLeg, makeFakeRoute, makeFakeStep} from '../../testing/fake_route.js';
 
 import {RoutePolyline} from './route_polyline.js';
 
@@ -127,13 +127,48 @@ describe('RoutePolyline', () => {
     });
   });
 
-  it('sets its path from a route', async () => {
+  it(`sets its path from a route's step`, async () => {
     const {polyline, setPathSpy} = await prepareState();
     const path: google.maps.LatLng[] = [];
-    polyline.route = makeFakeRoute({overview_path: path});
+    polyline.route =
+        makeFakeRoute({legs: [makeFakeLeg({steps: [makeFakeStep({path})]})]});
     await env.waitForStability();
 
     expect(setPathSpy).toHaveBeenCalledOnceWith(path);
+  });
+
+  it('concatenates the paths from multiple steps', async () => {
+    const {polyline, setPathSpy} = await prepareState();
+    const [ll1, ll2, ll3, ll4] = [
+      new FakeLatLng(1, 1), new FakeLatLng(2, 2), new FakeLatLng(3, 3),
+      new FakeLatLng(4, 4)
+    ];
+    polyline.route = makeFakeRoute({
+      legs: [makeFakeLeg({
+        steps:
+            [makeFakeStep({path: [ll1, ll2]}), makeFakeStep({path: [ll3, ll4]})]
+      })]
+    });
+    await env.waitForStability();
+
+    expect(setPathSpy).toHaveBeenCalledOnceWith([ll1, ll2, ll3, ll4]);
+  });
+
+  it('concatenates the paths from multiple legs', async () => {
+    const {polyline, setPathSpy} = await prepareState();
+    const [ll1, ll2, ll3, ll4] = [
+      new FakeLatLng(1, 1), new FakeLatLng(2, 2), new FakeLatLng(3, 3),
+      new FakeLatLng(4, 4)
+    ];
+    polyline.route = makeFakeRoute({
+      legs: [
+        makeFakeLeg({steps: [makeFakeStep({path: [ll1, ll2]})]}),
+        makeFakeLeg({steps: [makeFakeStep({path: [ll3, ll4]})]})
+      ]
+    });
+    await env.waitForStability();
+
+    expect(setPathSpy).toHaveBeenCalledOnceWith([ll1, ll2, ll3, ll4]);
   });
 
   it('connects to a map', async () => {

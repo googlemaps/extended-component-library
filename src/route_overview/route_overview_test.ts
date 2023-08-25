@@ -12,6 +12,7 @@ import {RouteDataProvider} from '../route_building_blocks/route_data_provider/ro
 import {RouteMarker} from '../route_building_blocks/route_marker/route_marker.js';
 import {RoutePolyline} from '../route_building_blocks/route_polyline/route_polyline.js';
 import {Environment} from '../testing/environment.js';
+import {makeFakeRoute} from '../testing/fake_route.js';
 
 import {RouteOverview} from './route_overview.js';
 
@@ -92,7 +93,7 @@ describe('RouteOverview', () => {
   it('passes the route property to its data provider', async () => {
     const {overview, provider} = await prepareState();
 
-    const route = {} as google.maps.DirectionsRoute;
+    const route = makeFakeRoute();
     overview.route = route;
     await env.waitForStability();
 

@@ -114,23 +114,19 @@ export class RoutePolyline extends RouteDataConsumer implements LatLngBounded {
     this.innerPolyline?.setMap(null);
   }
 
-  protected override async updated(changedProperties: PropertyValues<this>) {
+  protected override updated(changedProperties: PropertyValues<this>) {
     if (POLYLINE_OPTIONS_PROPS.some((prop) => changedProperties.has(prop))) {
-      await this.setInnerPolylineOptions();
+      this.setInnerPolylineOptions();
     }
     if (changedProperties.has('route') ||
         changedProperties.has('contextRoute')) {
-      const route = this.getRoute();
-      const polyline = await this.innerPolylinePromise;
-      // TODO(b/291675716) Concatenate higher-quality paths from directions
-      // steps, instead of using overview_path
-      polyline.setPath(route?.overview_path ?? []);
+      this.updatePath();
     }
     if (changedProperties.has('fitInViewport') ||
         (this.fitInViewport &&
          (changedProperties.has('route') ||
           changedProperties.has('contextRoute')))) {
-      await this.mapController.viewportManager?.updateViewport();
+      this.mapController.viewportManager?.updateViewport();
     }
   }
 
@@ -154,6 +150,20 @@ export class RoutePolyline extends RouteDataConsumer implements LatLngBounded {
     };
     const polyline = await this.innerPolylinePromise;
     polyline.setOptions(options);
+  }
+
+  private async updatePath() {
+    let path: google.maps.LatLng[] = [];
+    const route = this.getRoute();
+    if (route) {
+      for (const leg of route.legs) {
+        for (const step of leg.steps) {
+          path = path.concat(step.path);
+        }
+      }
+    }
+    const polyline = await this.innerPolylinePromise;
+    polyline.setPath(path);
   }
 }
 
