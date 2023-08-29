@@ -8,6 +8,7 @@
 
 import {html, TemplateResult} from 'lit';
 
+import {LoggingController} from '../base/logging_controller.js';
 import {RouteDataProvider} from '../route_building_blocks/route_data_provider/route_data_provider.js';
 import {RouteMarker} from '../route_building_blocks/route_marker/route_marker.js';
 import {RoutePolyline} from '../route_building_blocks/route_polyline/route_polyline.js';
@@ -29,6 +30,7 @@ describe('RouteOverview', () => {
   const env = new Environment();
 
   async function prepareState(template?: TemplateResult) {
+    const errorSpy = spyOn(LoggingController.prototype, 'error');
     const root = env.render(
         template ?? html`<gmpx-route-overview></gmpx-route-overview>`);
     await env.waitForStability();
@@ -36,7 +38,7 @@ describe('RouteOverview', () => {
     const provider = overview.shadowRoot!.querySelector<RouteDataProvider>(
         'gmpx-route-data-provider')!;
 
-    return {root, overview, provider};
+    return {errorSpy, root, overview, provider};
   }
 
   beforeEach(() => {
@@ -58,7 +60,7 @@ describe('RouteOverview', () => {
           origin-place-id="123"
           origin-address="456"
           travel-mode="walking"
-      ></gmpx-route-overview> `);
+      ></gmpx-route-overview>`);
 
     expect(provider.destinationLatLng).toEqual({lat: 1, lng: 2});
     expect(provider.destinationPlaceId).toEqual('abc');
@@ -88,6 +90,34 @@ describe('RouteOverview', () => {
     expect(provider.originPlaceId).toEqual('123');
     expect(provider.originAddress).toEqual('456');
     expect(provider.travelMode).toEqual('walking');
+  });
+
+  it('logs an error when setting multiple origins', async () => {
+    const {errorSpy} = await prepareState(html`
+      <gmpx-route-overview
+          destination-lat-lng="1,2"
+          origin-lat-lng="3,4"
+          origin-place-id="123"
+          origin-address="456"
+      ></gmpx-route-overview>`);
+
+    expect(errorSpy).toHaveBeenCalledOnceWith(
+        'Too many origins. Only one of origin-lat-lng, ' +
+        'origin-place-id, or origin-address may be specified.');
+  });
+
+  it('logs an error when setting multiple destinations', async () => {
+    const {errorSpy} = await prepareState(html`
+      <gmpx-route-overview
+          destination-lat-lng="1,2"
+          destination-place-id="abc"
+          destination-address="def"
+          origin-lat-lng="3,4"
+      ></gmpx-route-overview> `);
+
+    expect(errorSpy).toHaveBeenCalledOnceWith(
+        'Too many destinations. Only one of destination-lat-lng, ' +
+        'destination-place-id, or destination-address may be specified.');
   });
 
   it('passes the route property to its data provider', async () => {
