@@ -17,14 +17,6 @@ import {makeFakeRoute} from '../testing/fake_route.js';
 
 import {RouteOverview} from './route_overview.js';
 
-const FAKE_LIBRARY = {
-  AdvancedMarkerElement: class {},
-  Polyline: class {
-    setMap(map: google.maps.Map|null) {}
-    setPath(path: Array<google.maps.LatLng|google.maps.LatLngLiteral>) {}
-    setOptions(options: google.maps.PolylineOptions) {}
-  }
-};
 
 describe('RouteOverview', () => {
   const env = new Environment();
@@ -40,10 +32,6 @@ describe('RouteOverview', () => {
 
     return {errorSpy, root, overview, provider};
   }
-
-  beforeEach(() => {
-    env.importLibrarySpy!.and.returnValue(FAKE_LIBRARY);
-  });
 
   it('is defined', () => {
     const el = document.createElement('gmpx-route-overview');
@@ -173,6 +161,17 @@ describe('RouteOverview', () => {
     expect(originMarkers.length).toEqual(1);
     expect(destinationMarkers.length).toEqual(2);
     expect(polylines.length).toEqual(2);
+  });
+
+  it('omits the pin when no-pin is specified', async () => {
+    const {overview} = await prepareState(html`
+      <gmpx-route-overview no-pin destination-address="abc" origin-address="123">
+      </gmpx-route-overview>`);
+    const destinationMarkers =
+        overview.shadowRoot!.querySelectorAll<RouteMarker>(
+            'gmpx-route-marker[waypoint="destination"]');
+
+    expect(destinationMarkers.length).toEqual(1);
   });
 });
 

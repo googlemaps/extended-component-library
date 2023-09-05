@@ -38,6 +38,7 @@ import { RouteOverview } from '@googlemaps/extended-component-library/route_over
 | `origin-address`       | `originAddress`      | `string \| undefined`                | The origin of the directions request as an address query. When setting the origin, only one of lat/lng, Place ID, or address should be specified.           |             | ✅         |
 |                        | `route`              | `DirectionsRoute \| undefined`       | Route data to render directly, instead of making an API call.                                                                                               |             | ❌         |
 | `travel-mode`          | `travelMode`         | `Lowercase<google.maps.TravelMode>`  | The travel mode of the directions request.                                                                                                                  | `'driving'` | ✅         |
+| `no-pin`               | `noPin`              | `boolean`                            | Hides the red pin displayed at the destination.                                                                                                             | `false`     | ✅         |
 
 ## Events
 

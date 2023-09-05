@@ -10,6 +10,7 @@ import '../route_building_blocks/route_marker/route_marker.js';
 
 import {html} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
+import {when} from 'lit/directives/when.js';
 
 import {BaseComponent} from '../base/base_component.js';
 import {LAT_LNG_LITERAL_ATTRIBUTE_CONVERTER} from '../utils/attribute_converters.js';
@@ -97,6 +98,11 @@ export class RouteOverview extends BaseComponent {
   @property({type: String, attribute: 'travel-mode', reflect: true})
   travelMode: Lowercase<google.maps.TravelMode> = 'driving';
 
+  /**
+   * Hides the red pin displayed at the destination.
+   */
+  @property({type: Boolean, attribute: 'no-pin', reflect: true}) noPin = false;
+
   private static numConstructed = 0;
 
   private readonly zIndex: number;
@@ -149,11 +155,12 @@ export class RouteOverview extends BaseComponent {
                 fill="black"/>
           </svg>
         </gmpx-route-marker>
-        <gmpx-route-marker
-            waypoint="destination"
-            .title=${this.destinationAddress ?? ''}
-            .zIndex=${this.zIndex + 2}>
-        </gmpx-route-marker>
+        ${when(!this.noPin, () => html`
+          <gmpx-route-marker
+              waypoint="destination"
+              .title=${this.destinationAddress ?? ''}
+              .zIndex=${this.zIndex + 2}>
+          </gmpx-route-marker>`)}
       </gmpx-route-data-provider>
     `;
     // clang-format on

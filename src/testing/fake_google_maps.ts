@@ -75,17 +75,23 @@ export class FakeGoogleMapsHarness {
   /** This is an object that can be substituted for `google.maps`. */
   readonly sdk: typeof google.maps;
 
+  // tslint:disable:enforce-name-casing
   constructor() {
     const harness = this;
     this.libraries = {
       'core': {},
       'maps': {
-        // tslint:disable-next-line:enforce-name-casing
         Map: class {},
+        Polyline: class {
+          setMap() {}
+          setPath() {}
+          setOptions() {}
+        }
       },
-      'marker': {},
+      'marker': {
+        AdvancedMarkerElement: class {},
+      },
       'places': {
-        // tslint:disable-next-line:enforce-name-casing
         Autocomplete: class {
           constructor(
               input: HTMLInputElement,
@@ -94,7 +100,6 @@ export class FakeGoogleMapsHarness {
           }
         },
 
-        // tslint:disable-next-line:enforce-name-casing
         Place: class {
           constructor(options: google.maps.places.PlaceOptions) {
             return harness.placeConstructor(options);
@@ -106,7 +111,6 @@ export class FakeGoogleMapsHarness {
           }
         },
 
-        // tslint:disable-next-line:enforce-name-casing
         PlacesService: class {
           getDetails(
               options: google.maps.places.PlaceDetailsRequest,
@@ -129,7 +133,6 @@ export class FakeGoogleMapsHarness {
         }
       },
       'routes': {
-        // tslint:disable-next-line:enforce-name-casing
         DirectionsService: class {
           route(request: google.maps.DirectionsRequest) {
             return harness.routeHandler(request);
