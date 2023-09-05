@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.4.1](https://github.com/googlemaps/extended-component-library/compare/v0.4.0...v0.4.1) (2023-09-05)
+
+
+### Bug Fixes
+
+* allow omitting the destination pin in Route Overview ([b323474](https://github.com/googlemaps/extended-component-library/commit/b3234746f0b8120b95fdb7f4b2622c7eb79e8edc))
+* prevent closing overlay layout on escape when photo lightbox is open ([4eaa19c](https://github.com/googlemaps/extended-component-library/commit/4eaa19c4761b7cea6491c5af39ccc6b8a8d26bbc))
+
+
+### Performance Improvements
+
+* use high-detail path in Route Polyline ([2720c46](https://github.com/googlemaps/extended-component-library/commit/2720c46239f65de445b392431807cfc4b0309b3a))
+
 ## [0.4.0](https://github.com/googlemaps/extended-component-library/compare/v0.3.1...v0.4.0) (2023-08-18)
 
 
