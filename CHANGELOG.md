@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.2](https://github.com/googlemaps/extended-component-library/compare/v0.4.1...v0.4.2) (2023-09-06)
+
+
+### Bug Fixes
+
+* have Place Picker update input when performing fallback search ([5533390](https://github.com/googlemaps/extended-component-library/commit/55333902dea8f15325fe3048fd38f705038f7a5f))
+
 ## [0.4.1](https://github.com/googlemaps/extended-component-library/compare/v0.4.0...v0.4.1) (2023-09-05)
 
 
