@@ -424,10 +424,9 @@ export class PlacePicker extends BaseComponent {
         throw error;
       }
     }
-    return places.length === 0 ?
-        null :
-        (await places[0].fetchFields({fields: [...PLACE_DATA_FIELDS]})).place as
-            Place;
+    if (!places.length) return null;
+    await places[0].fetchFields({fields: [...PLACE_DATA_FIELDS]});
+    return places[0] as Place;
   }
 
   /** Looks up a Place using the GA API. */
@@ -476,9 +475,24 @@ export class PlacePicker extends BaseComponent {
     this.disableSearch = true;
     try {
       this.valueInternal = await this.search(this.inputElement.value);
+      if (this.valueInternal) this.updateInputTextFromPlace(this.valueInternal);
     } catch (error: unknown) {
       const requestErrorEvent = new RequestErrorEvent(error);
       this.dispatchEvent(requestErrorEvent);
     }
+  }
+
+  private updateInputTextFromPlace(place: Place) {
+    let newText;
+    if (place.formattedAddress && place.displayName) {
+      if (place.formattedAddress.startsWith(place.displayName)) {
+        newText = place.formattedAddress;
+      } else {
+        newText = `${place.displayName}, ${place.formattedAddress}`;
+      }
+    } else {
+      newText = place.displayName ?? place.formattedAddress ?? '';
+    }
+    if (newText) this.inputElement!.value = newText;
   }
 }

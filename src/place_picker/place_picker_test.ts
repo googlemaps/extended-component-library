@@ -34,7 +34,11 @@ const FAKE_PLACE_RESULT_FROM_AUTOCOMPLETE = {
   name: 'Fake Place from Autocomplete',
 };
 
-const FAKE_PLACE_FROM_QUERY = makeFakePlace({id: 'FAKE_QUERY_PLACE_ID'});
+const FAKE_PLACE_FROM_QUERY = makeFakePlace({
+  id: 'FAKE_QUERY_PLACE_ID',
+  formattedAddress: '123 Main St, City Name, CA 00000',
+  displayName: '123 Main St'
+});
 
 describe('PlacePicker', () => {
   const env = new Environment();
@@ -276,8 +280,6 @@ describe('PlacePicker', () => {
   });
 
   it(`sets value based on place returned by Find Place request`, async () => {
-    (env.fakeGoogleMapsHarness!.findPlaceFromQueryHandler as jasmine.Spy)
-        .and.returnValue({places: [FAKE_PLACE_FROM_QUERY]});
     fakeAutocomplete.getBounds.and.returnValue(FAKE_BOUNDS);
     const {picker, input, searchButton, clearButton} = await prepareState();
 
@@ -301,6 +303,7 @@ describe('PlacePicker', () => {
     expect(place!.id).toBe('FAKE_QUERY_PLACE_ID');
     expect(searchButton.disabled).toBeTrue();
     expect(clearButton.hidden).toBeFalse();
+    expect(input.value).toBe('123 Main St, City Name, CA 00000');
   });
 
   it('sets value from fallback GA API when Place.findPlaceFromQuery is not available',
@@ -311,8 +314,14 @@ describe('PlacePicker', () => {
            .and.throwError(new Error(
                'google.maps.places.Place.findPlaceFromQuery() is not available in the SDK!'));
        spyOn(env.fakeGoogleMapsHarness!, 'findPlaceFromQueryGAHandler')
-           .and.returnValue(
-               {results: [{place_id: 'ga123'} as PlaceResult], status: 'OK'});
+           .and.returnValue({
+             results: [{
+               place_id: 'ga123',
+               name: 'City Hall',
+               formatted_address: '123 Main St, City Name, CA 00000'
+             } as PlaceResult],
+             status: 'OK'
+           });
 
        await enterQueryText(input, '123 Main St');
        searchButton.click();
@@ -330,6 +339,7 @@ describe('PlacePicker', () => {
        expect(place!.id).toBe('ga123');
        expect(searchButton.disabled).toBeTrue();
        expect(clearButton.hidden).toBeFalse();
+       expect(input.value).toBe('City Hall, 123 Main St, City Name, CA 00000');
      });
 
   it(`sets value to null if no search results and fires event`, async () => {
