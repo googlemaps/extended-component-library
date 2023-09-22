@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {ContextProvider, provide} from '@lit-labs/context';
+import {ContextProvider, provide} from '@lit/context';
 import {html, PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {choose} from 'lit/directives/choose.js';

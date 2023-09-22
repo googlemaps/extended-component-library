@@ -7,7 +7,7 @@
 // import 'jasmine'; (google3-only)
 import './route_data_provider.js';
 
-import {consume} from '@lit-labs/context';
+import {consume} from '@lit/context';
 import {html, LitElement, TemplateResult} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 
