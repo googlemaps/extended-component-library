@@ -63,8 +63,8 @@
     "registry": "https://wombat-dressing-room.appspot.com"
   },
   "dependencies": {
-    "@lit-labs/context": "^0.3.1",
-    "@lit-labs/react": "^1.2.0",
+    "@lit-labs/context": "^0.4.1",
+    "@lit-labs/react": "^2.1.0",
     "lit": "^2.3.0",
     "tslib": "^2.4.0"
   },
