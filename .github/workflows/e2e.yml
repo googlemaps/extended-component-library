@@ -16,7 +16,7 @@ jobs:
     - uses: google/wireit@setup-github-actions-caching/v1
 
     - run: npm ci
-    - run: npx playwright install-deps
+    - run: npx playwright install --with-deps
     - run: npm run e2e
       env:
         MAPS_API_KEY: ${{secrets.MAPS_API_KEY}}
