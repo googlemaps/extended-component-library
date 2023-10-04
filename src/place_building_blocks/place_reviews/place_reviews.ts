@@ -91,7 +91,8 @@ export class PlaceReviews extends PlaceDataConsumer {
   `;
 
   /**
-   * The maximum number of reviews to display. No limit if undefined.
+   * The maximum number of reviews to display. If undefined, displays all
+   * reviews returned by the Places API, which provides at most 5.
    */
   @property({type: Number, reflect: true, attribute: 'max-reviews'})
   maxReviews?: number;
