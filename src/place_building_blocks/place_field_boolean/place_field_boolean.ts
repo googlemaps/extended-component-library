@@ -143,6 +143,13 @@ function getBooleanSync(place: Place, field: SyncPlaceBooleanField): boolean|
 /**
  * Component that conditionally renders content depending on the value of a
  * boolean field, or the `isOpen()` method which returns a boolean.
+ *
+ * Include a child element with `slot="true"` to display content when the
+ * boolean value is true. Likewise, a child element with `slot="false"` will be
+ * displayed when the boolean value is false.
+ * 
+ * @slot true - Content to be displayed when the boolean value is true.
+ * @slot false - Content to be displayed when the boolean value is false.
  */
 @customElement('gmpx-place-field-boolean')
 export class PlaceFieldBoolean extends PlaceDataConsumer {
