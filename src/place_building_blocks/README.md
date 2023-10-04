@@ -18,12 +18,12 @@ The data provider component must wrap any of the Place details components in you
 ```html
 <gmpx-place-data-provider place="INSERT_PLACE_ID">
   <h2>
-    <gmpx-place-field-text field="displayName"/>
+    <gmpx-place-field-text field="displayName"></gmpx-place-field-text>
   </h2>
   <p>
-    Rating: <gmpx-place-rating/>
+    Rating: <gmpx-place-rating></gmpx-place-rating>
   </p>
-  <gmpx-place-photo-gallery max-tiles="1"/>
+  <gmpx-place-photo-gallery max-tiles="1"></gmpx-place-photo-gallery>
 </gmpx-place-data-provider>
 ```
 
