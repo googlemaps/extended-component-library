@@ -15,4 +15,5 @@ export default {
     playwrightLauncher({ product: 'chromium' }),
     playwrightLauncher({ product: 'firefox' }),
   ],
+  filterBrowserLogs: (log) => !log.args[0].startsWith('Lit is in dev mode.')
 };
