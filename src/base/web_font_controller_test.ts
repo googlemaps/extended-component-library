@@ -38,14 +38,14 @@ describe('WebFontController', () => {
     return instance;
   }
 
-  function selectAllGoogleSansLinkElements(rootNode: HTMLElement|
-                                           ShadowRoot): HTMLLinkElement[] {
+  function selectAllGoogleSansLinkElements(
+      rootNode: HTMLElement|DocumentFragment): HTMLLinkElement[] {
     return Array.from(rootNode.querySelectorAll<HTMLLinkElement>(
         `link[href*="Google%20Sans%20Text:wght@400%3B500"]`));
   }
 
-  function selectAllMaterialSymbolsLinkElements(rootNode: HTMLElement|
-                                                ShadowRoot): HTMLLinkElement[] {
+  function selectAllMaterialSymbolsLinkElements(
+      rootNode: HTMLElement|DocumentFragment): HTMLLinkElement[] {
     return Array.from(rootNode.querySelectorAll<HTMLLinkElement>(
         `link[href*="Material%20Symbols%20Outlined:wght@400"]`));
   }

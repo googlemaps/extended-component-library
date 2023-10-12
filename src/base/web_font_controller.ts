@@ -61,7 +61,8 @@ export class WebFontController implements ReactiveController {
     }
   }
 
-  private injectWebFontAsset(rootNode: HTMLElement|ShadowRoot, font: WebFont) {
+  private injectWebFontAsset(
+      rootNode: HTMLElement|DocumentFragment, font: WebFont) {
     const existing =
         rootNode.querySelector(`link[href*="${encodeURIComponent(font)}"]`);
     if (!existing) {

@@ -63,9 +63,9 @@
     "registry": "https://wombat-dressing-room.appspot.com"
   },
   "dependencies": {
-    "@lit-labs/context": "^0.3.1",
     "@lit-labs/react": "^1.2.0",
-    "lit": "^2.3.0",
+    "@lit/context": "^1.0.0",
+    "lit": "^3.0.0",
     "tslib": "^2.4.0"
   },
   "devDependencies": {
@@ -84,7 +84,7 @@
     "playwright": "^1.38.1",
     "rollup": "^3.29.4",
     "rollup-plugin-summary": "^2.0.0",
-    "typescript": "~4.7.4",
+    "typescript": "^5.2.2",
     "web-test-runner-jasmine": "^0.0.5",
     "wireit": "^0.14.0"
   },

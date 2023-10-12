@@ -18,6 +18,16 @@ function simpleStripComments(xml: string): string {
   return xml.replace(/<!--.*?-->/ig, '');
 }
 
+/**
+ * The inner HTML content of `renderRoot`, equivalent to `renderRoot.innerHTML`
+ * when its type is `HTMLElement`. This is needed because `DocumentFragment`
+ * does not have the `innerHTML` property.
+ */
+function renderedHTML(renderRoot: HTMLElement|DocumentFragment): string {
+  return Array.from(renderRoot.children)
+      .map((child) => child.outerHTML)
+      .reduce((x, y) => x + y, '');
+}
 
 describe('place attribution test', () => {
   const env = new Environment();
@@ -61,9 +71,9 @@ describe('place attribution test', () => {
 
     const el = await prepareState(html`<gmpx-place-attribution .place=${
         place}></gmpx-place-attribution>`);
-
-    expect(simpleStripComments(el.renderRoot.innerHTML))
+    expect(simpleStripComments(renderedHTML(el.renderRoot)))
         .toEqual(
-            '<a target="_blank" href="https://foo.com">Foo</a><span class="sep">, </span><span>Bar</span>');
+            '<a target="_blank" href="https://foo.com">Foo</a>' +
+            '<span class="sep">, </span><span>Bar</span>');
   });
 });

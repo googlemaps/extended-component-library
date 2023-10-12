@@ -7,7 +7,7 @@
 import '../place_building_blocks/place_data_provider/place_data_provider_test.js';
 // import 'jasmine'; (google3-only)
 
-import {provide} from '@lit-labs/context';
+import {provide} from '@lit/context';
 import {html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 

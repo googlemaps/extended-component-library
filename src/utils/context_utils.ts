@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {ContextRoot} from '@lit-labs/context';
+import {ContextRoot} from '@lit/context';
 
 let hasContextRoot = false;
 

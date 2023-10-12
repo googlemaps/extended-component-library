@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {provide} from '@lit-labs/context';
+import {provide} from '@lit/context';
 import {customElement, property} from 'lit/decorators.js';
 
 import {BaseComponent} from '../../base/base_component.js';

@@ -17,7 +17,7 @@ import '../place_building_blocks/place_price_level/place_price_level.js';
 import '../place_building_blocks/place_rating/place_rating.js';
 import '../place_building_blocks/place_reviews/place_reviews.js';
 
-import {consume} from '@lit-labs/context';
+import {consume} from '@lit/context';
 import {css, html, PropertyValues} from 'lit';
 import {customElement, property, query} from 'lit/decorators.js';
 import {choose} from 'lit/directives/choose.js';
