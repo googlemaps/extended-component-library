@@ -403,7 +403,7 @@ function declarationToMarkdown(declaration, module, headerLevel) {
         'Property type',
         'Description',
         'Default',
-        'Reflects?',
+        '[Reflects?](https://open-wc.org/guides/knowledge/attributes-and-properties/#attribute-and-property-reflection)',
       ],
     ];
     for (const field of fields) {
