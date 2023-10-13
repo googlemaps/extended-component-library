@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.3](https://github.com/googlemaps/extended-component-library/compare/v0.4.2...v0.4.3) (2023-10-13)
+
+
+### Bug Fixes
+
+* resolve minor styling issue with photo scrollbar in Place Overview ([95e9a6c](https://github.com/googlemaps/extended-component-library/commit/95e9a6c4f08b6efdeb5c26ed17ceed138fec6e75))
+
 ## [0.4.2](https://github.com/googlemaps/extended-component-library/compare/v0.4.1...v0.4.2) (2023-09-06)
 
 
