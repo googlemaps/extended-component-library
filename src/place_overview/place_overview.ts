@@ -188,6 +188,7 @@ export class PlaceOverview extends BaseComponent {
     }
 
     .carousel {
+      line-height: normal;
       margin-inline-end: ${getTypeScaleSizeFromPx(-20)};
       overflow-x: auto;
       white-space: nowrap;
@@ -196,6 +197,9 @@ export class PlaceOverview extends BaseComponent {
     .carousel::-webkit-scrollbar {
       background-color: ${GMPX_COLOR_SURFACE};
       width: 16px;
+    }
+    .carousel::-webkit-scrollbar-corner {
+      background-color: ${GMPX_COLOR_SURFACE};
     }
     .carousel::-webkit-scrollbar-track {
       background-color: ${GMPX_COLOR_SURFACE};
