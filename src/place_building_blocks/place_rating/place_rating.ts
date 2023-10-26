@@ -85,8 +85,8 @@ export class PlaceRating extends PlaceDataConsumer {
       const icons = this.condensed ? [IconType.FULL] : toStarIcons(rating!);
       // clang-format off
       return html`
-        <span aria-label=${
-              this.getMsg('PLACE_RATING_ARIA_LABEL', rating!.toFixed(1))}>
+        <span role="img" aria-label=${
+            this.getMsg('PLACE_RATING_ARIA_LABEL', rating!.toFixed(1))}>
           <span aria-hidden="true">
             <span>${rating!.toFixed(1)}</span>
             ${map(icons, (iconType) => {

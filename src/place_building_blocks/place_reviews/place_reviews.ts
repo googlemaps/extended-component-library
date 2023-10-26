@@ -149,8 +149,8 @@ export class PlaceReviews extends PlaceDataConsumer {
     const subheader = html`
       <div class="subheader">
         ${when(review.rating, () => html`
-          <span aria-label=${
-                this.getMsg('PLACE_RATING_ARIA_LABEL', review.rating!)}>
+          <span role="img" aria-label=${
+              this.getMsg('PLACE_RATING_ARIA_LABEL', review.rating!)}>
             <span aria-hidden="true">
               ${map(toStarIcons(review.rating!), (iconType) => {
                 return html`<span class="star-icon ${iconType}">&#x2605;</span>`;
