@@ -64,7 +64,7 @@ export class PlaceOpeningHours extends PlaceDataConsumer {
     }
 
     .open {
-      color: #388e3c;
+      color: #188038;
     }
 
     .icon {

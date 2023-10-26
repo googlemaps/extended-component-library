@@ -26,7 +26,7 @@ const CSS_CUSTOM_PROPERTY_DEFAULTS = {
   '--gmpx-color-surface': '#fff',
   '--gmpx-color-on-surface': '#212121',
   '--gmpx-color-on-surface-variant': '#757575',
-  '--gmpx-color-primary': '#1e88e5',
+  '--gmpx-color-primary': '#1976d2',
   '--gmpx-color-on-primary': '#fff',
   '--gmpx-font-family-base': '\'Google Sans Text\', sans-serif',
   '--gmpx-font-family-headings': '--gmpx-font-family-base',

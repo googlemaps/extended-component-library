@@ -10,7 +10,7 @@ import {css, CSSResult} from 'lit';
  * Primary theme color (e.g. buttons, hyperlinks). Can be modified via
  * `--gmpx-color-primary`.
  */
-export const GMPX_COLOR_PRIMARY = css`var(--gmpx-color-primary, #1e88e5)`;
+export const GMPX_COLOR_PRIMARY = css`var(--gmpx-color-primary, #1976d2)`;
 
 /**
  * Surface theme color (e.g. card background). Can be modified via

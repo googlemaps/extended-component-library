@@ -143,7 +143,7 @@ Global theming options let you consistently customize the color and typography f
 | `--gmpx-color-surface`              | `#fff`          | Surface theme color, used as a background. |
 | `--gmpx-color-on-surface`           | `#212121`       | Color used for text and other elements placed on top of the surface color. |
 | `--gmpx-color-on-surface-variant`   | `#757575`       | Color used for supporting metadata and other elements placed on top of the surface color. |
-| `--gmpx-color-primary`              | `#1e88e5`       | Primary theme color used for interactive text and elements, like buttons and icons. Also used to highlight an active or selected state like in a focused text field’s border. |
+| `--gmpx-color-primary`              | `#1976d2`       | Primary theme color used for interactive text and elements, like buttons and icons. Also used to highlight an active or selected state like in a focused text field’s border. |
 | `--gmpx-color-on-primary`           | `#fff`          | Color used for text or icons on top of a `--gmpx-color-primary` background. |
 | `--gmpx-font-family-base`           | `'Google Sans Text', sans-serif` | Typeface for body text, captions, and labels. |
 | `--gmpx-font-family-headings`       | `'Google Sans Text', sans-serif` | Typeface for headings. |

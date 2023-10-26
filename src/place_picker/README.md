@@ -67,7 +67,7 @@ You can use most built-in CSS properties to control the positioning or display o
 | ------------------------- | -------------------------------- | ------------------------------------------ |
 | `--gmpx-color-surface`    | `#fff`                           | Background color of the input. 🌎          |
 | `--gmpx-color-on-surface` | `#212121`                        | Main text color. 🌎                        |
-| `--gmpx-color-primary`    | `#1e88e5`                        | Color of the input focus ring. 🌎          |
+| `--gmpx-color-primary`    | `#1976d2`                        | Color of the input focus ring. 🌎          |
 | `--gmpx-font-family-base` | `'Google Sans Text', sans-serif` | Font family. 🌎                            |
 | `--gmpx-font-size-base`   | `0.875rem`                       | Font size, used to scale the component. 🌎 |
 
