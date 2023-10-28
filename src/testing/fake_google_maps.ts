@@ -4,8 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Place, PlaceResult} from '../utils/googlemaps_types.js';
+import {LatLng, LatLngLiteral, Place, PlaceResult} from '../utils/googlemaps_types.js';
 
+import {makeFakeDistanceMatrixResponse} from './fake_distance_matrix.js';
 import {makeFakePlace} from './fake_place.js';
 import {makeFakeRoute} from './fake_route.js';
 
@@ -37,6 +38,13 @@ export class FakeGoogleMapsHarness {
   routeHandler = (request: google.maps.DirectionsRequest) => Promise.resolve({
     routes: [makeFakeRoute()],
   } as google.maps.DirectionsResult);
+
+  /**
+   * Override this function to control the response of a
+   * `google.maps.DistanceMatrixService.getDistanceMatrix()` request.
+   */
+  distanceMatrixHandler = (request: google.maps.DistanceMatrixRequest) =>
+      makeFakeDistanceMatrixResponse(request);
 
   /**
    * Override this function to control the response of a
@@ -138,7 +146,27 @@ export class FakeGoogleMapsHarness {
             return harness.routeHandler(request);
           }
         },
+
+        DistanceMatrixService: class {
+          getDistanceMatrix(request: google.maps.DistanceMatrixRequest) {
+            return Promise.resolve(harness.distanceMatrixHandler(request));
+          }
+        }
       },
+      'geometry': {
+        spherical: {
+          /**
+           * Fake spherical geometry calculation returns the difference in
+           * `lat` values.
+           */
+          computeDistanceBetween(
+              from: LatLng|LatLngLiteral, to: LatLng|LatLngLiteral): number {
+            const getLat = (x: LatLng|LatLngLiteral) =>
+                typeof x.lat === 'function' ? x.lat() : x.lat;
+            return Math.abs(getLat(from) - getLat(to));
+          }
+        }
+      }
     };
 
     this.sdk = {

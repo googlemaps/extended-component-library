@@ -62,5 +62,5 @@ export type PriceLevel = google.maps.places.PriceLevel;
 
 /** HTML tag names for Maps JS web components. */
 export interface HTMLElementTagNameMap {
-  'gmp-map': MapElement,
+  'gmp-map': MapElement;
 }
