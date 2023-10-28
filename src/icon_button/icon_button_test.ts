@@ -104,4 +104,13 @@ describe('IconButton', () => {
     expect(el.variant).toBe('outlined');
     expect(el.getAttribute('variant')).toBe('outlined');
   });
+
+  it('sets role="none" on the host when aria-label is present', async () => {
+    const el = await prepareState(html`
+      <gmpx-icon-button aria-label="enter">
+      </gmpx-icon-button>
+    `);
+
+    expect(el.role).toBe('none');
+  });
 });

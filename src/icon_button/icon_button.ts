@@ -242,6 +242,13 @@ export class IconButton extends BaseComponent {
     `;
   }
 
+  protected override updated() {
+    // If the aria-label attribute is set, hide it from the a11y tree. Otherwise
+    // the component and its shadow DOM content show up as duplicate nodes with
+    // the same aria-label.
+    this.role = this.ariaLabel != null ? 'none' : null;
+  }
+
   private renderContent() {
     const icon = this.icon ||
         (!this.hasLabel || this.condensed ? DEFAULT_ICON : undefined);

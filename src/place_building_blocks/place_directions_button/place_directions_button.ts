@@ -123,6 +123,13 @@ export class PlaceDirectionsButton extends PlaceDataConsumer {
     `;
   }
 
+  protected override updated() {
+    // If the aria-label attribute is set, hide it from the a11y tree. Otherwise
+    // the component and its shadow DOM content show up as duplicate nodes with
+    // the same aria-label.
+    this.role = this.ariaLabel != null ? 'none' : null;
+  }
+
   /** @ignore */
   getRequiredFields(): Array<keyof Place> {
     return ['displayName', 'formattedAddress', 'location'];

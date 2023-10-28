@@ -165,4 +165,16 @@ describe('PlaceDirectionsButton', () => {
                   expectedQuery}`);
     });
   });
+
+  it('sets role="none" on the host when aria-label is present', async () => {
+    const root = env.render(html`
+      <gmpx-place-directions-button aria-label="Get Directions">
+      </gmpx-place-directions-button>
+    `);
+    await env.waitForStability();
+    const el = root.querySelector<PlaceDirectionsButton>(
+        'gmpx-place-directions-button')!;
+
+    expect(el.role).toBe('none');
+  });
 });
