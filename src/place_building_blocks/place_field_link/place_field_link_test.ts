@@ -142,4 +142,33 @@ describe('PlaceFieldLink', () => {
 
     expect(getHref(el)).toBe('https://www.mywebsite.com/');
   });
+
+  it(`forwards aria-label to the anchor element`, async () => {
+    const [el] = await prepareState(html`
+      <gmpx-place-field-link .place=${fakePlace} aria-label="My Label">
+      </gmpx-place-field-link>
+    `);
+
+    const anchor = el.renderRoot.querySelector('a')!;
+    expect(anchor.getAttribute('aria-label')).toBe('My Label');
+  });
+
+  it(`omits aria-label from the anchor element when not set`, async () => {
+    const [el] = await prepareState(html`
+      <gmpx-place-field-link .place=${fakePlace}>
+      </gmpx-place-field-link>
+    `);
+
+    const anchor = el.renderRoot.querySelector('a')!;
+    expect(anchor.hasAttribute('aria-label')).toBeFalse();
+  });
+
+  it('sets role="none" on the host when aria-label is present', async () => {
+    const [el] = await prepareState(html`
+      <gmpx-place-field-link .place=${fakePlace} aria-label="My Label">
+      </gmpx-place-field-link>
+    `);
+
+    expect(el.role).toBe('none');
+  });
 });

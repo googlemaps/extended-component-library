@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {css, html} from 'lit';
+import {css, html, nothing} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 
@@ -92,11 +92,22 @@ export class PlaceFieldLink extends PlaceDataConsumer {
   @property({type: String, reflect: true, attribute: 'href-field'})
   hrefField: LinkField = 'websiteURI';
 
+  /**
+   * The link description that gets read by assistive technology.
+   *
+   * Set this to something more descriptive if the link's purpose isn't clear
+   * from its text content alone. For example, if the link text is just
+   * "Website", then the `aria-label` could be "Website for (business name)".
+   */
+  @property({attribute: 'aria-label', reflect: true, type: String})
+  override ariaLabel: string|null = null;
+
   protected override render() {
     const href = this.getHref();
     // clang-format off
     return html`${when(href, () => html`
-      <a target="_blank" rel="noopener noreferrer" href=${href!}>
+      <a target="_blank" rel="noopener noreferrer" href=${href!}
+          aria-label=${this.ariaLabel ?? nothing}>
         ${when(this.hasContentForSlot(),
           () => html`<slot></slot>`,
           () => html`${this.getDefaultLinkText(href!)}`,
@@ -104,6 +115,13 @@ export class PlaceFieldLink extends PlaceDataConsumer {
       </a>
     `,)}`;
     // clang-format on
+  }
+
+  protected override updated() {
+    // If the aria-label attribute is set, hide it from the a11y tree. Otherwise
+    // the component and its shadow DOM content show up as duplicate nodes with
+    // the same aria-label.
+    this.role = this.ariaLabel != null ? 'none' : null;
   }
 
   /** @ignore */
