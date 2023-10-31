@@ -15,6 +15,11 @@ export type StringFunction = (...args: any[]) => string;
  */
 export declare interface StringLiterals extends
     Record<string, string|StringFunction> {
+  BACK_BUTTON: string;
+  LOCATOR_ALL_LOCATIONS: string;
+  LOCATOR_LIST_HEADER: string;
+  LOCATOR_SEARCH_PROMPT: string;
+  LOCATOR_VIEW_DETAILS: string;
   PLACE_CLEAR_ARIA_LABEL: string;
   PLACE_CLOSED: string;
   PLACE_CLOSED_PERMANENTLY: string;
@@ -51,6 +56,11 @@ export declare interface StringLiterals extends
 
 /** String literals in the `en-US` locale. */
 export const STRING_LITERALS_EN_US: StringLiterals = Object.freeze({
+  'BACK_BUTTON': 'Back',
+  'LOCATOR_ALL_LOCATIONS': 'All locations',
+  'LOCATOR_LIST_HEADER': 'Find a location near you',
+  'LOCATOR_SEARCH_PROMPT': 'Enter your address or zip code',
+  'LOCATOR_VIEW_DETAILS': 'View details',
   'PLACE_CLEAR_ARIA_LABEL': 'Clear',
   'PLACE_CLOSED': 'Closed',
   'PLACE_CLOSED_PERMANENTLY': 'Permanently closed',

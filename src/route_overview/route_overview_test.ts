@@ -21,6 +21,10 @@ import {RouteOverview} from './route_overview.js';
 describe('RouteOverview', () => {
   const env = new Environment();
 
+  beforeEach(() => {
+    env.defineFakeAdvancedMarkerElement();
+  });
+
   async function prepareState(template?: TemplateResult) {
     const errorSpy = spyOn(LoggingController.prototype, 'error');
     const root = env.render(

@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '../../testing/fake_gmp_components.js';
 // import 'jasmine'; (google3-only)
 
 import {html, TemplateResult} from 'lit';
@@ -18,25 +17,6 @@ import {makeFakeLeg, makeFakeRoute} from '../../testing/fake_route.js';
 import {RouteMarker} from './route_marker.js';
 
 type LatLng = google.maps.LatLng;
-
-const FAKE_MARKER_LIBRARY = {
-  AdvancedMarkerElement: class {
-    position?: LatLng|null;
-    zIndex?: number|null;
-    title: string = '';
-    map?: google.maps.Map|null;
-
-    innerContent?: Element|null;
-    set content(content: Element|null|undefined) {
-      // Detach from the DOM as in the real AdvancedMarkerElement
-      content?.remove();
-      this.innerContent = content;
-    }
-    get content(): Element|null|undefined {
-      return this.innerContent;
-    }
-  }
-};
 
 function fakeRouteBetween(
     [startLat, startLng]: [number, number],
@@ -54,15 +34,14 @@ describe('RouteMarker', () => {
 
   beforeAll(() => {
     env.defineFakeMapElement();
-  });
-
-  beforeEach(() => {
-    env.importLibrarySpy!.and.returnValue(FAKE_MARKER_LIBRARY);
+    env.defineFakeAdvancedMarkerElement();
   });
 
   async function prepareState(template?: TemplateResult) {
-    const constructorSpy =
-        spyOn(FAKE_MARKER_LIBRARY, 'AdvancedMarkerElement').and.callThrough();
+    const constructorSpy = spyOn(
+                               env.fakeGoogleMapsHarness!.libraries['marker'],
+                               'AdvancedMarkerElement')
+                               .and.callThrough();
     const root =
         env.render(template ?? html`<gmpx-route-marker></gmpx-route-marker>`);
     await env.waitForStability();

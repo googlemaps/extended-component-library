@@ -12,15 +12,10 @@ import {FakeLatLngBounds} from '../testing/fake_lat_lng.js';
 
 import {ViewportManager} from './viewport_manager.js';
 
-const FAKE_CORE_LIBRARY = {
-  LatLngBounds: FakeLatLngBounds,
-};
-
 describe('ViewportManager', () => {
   const env = new Environment();
 
   beforeEach(() => {
-    env.importLibrarySpy!.and.returnValue(FAKE_CORE_LIBRARY);
     env.defineFakeMapElement();
   });
 
@@ -101,14 +96,13 @@ describe('ViewportManager', () => {
     it('fits the bounds of a registered component', async () => {
       const map = new FakeMapElement();
       const manager = ViewportManager.getInstanceForMap(map);
-      const fitBoundsSpy = spyOn(map.innerMap, 'fitBounds');
       const component = {
         getBounds: () => ({north: 1, south: 0, east: 1, west: 0})
       };
 
       await manager.register(component);
 
-      expect(fitBoundsSpy)
+      expect(map.innerMap.fitBounds)
           .toHaveBeenCalledOnceWith(
               new FakeLatLngBounds({north: 1, south: 0, east: 1, west: 0}));
     });
@@ -124,10 +118,10 @@ describe('ViewportManager', () => {
       };
 
       await manager.register(component1);
-      const fitBoundsSpy = spyOn(map.innerMap, 'fitBounds');
+      map.innerMap.fitBounds.calls.reset();
       await manager.register(component2);
 
-      expect(fitBoundsSpy)
+      expect(map.innerMap.fitBounds)
           .toHaveBeenCalledOnceWith(
               new FakeLatLngBounds({north: 2, south: 0, east: 2, west: 0}));
     });
@@ -144,10 +138,10 @@ describe('ViewportManager', () => {
 
       await manager.register(component1);
       await manager.register(component2);
-      const fitBoundsSpy = spyOn(map.innerMap, 'fitBounds');
+      map.innerMap.fitBounds.calls.reset();
       await manager.unregister(component1);
 
-      expect(fitBoundsSpy)
+      expect(map.innerMap.fitBounds)
           .toHaveBeenCalledOnceWith(
               new FakeLatLngBounds({north: 2, south: 1, east: 2, west: 1}));
     });
@@ -160,10 +154,10 @@ describe('ViewportManager', () => {
       };
 
       await manager.register(component);
-      const fitBoundsSpy = spyOn(map.innerMap, 'fitBounds');
+      map.innerMap.fitBounds.calls.reset();
       await manager.unregister(component);
 
-      expect(fitBoundsSpy).not.toHaveBeenCalled();
+      expect(map.innerMap.fitBounds).not.toHaveBeenCalled();
     });
 
     it('fits bounds when calling updateViewport() manually', async () => {
@@ -174,10 +168,10 @@ describe('ViewportManager', () => {
       };
 
       await manager.register(component);
-      const fitBoundsSpy = spyOn(map.innerMap, 'fitBounds');
+      map.innerMap.fitBounds.calls.reset();
       await manager.updateViewport();
 
-      expect(fitBoundsSpy)
+      expect(map.innerMap.fitBounds)
           .toHaveBeenCalledOnceWith(
               new FakeLatLngBounds({north: 1, south: 0, east: 1, west: 0}));
     });

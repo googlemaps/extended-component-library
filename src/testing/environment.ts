@@ -10,7 +10,7 @@ import {ReactiveElement, render as litRender, TemplateResult} from 'lit';
 
 import {APILoader} from '../api_loader/api_loader.js';
 
-import {FakeMapElement} from './fake_gmp_components.js';
+import {FakeAdvancedMarkerElement, FakeMapElement} from './fake_gmp_components.js';
 import {FakeGoogleMapsHarness} from './fake_google_maps.js';
 
 declare global {
@@ -103,9 +103,22 @@ export class Environment {
     return root;
   }
 
+  /**
+   * Inserts a fake implementation of <gmp-map> into the test environment.
+   */
   defineFakeMapElement() {
     if (!customElements.get('gmp-map')) {
       customElements.define('gmp-map', FakeMapElement);
+    }
+  }
+
+  /**
+   * Inserts a fake implementation of <gmp-advanced-marker> into the test
+   * environment.
+   */
+  defineFakeAdvancedMarkerElement() {
+    if (!customElements.get('gmp-advanced-marker')) {
+      customElements.define('gmp-advanced-marker', FakeAdvancedMarkerElement);
     }
   }
 

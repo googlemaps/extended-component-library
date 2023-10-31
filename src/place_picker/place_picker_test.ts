@@ -42,7 +42,6 @@ const FAKE_PLACE_FROM_QUERY = makeFakePlace({
 
 describe('PlacePicker', () => {
   const env = new Environment();
-  let fakeAutocomplete: jasmine.SpyObj<google.maps.places.Autocomplete>;
 
   beforeAll(() => {
     env.defineFakeMapElement();
@@ -57,13 +56,6 @@ describe('PlacePicker', () => {
     const fakeCircle = jasmine.createSpyObj('Circle', ['getBounds']);
     env.fakeGoogleMapsHarness!.libraries['maps'].Circle =
         jasmine.createSpy().and.returnValue(fakeCircle);
-
-    // Create a fake Autocomplete class with test-specific logic.
-    fakeAutocomplete = jasmine.createSpyObj<google.maps.places.Autocomplete>(
-        'Autocomplete',
-        ['addListener', 'bindTo', 'getBounds', 'getPlace', 'setOptions']);
-    spyOn(env.fakeGoogleMapsHarness!, 'autocompleteConstructor')
-        .and.returnValue(fakeAutocomplete);
   });
 
   async function prepareState(template?: TemplateResult) {
@@ -101,6 +93,8 @@ describe('PlacePicker', () => {
   });
 
   it('initializes Autocomplete widget with minimum configs', async () => {
+    spyOn(env.fakeGoogleMapsHarness!, 'autocompleteConstructor')
+        .and.callThrough();
     const {picker, input, searchButton, clearButton} = await prepareState();
 
     expect(env.fakeGoogleMapsHarness!.autocompleteConstructor)
@@ -117,6 +111,9 @@ describe('PlacePicker', () => {
   });
 
   it(`initializes Autocomplete widget based on attributes`, async () => {
+    spyOn(env.fakeGoogleMapsHarness!, 'autocompleteConstructor')
+        .and.callThrough();
+
     // The call to `.Circle.and.exec()` grabs a reference to the Circle
     // spy object without recording a call to the constructor spy (e.g.
     // `.Circle()`)
@@ -160,13 +157,14 @@ describe('PlacePicker', () => {
     picker.type = 'restaurant';
     await env.waitForStability();
 
-    expect(fakeAutocomplete.setOptions).toHaveBeenCalledOnceWith({
-      bounds: FAKE_BOUNDS,
-      componentRestrictions: {country: ['uk']},
-      fields: [...PLACE_RESULT_DATA_FIELDS],
-      strictBounds: true,
-      types: ['restaurant'],
-    });
+    expect(env.fakeGoogleMapsHarness!.autocompleteSpy.setOptions)
+        .toHaveBeenCalledOnceWith({
+          bounds: FAKE_BOUNDS,
+          componentRestrictions: {country: ['uk']},
+          fields: [...PLACE_RESULT_DATA_FIELDS],
+          strictBounds: true,
+          types: ['restaurant'],
+        });
   });
 
   it(`doesn't define bounds when only location bias is specified`, async () => {
@@ -175,7 +173,7 @@ describe('PlacePicker', () => {
     picker.locationBias = {lat: 12, lng: 34};
     await env.waitForStability();
 
-    expect(fakeAutocomplete.setOptions)
+    expect(env.fakeGoogleMapsHarness!.autocompleteSpy.setOptions)
         .toHaveBeenCalledOnceWith(jasmine.objectContaining({
           bounds: undefined,
         }));
@@ -187,7 +185,7 @@ describe('PlacePicker', () => {
     picker.radius = 1000;
     await env.waitForStability();
 
-    expect(fakeAutocomplete.setOptions)
+    expect(env.fakeGoogleMapsHarness!.autocompleteSpy.setOptions)
         .toHaveBeenCalledOnceWith(jasmine.objectContaining({
           bounds: undefined,
         }));
@@ -199,7 +197,8 @@ describe('PlacePicker', () => {
     picker.placeholder = 'Search nearby places';
     await env.waitForStability();
 
-    expect(fakeAutocomplete.setOptions).not.toHaveBeenCalled();
+    expect(env.fakeGoogleMapsHarness!.autocompleteSpy.setOptions)
+        .not.toHaveBeenCalled();
   });
 
   it(`enables search & clear buttons on user input`, async () => {
@@ -230,12 +229,13 @@ describe('PlacePicker', () => {
   it(`sets value based on user selection and fires event`, async () => {
     const dispatchEventSpy = spyOn(PlacePicker.prototype, 'dispatchEvent');
     let autocompleteSelectionHandler: Function;
-    fakeAutocomplete.addListener.withArgs('place_changed', jasmine.anything())
+    env.fakeGoogleMapsHarness!.autocompleteSpy.addListener
+        .withArgs('place_changed', jasmine.anything())
         .and.callFake((eventName, handler) => {
           autocompleteSelectionHandler = handler;
           return {} as google.maps.MapsEventListener;
         });
-    fakeAutocomplete.getPlace.and.returnValue(
+    env.fakeGoogleMapsHarness!.autocompleteSpy.getPlace.and.returnValue(
         FAKE_PLACE_RESULT_FROM_AUTOCOMPLETE);
     const {picker, input, searchButton, clearButton} = await prepareState();
 
@@ -256,7 +256,8 @@ describe('PlacePicker', () => {
 
   it(`sets value to undefined when place's cleared & fires event`, async () => {
     let autocompleteSelectionHandler: Function;
-    fakeAutocomplete.addListener.withArgs('place_changed', jasmine.anything())
+    env.fakeGoogleMapsHarness!.autocompleteSpy.addListener
+        .withArgs('place_changed', jasmine.anything())
         .and.callFake((eventName, handler) => {
           autocompleteSelectionHandler = handler;
           return {} as google.maps.MapsEventListener;
@@ -280,7 +281,8 @@ describe('PlacePicker', () => {
   });
 
   it(`sets value based on place returned by Find Place request`, async () => {
-    fakeAutocomplete.getBounds.and.returnValue(FAKE_BOUNDS);
+    env.fakeGoogleMapsHarness!.autocompleteSpy.getBounds.and.returnValue(
+        FAKE_BOUNDS);
     const {picker, input, searchButton, clearButton} = await prepareState();
 
     await enterQueryText(input, '123 Main St');
@@ -308,7 +310,8 @@ describe('PlacePicker', () => {
 
   it('sets value from fallback GA API when Place.findPlaceFromQuery is not available',
      async () => {
-       fakeAutocomplete.getBounds.and.returnValue(FAKE_BOUNDS);
+       env.fakeGoogleMapsHarness!.autocompleteSpy.getBounds.and.returnValue(
+           FAKE_BOUNDS);
        const {picker, input, searchButton, clearButton} = await prepareState();
        (env.fakeGoogleMapsHarness!.findPlaceFromQueryHandler as jasmine.Spy)
            .and.throwError(new Error(
@@ -412,7 +415,8 @@ describe('PlacePicker', () => {
 
     await picker.bindTo(fakeMap);
 
-    expect(fakeAutocomplete.bindTo).toHaveBeenCalledOnceWith('bounds', fakeMap);
+    expect(env.fakeGoogleMapsHarness!.autocompleteSpy.bindTo)
+        .toHaveBeenCalledOnceWith('bounds', fakeMap);
   });
 
   it(`binds to map bounds declaratively via attribute`, async () => {
@@ -422,7 +426,7 @@ describe('PlacePicker', () => {
     `);
     const mapElement = root.querySelector<FakeMapElement>('gmp-map')!;
 
-    expect(fakeAutocomplete.bindTo)
+    expect(env.fakeGoogleMapsHarness!.autocompleteSpy.bindTo)
         .toHaveBeenCalledOnceWith('bounds', mapElement.innerMap);
   });
 
@@ -431,7 +435,8 @@ describe('PlacePicker', () => {
       <gmpx-place-picker for-map="my-map"></gmpx-place-picker>
     `);
 
-    expect(fakeAutocomplete.bindTo).not.toHaveBeenCalled();
+    expect(env.fakeGoogleMapsHarness!.autocompleteSpy.bindTo)
+        .not.toHaveBeenCalled();
   });
 
   it(`doesn't bind to map bounds when id matches non-Map element`, async () => {
@@ -440,6 +445,7 @@ describe('PlacePicker', () => {
       <div id="my-map"></div>
     `);
 
-    expect(fakeAutocomplete.bindTo).not.toHaveBeenCalled();
+    expect(env.fakeGoogleMapsHarness!.autocompleteSpy.bindTo)
+        .not.toHaveBeenCalled();
   });
 });

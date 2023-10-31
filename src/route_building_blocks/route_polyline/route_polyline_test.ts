@@ -15,16 +15,6 @@ import {makeFakeLeg, makeFakeRoute, makeFakeStep} from '../../testing/fake_route
 
 import {RoutePolyline} from './route_polyline.js';
 
-const FAKE_MAPS_LIBRARY = {
-  Polyline: class {
-    // clang-format off
-    setMap(map: google.maps.Map|null) {}
-    setPath(path: Array<google.maps.LatLng|google.maps.LatLngLiteral>) {}
-    setOptions(options: google.maps.PolylineOptions) {}
-    // clang-format on
-  },
-  LatLngBounds: FakeLatLngBounds,
-};
 
 describe('RoutePolyline', () => {
   const env = new Environment();
@@ -33,23 +23,25 @@ describe('RoutePolyline', () => {
     env.defineFakeMapElement();
   });
 
-  beforeEach(() => {
-    env.importLibrarySpy!.and.returnValue(FAKE_MAPS_LIBRARY);
-  });
-
   async function prepareState(template?: TemplateResult) {
-    const setMapSpy = spyOn(FAKE_MAPS_LIBRARY.Polyline.prototype, 'setMap');
-    const setOptionsSpy =
-        spyOn(FAKE_MAPS_LIBRARY.Polyline.prototype, 'setOptions');
-    const setPathSpy = spyOn(FAKE_MAPS_LIBRARY.Polyline.prototype, 'setPath');
+    const setMapSpy = spyOn(
+        env.fakeGoogleMapsHarness!.libraries['maps'].Polyline.prototype,
+        'setMap');
+    const setOptionsSpy = spyOn(
+        env.fakeGoogleMapsHarness!.libraries['maps'].Polyline.prototype,
+        'setOptions');
+    const setPathSpy = spyOn(
+        env.fakeGoogleMapsHarness!.libraries['maps'].Polyline.prototype,
+        'setPath');
     const constructorSpy =
-        spyOn(FAKE_MAPS_LIBRARY, 'Polyline').and.callThrough();
+        spyOn(env.fakeGoogleMapsHarness!.libraries['maps'], 'Polyline')
+            .and.callThrough();
 
     const root = env.render(
         template ?? html`<gmpx-route-polyline></gmpx-route-polyline>`);
     const map = root.querySelector<FakeMapElement>('gmp-map');
     const polyline = root.querySelector<RoutePolyline>('gmpx-route-polyline')!;
-    const fitBoundsSpy = map ? spyOn(map.innerMap, 'fitBounds') : undefined;
+    const fitBoundsSpy = map?.innerMap?.fitBounds;
     await env.waitForStability();
 
     return {

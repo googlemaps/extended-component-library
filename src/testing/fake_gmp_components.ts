@@ -20,23 +20,42 @@
 
 import {LitElement} from 'lit';
 
-import {LatLng, LatLngBounds, LatLngBoundsLiteral, LatLngLiteral} from '../utils/googlemaps_types.js';
+import {LatLng, LatLngLiteral} from '../utils/googlemaps_types.js';
 
 declare global {
   interface HTMLElementTagNameMap {
     'gmp-map': FakeMapElement;
+    'gmp-advanced-marker': FakeAdvancedMarkerElement;
   }
 }
 
-/** A fake google.maps.MapElement class for testing purposes. */
+/** A fake `google.maps.MapElement` class for testing purposes. */
 export class FakeMapElement extends LitElement {
   center: LatLng|LatLngLiteral|null = null;
 
-  // tslint:disable-next-line:prefer-type-annotation
-  readonly innerMap = {
-    fitBounds: (bounds: LatLngBounds|LatLngBoundsLiteral) => {}
-  } as google.maps.Map;
+  readonly innerMap =
+      jasmine.createSpyObj<google.maps.Map>('Map', ['fitBounds']);
 
   mapId: string|null = null;
   zoom: number|null = null;
+}
+
+/**
+ * A fake `google.maps.AdvancedMarkerElement` class for testing purposes.
+ */
+export class FakeAdvancedMarkerElement extends LitElement {
+  position?: LatLng|null;
+  zIndex?: number|null;
+  override title = '';
+  map?: google.maps.Map|null;
+
+  innerContent?: Element|null;
+  set content(content: Element|null|undefined) {
+    // Detach from the DOM as in the real AdvancedMarkerElement
+    content?.remove();
+    this.innerContent = content;
+  }
+  get content(): Element|null|undefined {
+    return this.innerContent;
+  }
 }

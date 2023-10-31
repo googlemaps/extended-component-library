@@ -83,7 +83,9 @@ export class FakeLatLngBounds implements LatLngBounds {
     throw new Error('equals is not implemented');
   }
   extend(point: LatLng|LatLngLiteral): LatLngBounds {
-    throw new Error('extend is not implemented');
+    const lat = typeof point.lat === 'function' ? point.lat() : point.lat;
+    const lng = typeof point.lng === 'function' ? point.lng() : point.lng;
+    return this.union({north: lat, south: lat, east: lng, west: lng});
   }
   getCenter(): LatLng {
     throw new Error('getCenter is not implemented');

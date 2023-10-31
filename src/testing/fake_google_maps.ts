@@ -6,7 +6,10 @@
 
 import {LatLng, LatLngLiteral, Place, PlaceResult} from '../utils/googlemaps_types.js';
 
+import {makeFakeAutocomplete} from './fake_autocomplete.js';
 import {makeFakeDistanceMatrixResponse} from './fake_distance_matrix.js';
+import {FakeAdvancedMarkerElement, FakeMapElement} from './fake_gmp_components.js';
+import {FakeLatLng, FakeLatLngBounds} from './fake_lat_lng.js';
 import {makeFakePlace} from './fake_place.js';
 import {makeFakeRoute} from './fake_route.js';
 
@@ -64,14 +67,19 @@ export class FakeGoogleMapsHarness {
       } = (request) => ({places: []});
 
   /**
-   * Override this function to customize how `google.maps.places.Autocomplete`
-   * is instantiated.
+   * Spy for the fake Places Autocomplete.
    */
-  autocompleteConstructor:
+  autocompleteSpy = makeFakeAutocomplete();
+
+  /**
+   * Override this function to control the constructor for
+   * `google.maps.places.Autocomplete`.
+   */
+  autocompleteConstructor =
       (input: HTMLInputElement,
        options?: google.maps.places.AutocompleteOptions) =>
-          google.maps.places.Autocomplete = () =>
-              ({} as google.maps.places.Autocomplete);
+          this.autocompleteSpy;
+
 
   /**
    * Collection of libraries that are dispatched via `importLibrary()`.
@@ -87,9 +95,9 @@ export class FakeGoogleMapsHarness {
   constructor() {
     const harness = this;
     this.libraries = {
-      'core': {},
+      'core': {LatLng: FakeLatLng, LatLngBounds: FakeLatLngBounds},
       'maps': {
-        Map: class {},
+        Map: FakeMapElement,
         Polyline: class {
           setMap() {}
           setPath() {}
@@ -97,7 +105,7 @@ export class FakeGoogleMapsHarness {
         }
       },
       'marker': {
-        AdvancedMarkerElement: class {},
+        AdvancedMarkerElement: FakeAdvancedMarkerElement,
       },
       'places': {
         Autocomplete: class {
