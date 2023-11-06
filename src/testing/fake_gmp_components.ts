@@ -34,7 +34,7 @@ export class FakeMapElement extends LitElement {
   center: LatLng|LatLngLiteral|null = null;
 
   readonly innerMap =
-      jasmine.createSpyObj<google.maps.Map>('Map', ['fitBounds']);
+      jasmine.createSpyObj<google.maps.Map>('Map', ['fitBounds', 'panTo']);
 
   mapId: string|null = null;
   zoom: number|null = null;

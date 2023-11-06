@@ -95,7 +95,11 @@ export class FakeGoogleMapsHarness {
   constructor() {
     const harness = this;
     this.libraries = {
-      'core': {LatLng: FakeLatLng, LatLngBounds: FakeLatLngBounds},
+      'core': {
+        LatLng: FakeLatLng,
+        LatLngBounds: FakeLatLngBounds,
+        UnitSystem: {IMPERIAL: 0, METRIC: 1},
+      },
       'maps': {
         Map: FakeMapElement,
         Polyline: class {

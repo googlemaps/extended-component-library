@@ -12,14 +12,19 @@ export type StringFunction = (...args: any[]) => string;
  *
  * The values of this interface may be either plain strings or string functions,
  * the latter of which outputs a string based on one or more string parameters.
+ *
+ * Naming convention is <COMPONENT>_<DESCRIPTION>, where the first term
+ * indicates where the string is used and the second term describes its intent.
  */
 export declare interface StringLiterals extends
     Record<string, string|StringFunction> {
-  BACK_BUTTON: string;
-  LOCATOR_ALL_LOCATIONS: string;
+  LOCATOR_BACK_BUTTON_CTA: string;
   LOCATOR_LIST_HEADER: string;
+  LOCATOR_LIST_SUBHEADING: string;
+  LOCATOR_LIST_SUBHEADING_WITH_SEARCH: string;
+  LOCATOR_SEARCH_LOCATION_MARKER_TITLE: string;
   LOCATOR_SEARCH_PROMPT: string;
-  LOCATOR_VIEW_DETAILS: string;
+  LOCATOR_VIEW_DETAILS_CTA: string;
   PLACE_CLEAR_ARIA_LABEL: string;
   PLACE_CLOSED: string;
   PLACE_CLOSED_PERMANENTLY: string;
@@ -54,13 +59,17 @@ export declare interface StringLiterals extends
   PLACE_TYPE: (placeType: string) => string;
 }
 
-/** String literals in the `en-US` locale. */
+/**
+ * String literals in the `en-US` locale.
+ */
 export const STRING_LITERALS_EN_US: StringLiterals = Object.freeze({
-  'BACK_BUTTON': 'Back',
-  'LOCATOR_ALL_LOCATIONS': 'All locations',
+  'LOCATOR_BACK_BUTTON_CTA': 'Back',
   'LOCATOR_LIST_HEADER': 'Find a location near you',
+  'LOCATOR_LIST_SUBHEADING': 'All locations',
+  'LOCATOR_LIST_SUBHEADING_WITH_SEARCH': 'Nearest locations',
+  'LOCATOR_SEARCH_LOCATION_MARKER_TITLE': 'My location',
   'LOCATOR_SEARCH_PROMPT': 'Enter your address or zip code',
-  'LOCATOR_VIEW_DETAILS': 'View details',
+  'LOCATOR_VIEW_DETAILS_CTA': 'View details',
   'PLACE_CLEAR_ARIA_LABEL': 'Clear',
   'PLACE_CLOSED': 'Closed',
   'PLACE_CLOSED_PERMANENTLY': 'Permanently closed',
