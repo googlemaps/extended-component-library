@@ -150,6 +150,44 @@ export const PlaceReviews = createComponent({
   react: React,
 });
 
+import {RouteDataProvider as RouteDataProviderWC} from '../route_building_blocks/route_data_provider/route_data_provider.js';
+
+export const RouteDataProvider = createComponent({
+  tagName: 'gmpx-route-data-provider',
+  elementClass: RouteDataProviderWC,
+  react: React,
+  events: {
+    'onRequestError': 'gmpx-requesterror' as EventName<RequestErrorEvent>,
+  },
+});
+
+import {RouteMarker as RouteMarkerWC} from '../route_building_blocks/route_marker/route_marker.js';
+
+export const RouteMarker = createComponent({
+  tagName: 'gmpx-route-marker',
+  elementClass: RouteMarkerWC,
+  react: React,
+});
+
+import {RouteOverview as RouteOverviewWC} from '../route_overview/route_overview.js';
+
+export const RouteOverview = createComponent({
+  tagName: 'gmpx-route-overview',
+  elementClass: RouteOverviewWC,
+  react: React,
+  events: {
+    'onRequestError': 'gmpx-requesterror' as EventName<RequestErrorEvent>,
+  },
+});
+
+import {RoutePolyline as RoutePolylineWC} from '../route_building_blocks/route_polyline/route_polyline.js';
+
+export const RoutePolyline = createComponent({
+  tagName: 'gmpx-route-polyline',
+  elementClass: RoutePolylineWC,
+  react: React,
+});
+
 import {SplitLayout as SplitLayoutWC} from '../split_layout/split_layout.js';
 
 export const SplitLayout = createComponent({
