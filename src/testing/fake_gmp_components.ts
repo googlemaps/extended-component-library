@@ -33,8 +33,8 @@ declare global {
 export class FakeMapElement extends LitElement {
   center: LatLng|LatLngLiteral|null = null;
 
-  readonly innerMap =
-      jasmine.createSpyObj<google.maps.Map>('Map', ['fitBounds', 'panTo']);
+  readonly innerMap = jasmine.createSpyObj<google.maps.Map>(
+      'Map', ['fitBounds', 'panTo', 'setOptions']);
 
   mapId: string|null = null;
   zoom: number|null = null;
