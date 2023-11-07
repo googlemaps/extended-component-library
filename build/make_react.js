@@ -71,8 +71,8 @@ let content = `/**
 // This file is generated from component definitions. DO NOT EDIT MANUALLY.
 
 import * as React from 'react';
-import {createComponent} from '@lit-labs/react';
-import type {EventName} from '@lit-labs/react';
+import {createComponent} from '@lit/react';
+import type {EventName} from '@lit/react';
 import {RequestErrorEvent} from '../base/events.js';
 `;  // Import new event types here (TS compiler will complain otherwise).
 

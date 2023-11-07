@@ -7,8 +7,8 @@
 // This file is generated from component definitions. DO NOT EDIT MANUALLY.
 
 import * as React from 'react';
-import {createComponent} from '@lit-labs/react';
-import type {EventName} from '@lit-labs/react';
+import {createComponent} from '@lit/react';
+import type {EventName} from '@lit/react';
 import {RequestErrorEvent} from '../base/events.js';
 
 import {APILoader as APILoaderWC} from '../api_loader/api_loader.js';
