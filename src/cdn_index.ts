@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+export {suggestValidationAction} from './address_validation/suggest_validation_action.js';
 export {APILoader} from './api_loader/api_loader.js';
 export {IconButton} from './icon_button/icon_button.js';
 export {OverlayLayout} from './overlay_layout/overlay_layout.js';

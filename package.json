@@ -34,6 +34,7 @@
     "!lib/**/*_test.*"
   ],
   "exports": {
+    "./address_validation.js": "./lib/address_validation/suggest_validation_action.js",
     "./api_loader.js": "./lib/api_loader/api_loader.js",
     "./icon_button.js": "./lib/icon_button/icon_button.js",
     "./overlay_layout.js": "./lib/overlay_layout/overlay_layout.js",

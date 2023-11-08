@@ -65,3 +65,91 @@ export interface HTMLElementTagNameMap {
   'gmp-map': MapElement;
   'gmp-advanced-marker': AdvancedMarkerElement;
 }
+
+/** google.maps.addressValidation.ComponentName */
+export declare interface ComponentName {
+  text: string;
+  languageCode: string;
+}
+
+/** google.maps.addressValidation.ConfirmationLevel */
+export enum ConfirmationLevel {
+  CONFIRMATION_LEVEL_UNSPECIFIED = 'CONFIRMATION_LEVEL_UNSPECIFIED',
+  CONFIRMED = 'CONFIRMED',
+  UNCONFIRMED_BUT_PLAUSIBLE = 'UNCONFIRMED_BUT_PLAUSIBLE',
+  UNCONFIRMED_AND_SUSPICIOUS = 'UNCONFIRMED_AND_SUSPICIOUS'
+}
+
+/** google.maps.addressValidation.AddressComponent */
+export declare interface AddressComponent {
+  componentName: ComponentName;
+  componentType: string;
+  confirmationLevel: ConfirmationLevel|null;
+  isInferred: boolean;
+  isSpellCorrected: boolean;
+  isReplaced: boolean;
+  isUnexpected: boolean;
+}
+
+/** google.maps.addressValidation.PostalAddress */
+export declare interface PostalAddress {
+  revision?: number;
+  regionCode?: string;
+  languageCode?: string;
+  postalCode?: string;
+  sortingCode?: string;
+  administrativeArea?: string;
+  locality?: string;
+  sublocality?: string;
+  addressLines?: string[];
+  recipients?: string[];
+  organization?: string;
+}
+
+/** google.maps.addressValidation.Address */
+export declare interface Address {
+  formattedAddress: string|null;
+  postalAddress: PostalAddress|null;
+  addressComponents: AddressComponent[];
+  missingComponentTypes?: string[];
+  unconfirmedComponentTypes?: string[];
+  unresolvedTokens?: string[];
+}
+
+/** google.maps.addressValidation.Granularity */
+export enum Granularity {
+  GRANULARITY_UNSPECIFIED = 'GRANULARITY_UNSPECIFIED',
+  SUB_PREMISE = 'SUB_PREMISE',
+  PREMISE = 'PREMISE',
+  PREMISE_PROXIMITY = 'PREMISE_PROXIMITY',
+  BLOCK = 'BLOCK',
+  ROUTE = 'ROUTE',
+  OTHER = 'OTHER'
+}
+
+/** google.maps.addressValidation.Verdict */
+export declare interface Verdict {
+  inputGranularity: Granularity|null;
+  validationGranularity: Granularity|null;
+  geocodeGranularity: Granularity|null;
+  isAddressComplete: boolean;
+  hasUnconfirmedComponents: boolean;
+  hasInferredComponents: boolean;
+  hasReplacedComponents: boolean;
+}
+
+/** google.maps.addressValidation.ValidationResult */
+export declare interface ValidationResult {
+  verdict: Verdict|null;
+  address: Address;
+  // geocode: Geocode;
+  // metadata: AddressMetadata;
+  // uspsData: UspsData;
+  // englishLatinAddress: Address;
+}
+
+/** google.maps.addressValidation.AddressValidationResponse */
+export declare interface AddressValidationResponse {
+  result: ValidationResult;
+  responseId: string;
+}

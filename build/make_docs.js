@@ -11,6 +11,7 @@ import {dirname, join, resolve, sep as pathSep} from 'path';
 const BASE_PATH = resolve('.');
 const PLACE_BUILDING_BLOCKS_DIR = join('src', 'place_building_blocks');
 const ROUTE_BUILDING_BLOCKS_DIR = join('src', 'route_building_blocks');
+const ADDRESS_VALIDATION_DIR = join('src', 'address_validation');
 
 const GLOBAL_STYLE_TOKENS = new Set([
   '--gmpx-color-surface',
@@ -59,6 +60,7 @@ const FRIENDLY_NAMES = {
   'PlacePriceLevel': 'Price Level',
   'PlaceRating': 'Rating',
   'PlaceReviews': 'Reviews',
+  'suggestValidationAction': 'Suggest action from API response',
 };
 
 /**
@@ -118,6 +120,12 @@ function firstParagraphOf(text) {
  * @return {boolean}
  */
 function shouldDocumentDeclaration(declaration, module) {
+  // Special case for Address Validation `suggestValidationAction()` utility.
+  if (declaration.kind === 'function' &&
+      declaration.name === 'suggestValidationAction') {
+    return true;
+  }
+
   return (
       declaration.kind === 'class' && declaration.customElement &&
       declaration.tagName && !declaration.tagName.endsWith('-internal'));
@@ -204,14 +212,58 @@ function getNpmExportsLookup() {
 }
 
 /**
+ * Writes a Markdown overview of a method or function.
+ *
+ * @param {import('custom-elements-manifest/schema').FunctionLike} func
+ * @param {number} headerLevel
+ * @param {string} className used in the signature for static methods
+ * @return {string}
+ */
+function makeFunctionDocumentation(func, headerLevel, className) {
+  let md = '';
+  const argsSummary = (func.parameters || []).map((x) => x.name).join(', ');
+  let fullMethodCall = `${func.name}(${argsSummary})`;
+  let staticComment = '';
+  if (func.static) {
+    fullMethodCall = `${className}.${fullMethodCall}`;
+    staticComment = ' (static method)';
+  }
+  md +=
+      newParagraph(header(headerLevel, asCode(fullMethodCall) + staticComment));
+  md += newParagraph(func.description);
+  if (func.return) {
+    md += newParagraph(`**Returns:** ${asCode(func.return.type.text)}`);
+    if (func.return.description) {
+      md += newParagraph(func.return.summary + func.return.description);
+    }
+  }
+  if (func.parameters) {
+    md += newParagraph('**Parameters:**');
+    const paramsTable = [['Name', 'Optional?', 'Type', 'Description']];
+    for (const param of func.parameters) {
+      paramsTable.push([
+        asCode(param.name),
+        param.optional ? 'optional' : '',
+        asCode(sanitizeForMarkdownTable(param.type.text)),
+        sanitizeForMarkdownTable(param.description),
+      ]);
+    }
+    md += newParagraph(markdownTable(paramsTable));
+  }
+  return md;
+}
+
+/**
  * Creates instructions for how to import this component.
  * @param {number} headerLevel
  * @param {string} modulePath
- * @param {string} className
+ * @param {string} className Element class or function name
  * @param {string} tagName
+ * @param {boolean} isFunction
  * @return {string}
  */
-function makeImportSection(headerLevel, modulePath, className, tagName) {
+function makeImportSection(
+    headerLevel, modulePath, className, tagName, isFunction) {
   let md = '';
   const npmExports = getNpmExportsLookup();
   const npmPath = './' + modulePath.replace(/^src/, 'lib').replace(/ts$/, 'js');
@@ -226,21 +278,30 @@ function makeImportSection(headerLevel, modulePath, className, tagName) {
 
   md += newParagraph(header(headerLevel, 'Importing'));
 
+  const cdnUse = !isFunction ?
+      'You do not need to take additional steps to use this component.' :
+      'This function will be available in the global namespace.';
   md += newParagraph(
-      'When loading the library with a &lt;script&gt; tag (referencing the CDN bundle), please refer to the instructions in the root-level Readme. You do not need to take additional steps to use this component.');
+      'When loading the library with a &lt;script&gt; tag (referencing the CDN bundle), please refer to the instructions in the root-level Readme. ' +
+      cdnUse);
 
-  md += newParagraph(
-      `When bundling your dependencies and you want to include \`<${
-          tagName}>\` on a page:`);
-  md += newParagraph(
-      '```\n' +
-      `import '${packageName}/${npmAlias}';` +
-      '\n```');
+  if (!isFunction) {
+    md += newParagraph(
+        `When bundling your dependencies and you want to include \`<${
+            tagName}>\` on a page:`);
+    md += newParagraph(
+        '```\n' +
+        `import '${packageName}/${npmAlias}';` +
+        '\n```');
 
+    md += newParagraph(
+        `When bundling your dependencies and you need to access the class \`${
+            className}\` directly (less common):`);
+  } else {
+    md +=
+        newParagraph(`When bundling your dependencies, import this function:`);
+  }
 
-  md += newParagraph(
-      `When bundling your dependencies and you need to access the class \`${
-          className}\` directly (less common):`);
   md += newParagraph(
       '```\n' +
       `import { ${className} } from '${packageName}/${npmAlias}';` +
@@ -366,7 +427,7 @@ function writeReadme(basePath, content) {
  *     -> "#", 2 -> "##", etc.
  * @return {string}
  */
-function declarationToMarkdown(declaration, module, headerLevel) {
+function elementDeclarationToMarkdown(declaration, module, headerLevel) {
   let headerName = `${asCode(`<${declaration.tagName}>`)} (as class ${
       asCode(declaration.name)})`;
   if (FRIENDLY_NAMES[declaration.name]) {
@@ -441,33 +502,8 @@ function declarationToMarkdown(declaration, module, headerLevel) {
   if (methods.length > 0) {
     md += newParagraph(header(headerLevel + 1, 'Methods'));
     for (const method of methods) {
-      const argsSummary =
-          (method.parameters || []).map((x) => x.name).join(', ');
-      let fullMethodCall = `${method.name}(${argsSummary})`;
-      let staticComment = '';
-      if (method.static) {
-        fullMethodCall = `${declaration.name}.${fullMethodCall}`;
-        staticComment = ' (static method)';
-      }
-      md += newParagraph(
-          header(headerLevel + 2, asCode(fullMethodCall) + staticComment));
-      md += newParagraph(method.description);
-      if (method.return) {
-        md += newParagraph(`**Returns:** ${asCode(method.return.type.text)}`);
-      }
-      if (method.parameters) {
-        md += newParagraph('**Parameters:**');
-        const paramsTable = [['Name', 'Optional?', 'Type', 'Description']];
-        for (const param of method.parameters) {
-          paramsTable.push([
-            asCode(param.name),
-            param.optional ? 'optional' : '',
-            asCode(sanitizeForMarkdownTable(param.type.text)),
-            sanitizeForMarkdownTable(param.description),
-          ]);
-        }
-        md += newParagraph(markdownTable(paramsTable));
-      }
+      md +=
+          makeFunctionDocumentation(method, headerLevel + 2, declaration.name);
     }
   }
   if (declaration.events) {
@@ -545,6 +581,26 @@ ${declaration.tagName} {
 }
 
 /**
+ * Converts a Custom Elements Manifest function declaration (as opposed to a
+ * custom element) into Markdown.
+ * @param {import('custom-elements-manifest/schema').Declaration} declaration
+ * @param {import('custom-elements-manifest/schema').Module} module
+ * @param {number} headerLevel Markdown header level for the overall element, 1
+ *     -> "#", 2 -> "##", etc.
+ * @return {string}
+ */
+function functionDeclarationToMarkdown(declaration, module, headerLevel) {
+  let md = '';
+  md += makeFunctionDocumentation(declaration, headerLevel + 1);
+  const importSection = makeImportSection(
+      headerLevel + 2, module.path, declaration.name, '', true);
+  if (importSection) {
+    md += importSection;
+  }
+  return md;
+}
+
+/**
  * Generates a set of README documentations for this package based on its
  * Custom Elements Manifest and writes contents to the file system.
  * @param {import('custom-elements-manifest/schema').Package} manifest
@@ -580,8 +636,13 @@ function makeDocs(manifest) {
 
       for (const declaration of module.declarations) {
         if (shouldDocumentDeclaration(declaration, module)) {
-          md += newParagraph(declarationToMarkdown(
-              declaration, module, /* headerLevel= */ declHeaderLevel));
+          if (declaration.tagName) {
+            md += newParagraph(elementDeclarationToMarkdown(
+                declaration, module, /* headerLevel= */ declHeaderLevel));
+          } else {
+            md += newParagraph(functionDeclarationToMarkdown(
+                declaration, module, /* headerLevel = */ declHeaderLevel));
+          }
 
           const componentName = asCode(
               declaration.tagName ? '<' + declaration.tagName + '>' :
@@ -612,6 +673,8 @@ function makeDocs(manifest) {
                   routeConsumerInventoryTable, componentName, relativeFilename,
                   declaration.description);
             }
+          } else if (filename.startsWith(ADDRESS_VALIDATION_DIR)) {
+            // Don't add any inventory.
           } else {
             addInventoryRow(
                 rootInventoryTable, componentName, filename,
@@ -638,7 +701,8 @@ function makeDocs(manifest) {
   }
 
   // Write a group README for Place Building Blocks components.
-  const placeBuildingBlocksInventory = newParagraph(header(2, 'Data provider')) +
+  const placeBuildingBlocksInventory =
+      newParagraph(header(2, 'Data provider')) +
       newParagraph(markdownTable(sortTable(placeDataProviderInventoryTable))) +
       newParagraph(header(2, 'Details components')) +
       newParagraph(markdownTable(sortTable(placeConsumerInventoryTable)));
@@ -657,6 +721,10 @@ function makeDocs(manifest) {
   writeReadme(
       BASE_PATH, markdownTable([
         ...sortTable(rootInventoryTable),
+        [
+          `[Address Validation](${ADDRESS_VALIDATION_DIR}/README.md)`,
+          'Components for integrating the Address Validation API with your web app.'
+        ],
         [
           `[Place building blocks](${PLACE_BUILDING_BLOCKS_DIR}/README.md)`,
           'The place data provider component, along with individual place details components, lets you choose how to display Google Maps place information like opening hours, star reviews, and photos in a new, custom view. '
