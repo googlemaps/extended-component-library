@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.5.0](https://github.com/googlemaps/extended-component-library/compare/v0.4.3...v0.5.0) (2023-11-08)
+
+
+### Features
+
+* add helper component for Address Validation API ([b3b07e9](https://github.com/googlemaps/extended-component-library/commit/b3b07e96211ecc37192ac157d55c0c690ba935b0))
+* support aria-label attribute on Place Field Link ([9676a62](https://github.com/googlemaps/extended-component-library/commit/9676a623c5ddf37169d7a981147171366396de49))
+
+
+### Bug Fixes
+
+* add role="img" to star rating renderings to support aria-label usage ([b69d8bd](https://github.com/googlemaps/extended-component-library/commit/b69d8bd544fc8943638d77c9e13c113e3aa59e87))
+* fix duplicate node in a11y tree when using aria-label on components ([c04dd5e](https://github.com/googlemaps/extended-component-library/commit/c04dd5e834d681e3edb1744edaad9346a9e9e9f3))
+* include Routes components in generated React module ([1ed2275](https://github.com/googlemaps/extended-component-library/commit/1ed22750a8a3f501f1de986361e86f0559180657))
+* increase color contrast to 4.5:1 for accessibility ([ec6265d](https://github.com/googlemaps/extended-component-library/commit/ec6265dbef35bb547e66b87d183e1844bc482443))
+
 ## [0.4.3](https://github.com/googlemaps/extended-component-library/compare/v0.4.2...v0.4.3) (2023-10-13)
 
 
