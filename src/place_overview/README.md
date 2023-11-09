@@ -73,18 +73,20 @@ You can use most built-in CSS properties to control the positioning or display o
 
 ### CSS Custom Properties
 
-| Name                              | Default                          | Description                                       |
-| --------------------------------- | -------------------------------- | ------------------------------------------------- |
-| `--gmpx-color-surface`            | `#fff`                           | Background color. 🌎                              |
-| `--gmpx-color-on-surface`         | `#212121`                        | Main text color. 🌎                               |
-| `--gmpx-color-on-surface-variant` | `#757575`                        | Color of less important text such as captions. 🌎 |
-| `--gmpx-color-primary`            | `#1976d2`                        | Color of buttons and icons. 🌎                    |
-| `--gmpx-color-outline`            | `#e0e0e0`                        | Color of divider elements and button outlines. 🌎 |
-| `--gmpx-font-family-base`         | `'Google Sans Text', sans-serif` | Font family for regular text. 🌎                  |
-| `--gmpx-font-family-headings`     | `--gmpx-font-family-base`        | Font family for headings. 🌎                      |
-| `--gmpx-font-size-base`           | `0.875rem`                       | Text size, sets scale for the component. 🌎       |
-| `--gmpx-rating-color`             | `#ffb300`                        | Color of star rating icons.                       |
-| `--gmpx-rating-color-empty`       | `#e0e0e0`                        | Background color of star rating icons.            |
+| Name                              | Default                          | Description                                        |
+| --------------------------------- | -------------------------------- | -------------------------------------------------- |
+| `--gmpx-color-surface`            | `#fff`                           | Background color. 🌎                               |
+| `--gmpx-color-on-surface`         | `#212121`                        | Main text color. 🌎                                |
+| `--gmpx-color-on-surface-variant` | `#757575`                        | Color of less important text such as captions. 🌎  |
+| `--gmpx-color-primary`            | `#1976d2`                        | Color of buttons and icons. 🌎                     |
+| `--gmpx-color-outline`            | `#e0e0e0`                        | Color of divider elements and button outlines. 🌎  |
+| `--gmpx-font-family-base`         | `'Google Sans Text', sans-serif` | Font family for regular text. 🌎                   |
+| `--gmpx-font-family-headings`     | `--gmpx-font-family-base`        | Font family for headings. 🌎                       |
+| `--gmpx-font-size-base`           | `0.875rem`                       | Text size, sets scale for the component. 🌎        |
+| `--gmpx-rating-color`             | `#ffb300`                        | Color of star rating icons.                        |
+| `--gmpx-rating-color-empty`       | `#e0e0e0`                        | Background color of star rating icons.             |
+| `--gmpx-hours-color-open`         | `#188038`                        | Opening hours text color when the place is open.   |
+| `--gmpx-hours-color-closed`       | `#d50000`                        | Opening hours text color when the place is closed. |
 
 🌎 _indicates a global style token shared by
                                     multiple components. Please see the library

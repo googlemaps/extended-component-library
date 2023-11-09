@@ -35,6 +35,11 @@ declare global {
  * which case it will render the place’s business status instead). A place’s
  * opening status is determined by its business status, opening hours periods,
  * and UTC offset minutes.
+ *
+ * @cssproperty [--gmpx-hours-color-open] - Text color when the place is
+ * currently open.
+ * @cssproperty [--gmpx-hours-color-closed] - Text color when the place
+ * is currently closed.
  */
 @customElement('gmpx-place-opening-hours')
 export class PlaceOpeningHours extends PlaceDataConsumer {
@@ -60,11 +65,11 @@ export class PlaceOpeningHours extends PlaceDataConsumer {
     }
 
     .closed {
-      color: #d50000;
+      color: var(--gmpx-hours-color-closed, #d50000);
     }
 
     .open {
-      color: #188038;
+      color: var(--gmpx-hours-color-open, #188038);
     }
 
     .icon {

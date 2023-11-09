@@ -39,16 +39,14 @@ import { PlaceOpeningHours } from '@googlemaps/extended-component-library/place_
 
 ## Styling
 
-This is a low-level component designed to be styled with built-in CSS properties. For most styling purposes, it is equivalent to a `<span>` element.
+You can use most built-in CSS properties to control the positioning or display of this component, similar to a `<span>` element. The component also supports the following styling inputs for more customization:
 
-For example, by default this component will inherit the color of its parent element. However, you can change the color by writing the following CSS:
+### CSS Custom Properties
 
-
-```css
-gmpx-place-opening-hours {
-  color: blue;
-}
-```
+| Name                        | Default   | Description                                    |
+| --------------------------- | --------- | ---------------------------------------------- |
+| `--gmpx-hours-color-open`   | `#188038` | Text color when the place is currently open.   |
+| `--gmpx-hours-color-closed` | `#d50000` | Text color when the place is currently closed. |
 
 
 

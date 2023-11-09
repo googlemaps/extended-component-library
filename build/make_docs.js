@@ -36,12 +36,13 @@ const CSS_CUSTOM_PROPERTY_DEFAULTS = {
   '--gmpx-font-size-base': '0.875rem',
   '--gmpx-rating-color': '#ffb300',
   '--gmpx-rating-color-empty': '#e0e0e0',
+  '--gmpx-hours-color-open': '#188038',
+  '--gmpx-hours-color-closed': '#d50000'
 };
 const COMPONENTS_STYLED_AS_TEXT = new Set([
   'PlaceAttribution',
   'PlaceFieldLink',
   'PlaceFieldText',
-  'PlaceOpeningHours',
   'PlacePriceLevel',
 ]);
 const FRIENDLY_NAMES = {

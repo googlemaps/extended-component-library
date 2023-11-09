@@ -103,6 +103,10 @@ declare global {
  * @cssproperty [--gmpx-rating-color] - Color of star rating icons.
  * @cssproperty [--gmpx-rating-color-empty] - Background color of star
  * rating icons.
+ * @cssproperty [--gmpx-hours-color-open] - Opening hours text color
+ * when the place is open.
+ * @cssproperty [--gmpx-hours-color-closed] - Opening hours text color
+ * when the place is closed.
  */
 @customElement('gmpx-place-overview')
 export class PlaceOverview extends BaseComponent {
