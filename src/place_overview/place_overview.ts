@@ -190,10 +190,16 @@ export class PlaceOverview extends BaseComponent {
     }
 
     .carousel {
+      display: flex;
       line-height: normal;
-      margin-inline-end: ${getTypeScaleSizeFromPx(-20)};
+      margin-inline: ${getTypeScaleSizeFromPx(-20)};
       overflow-x: auto;
+      padding-inline: ${getTypeScaleSizeFromPx(20)};
       white-space: nowrap;
+    }
+
+    .carousel[no-data] {
+      margin-bottom: ${getTypeScaleSizeFromPx(-12)};
     }
 
     .carousel::-webkit-scrollbar {
@@ -218,7 +224,7 @@ export class PlaceOverview extends BaseComponent {
       background-color: #7d7d7d;
     }
 
-    .carousel .gallery::part(tile) {
+    .carousel.gallery::part(tile) {
       height: ${getTypeScaleSizeFromPx(134)};
       width: ${getTypeScaleSizeFromPx(142)};
     }
