@@ -56,6 +56,7 @@ You can use most built-in CSS properties to control the positioning or display o
 | ----------------------------- | -------------------------------- | ---------------------------------------------------------------------------------------------------- |
 | `--gmpx-color-primary`        | `#1976d2`                        | Button text and outline color in the `outlined` variant, or background color in `filled` variant. 🌎 |
 | `--gmpx-color-on-primary`     | `#fff`                           | Button text color in `filled` variant. 🌎                                                            |
+| `--gmpx-color-outline`        | `#e0e0e0`                        | Outline color. 🌎                                                                                    |
 | `--gmpx-font-size-base`       | `0.875rem`                       | Font size for the button. 🌎                                                                         |
 | `--gmpx-font-family-headings` | `--gmpx-font-family-base`        | Font face for the button, except for condensed mode. 🌎                                              |
 | `--gmpx-font-family-base`     | `'Google Sans Text', sans-serif` | Font face used when the button is in condensed mode. 🌎                                              |

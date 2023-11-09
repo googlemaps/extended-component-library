@@ -44,6 +44,11 @@ You can use most built-in CSS properties to control the positioning or display o
 | --------------------------- | --------- | ------------------------------------------- |
 | `--gmpx-rating-color`       | `#ffb300` | Color of the star rating icons when filled. |
 | `--gmpx-rating-color-empty` | `#e0e0e0` | Color of the star rating icons when empty.  |
+| `--gmpx-color-outline`      | `#e0e0e0` | Divider color. 🌎                           |
+
+🌎 _indicates a global style token shared by
+                                    multiple components. Please see the library
+                                    Readme for more information._
 
 
 

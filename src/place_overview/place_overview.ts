@@ -94,6 +94,8 @@ declare global {
  * @cssproperty [--gmpx-color-on-surface-variant] - Color of less important text
  * such as captions.
  * @cssproperty [--gmpx-color-primary] - Color of buttons and icons.
+ * @cssproperty [--gmpx-color-outline] - Color of divider elements and button
+ * outlines.
  * @cssproperty [--gmpx-font-family-base] - Font family for regular text.
  * @cssproperty [--gmpx-font-family-headings] - Font family for headings.
  * @cssproperty [--gmpx-font-size-base] - Text size, sets scale for the

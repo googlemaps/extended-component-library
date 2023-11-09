@@ -50,6 +50,7 @@ declare global {
  * `outlined` variant, or background color in `filled` variant.
  * @cssproperty [--gmpx-color-on-primary] - Button text color in `filled`
  * variant.
+ * @cssproperty [--gmpx-color-outline] - Outline color.
  * @cssproperty [--gmpx-font-size-base] - Font size for the button.
  * @cssproperty [--gmpx-font-family-headings] - Font face for the button, except
  * for condensed mode.

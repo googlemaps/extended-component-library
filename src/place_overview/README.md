@@ -79,6 +79,7 @@ You can use most built-in CSS properties to control the positioning or display o
 | `--gmpx-color-on-surface`         | `#212121`                        | Main text color. 🌎                               |
 | `--gmpx-color-on-surface-variant` | `#757575`                        | Color of less important text such as captions. 🌎 |
 | `--gmpx-color-primary`            | `#1976d2`                        | Color of buttons and icons. 🌎                    |
+| `--gmpx-color-outline`            | `#e0e0e0`                        | Color of divider elements and button outlines. 🌎 |
 | `--gmpx-font-family-base`         | `'Google Sans Text', sans-serif` | Font family for regular text. 🌎                  |
 | `--gmpx-font-family-headings`     | `--gmpx-font-family-base`        | Font family for headings. 🌎                      |
 | `--gmpx-font-size-base`           | `0.875rem`                       | Text size, sets scale for the component. 🌎       |

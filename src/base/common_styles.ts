@@ -38,6 +38,12 @@ export const GMPX_COLOR_ON_SURFACE_VARIANT =
     css`var(--gmpx-color-on-surface-variant, #757575)`;
 
 /**
+ * Color of a button outline or divider element. Can be modified via
+ * `--gmpx-color-outline`.
+ */
+export const GMPX_COLOR_OUTLINE = css`var(--gmpx-color-outline, #e0e0e0)`;
+
+/**
  * Color of the stars in a star rating. Can be modified via
  * `--gmpx-rating-color`.
  */
@@ -113,5 +119,5 @@ export const GMPX_FONT_BODY = css`400 ${getTypeScaleSizeFromPx(14)}/${
 export const GMPX_FONT_CAPTION = css`400 ${getTypeScaleSizeFromPx(12)}/${
     getTypeScaleSizeFromPx(16)} ${GMPX_FONT_FAMILY_BASE}`;
 
-/** Border style for separating sections of a place representation. */
-export const GMPX_BORDER_SEPARATOR = css`1px solid #e0e0e0`;
+/** Border style for separating UI sections. */
+export const GMPX_BORDER_SEPARATOR = css`1px solid ${GMPX_COLOR_OUTLINE}`;

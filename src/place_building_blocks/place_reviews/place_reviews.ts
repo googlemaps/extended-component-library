@@ -39,6 +39,7 @@ function toStarIcons(rating: number): IconType[] {
  * when filled.
  * @cssproperty [--gmpx-rating-color-empty] - Color of the star rating
  * icons when empty.
+ * @cssproperty [--gmpx-color-outline] - Divider color.
  */
 @customElement('gmpx-place-reviews')
 export class PlaceReviews extends PlaceDataConsumer {
