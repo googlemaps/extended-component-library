@@ -195,3 +195,11 @@ export const SplitLayout = createComponent({
   elementClass: SplitLayoutWC,
   react: React,
 });
+
+import {StoreLocator as StoreLocatorWC} from '../store_locator/store_locator.js';
+
+export const StoreLocator = createComponent({
+  tagName: 'gmpx-store-locator',
+  elementClass: StoreLocatorWC,
+  react: React,
+});

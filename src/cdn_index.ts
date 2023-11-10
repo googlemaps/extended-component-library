@@ -26,4 +26,5 @@ export {RouteMarker} from './route_building_blocks/route_marker/route_marker.js'
 export {RoutePolyline} from './route_building_blocks/route_polyline/route_polyline.js';
 export {RouteOverview} from './route_overview/route_overview.js';
 export {SplitLayout} from './split_layout/split_layout.js';
+export {StoreLocator} from './store_locator/store_locator.js';
 export {setStringLiterals} from './utils/localize.js';

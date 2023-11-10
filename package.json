@@ -56,6 +56,7 @@
     "./route_building_blocks/route_polyline.js": "./lib/route_building_blocks/route_polyline/route_polyline.js",
     "./route_overview.js": "./lib/route_overview/route_overview.js",
     "./split_layout.js": "./lib/split_layout/split_layout.js",
+    "./store_locator.js": "./lib/store_locator/store_locator.js",
     "./react": "./lib/react/index.js",
     "./utils/localize.js": "./lib/utils/localize.js"
   },

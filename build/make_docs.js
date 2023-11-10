@@ -64,6 +64,7 @@ const FRIENDLY_NAMES = {
   'PlaceRating': 'Rating',
   'PlaceReviews': 'Reviews',
   'suggestValidationAction': 'Suggest action from API response',
+  'StoreLocator': 'Store Locator',
 };
 
 /**
@@ -541,7 +542,7 @@ ${declaration.tagName} {
 \`\`\``);
     } else {
       md += newParagraph(
-          `You can use most built-in CSS properties to control the positioning or display of this component, similar to a \`<span>\` element. The component also supports the following styling inputs for more customization:`);
+          `You can use most built-in CSS properties to control the positioning or display of this component, similar to a \`<span>\` or \`<div>\` element. The component also supports the following styling inputs for more customization:`);
 
       if (declaration.cssProperties) {
         md += newParagraph(header(headerLevel + 2, 'CSS Custom Properties'));

@@ -6,7 +6,7 @@
 
 // import 'jasmine'; (google3-only)
 
-import {html, nothing} from 'lit';
+import {html} from 'lit';
 
 import type {OverlayLayout} from '../overlay_layout/overlay_layout.js';
 import type {PlaceOverview} from '../place_overview/place_overview.js';
@@ -132,7 +132,7 @@ describe('StoreLocator', () => {
   });
 
   it('sets map options when specified', async () => {
-    const {locator, map} = await prepareState({
+    const {map} = await prepareState({
       listings: [LISTING_A, LISTING_B],
       featureSet: FeatureSet.ADVANCED,
       mapOptions: {zoom: 10}

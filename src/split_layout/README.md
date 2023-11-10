@@ -47,7 +47,7 @@ This component uses [named slots](https://developer.mozilla.org/en-US/docs/Web/A
 
 ## Styling
 
-You can use most built-in CSS properties to control the positioning or display of this component, similar to a `<span>` element. The component also supports the following styling inputs for more customization:
+You can use most built-in CSS properties to control the positioning or display of this component, similar to a `<span>` or `<div>` element. The component also supports the following styling inputs for more customization:
 
 ### CSS Custom Properties
 
