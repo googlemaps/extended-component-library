@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.6.0](https://github.com/googlemaps/extended-component-library/compare/v0.5.0...v0.6.0) (2023-11-10)
+
+
+### Features
+
+* add Store Locator component ([b2921f8](https://github.com/googlemaps/extended-component-library/commit/b2921f897814c7063d7880ed3f8ba8ab95a4fdf8))
+* make divider/button outline color customizable ([6e7f0cb](https://github.com/googlemaps/extended-component-library/commit/6e7f0cb658f383289465339f417f0d568dbee777))
+* make Place Opening Hours colors customizable ([66c5d88](https://github.com/googlemaps/extended-component-library/commit/66c5d8898aa41634d281b28f77d22c80fb6e5814))
+
+
+### Bug Fixes
+
+* adjust photo carousel margins in Place Overview ([3b03f39](https://github.com/googlemaps/extended-component-library/commit/3b03f3965151fda9da715f2b9ad3ed3fe2919ce2))
+
 ## [0.5.0](https://github.com/googlemaps/extended-component-library/compare/v0.4.3...v0.5.0) (2023-11-08)
 
 
