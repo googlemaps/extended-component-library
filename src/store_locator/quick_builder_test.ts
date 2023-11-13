@@ -6,7 +6,7 @@
 // import 'jasmine'; (google3-only)
 
 import {FeatureSet} from './interfaces.js';
-import {convertLocations, getFeatureSet} from './quick_builder.js';
+import {convertLocations, getFeatureSet, getMapOptions} from './quick_builder.js';
 
 describe('Quick Builder conversion', () => {
   it('converts listings from a Quick Builder configuration object', () => {
@@ -65,5 +65,11 @@ describe('Quick Builder conversion', () => {
         actions: true
       }
     })).toEqual(FeatureSet.ADVANCED);
+  });
+
+  it('removes mapId from the map options if set to an empty string', () => {
+    expect(getMapOptions({mapOptions: {maxZoom: 4, mapId: ''}})).toEqual({
+      maxZoom: 4
+    });
   });
 });

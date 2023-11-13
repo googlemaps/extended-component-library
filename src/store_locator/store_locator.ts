@@ -30,7 +30,7 @@ import type {AdvancedMarkerElement, LatLng, MapElement, Place, PlaceResult} from
 import {DistanceInfo, DistanceMeasurer, DistanceSource} from './distances.js';
 import type {InternalListing, StoreLocatorListing} from './interfaces.js';
 import {FeatureSet, QuickBuilderConfiguration} from './interfaces.js';
-import {convertLocations, getFeatureSet} from './quick_builder.js';
+import {convertLocations, getFeatureSet, getMapOptions} from './quick_builder.js';
 import {storeLocatorStyles} from './store_locator_styles.js';
 
 declare global {
@@ -239,7 +239,7 @@ export class StoreLocator extends BaseComponent {
   configureFromQuickBuilder(configuration: QuickBuilderConfiguration) {
     this.listings = convertLocations(configuration);
     this.featureSet = getFeatureSet(configuration);
-    if (configuration.mapOptions) this.mapOptions = configuration.mapOptions;
+    this.mapOptions = getMapOptions(configuration);
   }
 
   /**

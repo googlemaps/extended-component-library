@@ -41,3 +41,13 @@ export function getFeatureSet(configuration: QuickBuilderConfiguration):
     return FeatureSet.BASIC;
   }
 }
+
+/**
+ * Sanitizes Quick Builder generated map options.
+ */
+export function getMapOptions(configuration: QuickBuilderConfiguration):
+    Partial<google.maps.MapOptions> {
+  const options = {...(configuration.mapOptions ?? {})};
+  if (!options.mapId) delete options.mapId;
+  return options;
+}
