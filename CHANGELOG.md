@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.1](https://github.com/googlemaps/extended-component-library/compare/v0.6.0...v0.6.1) (2023-11-13)
+
+
+### Bug Fixes
+
+* clean up Map ID in a generated Quick Builder configuration ([bb25e4d](https://github.com/googlemaps/extended-component-library/commit/bb25e4d4f43145c323ed01a8c0deb43503b9313a))
+
 ## [0.6.0](https://github.com/googlemaps/extended-component-library/compare/v0.5.0...v0.6.0) (2023-11-10)
 
 
