@@ -139,13 +139,13 @@ export class StoreLocator extends BaseComponent {
   /**
    * List of locations to display in the store locator.
    */
-  @property() listings?: StoreLocatorListing[];
+  @property({attribute: false}) listings?: StoreLocatorListing[];
 
   /**
    * Overrides for the map options. Provide values for `center` and `zoom` to
    * display a map when `listings` is empty.
    */
-  @property() mapOptions?: Partial<google.maps.MapOptions>;
+  @property({attribute: false}) mapOptions?: Partial<google.maps.MapOptions>;
 
   @state() private internalListings: InternalListing[] = [];
 
