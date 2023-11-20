@@ -6,7 +6,7 @@
 
 // import 'jasmine'; (google3-only)
 
-import {html} from 'lit';
+import {html, nothing} from 'lit';
 
 import type {OverlayLayout} from '../overlay_layout/overlay_layout.js';
 import type {PlaceOverview} from '../place_overview/place_overview.js';
@@ -67,7 +67,7 @@ describe('StoreLocator', () => {
   }) {
     const root = env.render(html`
       <gmpx-store-locator .listings=${config.listings} .featureSet=${
-        config.featureSet} .mapOptions=${config.mapOptions}>
+        config.featureSet} .mapOptions=${config.mapOptions ?? nothing}>
       </gmpx-store-locator>
     `);
     await env.waitForStability();
@@ -129,6 +129,17 @@ describe('StoreLocator', () => {
     await env.waitForStability();
 
     expect(map?.innerMap?.panTo).toHaveBeenCalledOnceWith(LISTING_A.position);
+  });
+
+  it('sets default map options if none are specified', async () => {
+    const {map} = await prepareState(
+        {listings: [LISTING_A], featureSet: FeatureSet.BASIC});
+
+    expect(map?.innerMap?.setOptions).toHaveBeenCalledWith({
+      mapTypeControl: false,
+      maxZoom: 17,
+      streetViewControl: false,
+    });
   });
 
   it('sets map options when specified', async () => {

@@ -45,6 +45,12 @@ interface HTMLElementTagNameMap {
   'gmp-advanced-marker': google.maps.marker.AdvancedMarkerElement;
 }
 
+const DEFAULT_MAP_OPTIONS: Partial<google.maps.MapOptions> = {
+  mapTypeControl: false,
+  maxZoom: 17,
+  streetViewControl: false
+};
+
 /**
  * The store locator component displays an experience where your website's users
  * can browse a list of locations, find the nearest one, and view details.
@@ -145,7 +151,8 @@ export class StoreLocator extends BaseComponent {
    * Overrides for the map options. Provide values for `center` and `zoom` to
    * display a map when `listings` is empty.
    */
-  @property({attribute: false}) mapOptions?: Partial<google.maps.MapOptions>;
+  @property({attribute: false})
+  mapOptions?: Partial<google.maps.MapOptions> = DEFAULT_MAP_OPTIONS;
 
   @state() private internalListings: InternalListing[] = [];
 
@@ -179,7 +186,7 @@ export class StoreLocator extends BaseComponent {
    * other component methods (except for the constructor) can expect that
    * `this.initialized` is true.
    */
-  protected override shouldUpdate() {
+  protected override shouldUpdate(changedProperties: Map<string, unknown>) {
     return this.initialized;
   }
 
