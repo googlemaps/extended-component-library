@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.6.2](https://github.com/googlemaps/extended-component-library/compare/v0.6.1...v0.6.2) (2023-11-20)
+
+
+### Bug Fixes
+
+* prevent excessive zoom in store locator ([2394230](https://github.com/googlemaps/extended-component-library/commit/2394230cf7f130624c83a1465ab99335f42ebebd))
+* store locator listings and map options should not be attributes ([3dc5170](https://github.com/googlemaps/extended-component-library/commit/3dc517076cd93aef91a768f41730dfb3fe116b95))
+
 ## [0.6.1](https://github.com/googlemaps/extended-component-library/compare/v0.6.0...v0.6.1) (2023-11-13)
 
 
