@@ -371,7 +371,7 @@ export class PlacePicker extends BaseComponent {
       componentRestrictions: country ? {country} : undefined,
       fields: [...PLACE_RESULT_DATA_FIELDS],
       strictBounds,
-      ...(this.type && {types: [this.type]}),
+      types: this.type ? [this.type] : [],
     };
   }
 

@@ -103,6 +103,7 @@ describe('PlacePicker', () => {
           componentRestrictions: undefined,
           fields: [...PLACE_RESULT_DATA_FIELDS],
           strictBounds: false,
+          types: [],
         });
     expect(input.placeholder).toBe('');
     expect(picker.value).toBeUndefined();
@@ -165,6 +166,19 @@ describe('PlacePicker', () => {
           strictBounds: true,
           types: ['restaurant'],
         });
+  });
+
+  it(`resets the place type to none (= all) given a falsy value`, async () => {
+    const {picker} = await prepareState(
+        html`<gmpx-place-picker type="restaurant"></gmpx-place-picker>`);
+
+    picker.type = '';
+    await env.waitForStability();
+
+    expect(env.fakeGoogleMapsHarness!.autocompleteSpy.setOptions)
+        .toHaveBeenCalledOnceWith(jasmine.objectContaining({
+          types: [],
+        }));
   });
 
   it(`doesn't define bounds when only location bias is specified`, async () => {
