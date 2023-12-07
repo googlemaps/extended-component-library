@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.3](https://github.com/googlemaps/extended-component-library/compare/v0.6.2...v0.6.3) (2023-12-07)
+
+
+### Bug Fixes
+
+* allow resetting of Place Picker type to empty value (= all types) ([8fe6b56](https://github.com/googlemaps/extended-component-library/commit/8fe6b56505ca6fbfa63a08ef16fee9204be709cf))
+
 ## [0.6.2](https://github.com/googlemaps/extended-component-library/compare/v0.6.1...v0.6.2) (2023-11-20)
 
 
