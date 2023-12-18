@@ -71,8 +71,8 @@ export class PlaceDataProvider extends BaseComponent {
   fields?: string[];
 
   /**
-   * The place to be displayed by this component. Provide a [Place ID](
-   * https://developers.google.com/maps/documentation/places/web-service/place-id?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components)
+   * The place to be displayed by this component. Provide a [Place
+   * ID](https://developers.google.com/maps/documentation/places/web-service/place-id)
    * as a string to have the component look up and display details from the
    * Place API. The component will not make further API requests if child
    * components are added at a later time. If required, explicitly request a

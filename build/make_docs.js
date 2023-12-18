@@ -8,6 +8,8 @@ import {readFileSync, writeFileSync} from 'fs';
 import {markdownTable} from 'markdown-table';
 import {dirname, join, resolve, sep as pathSep} from 'path';
 
+import {updateMarkdownLinks} from './update_links.js';
+
 const BASE_PATH = resolve('.');
 const PLACE_BUILDING_BLOCKS_DIR = join('src', 'place_building_blocks');
 const ROUTE_BUILDING_BLOCKS_DIR = join('src', 'route_building_blocks');
@@ -327,7 +329,7 @@ function makeApiSkuSection(basePath, headerLevel) {
   let md = newParagraph(header(headerLevel, 'APIs and Pricing'));
 
   md += newParagraph(
-      'In addition to the [Maps JavaScript API](https://developers.google.com/maps/documentation/javascript?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components), this component relies on the following Google Maps Platform APIs which may incur cost and must be enabled.');
+      'In addition to the [Maps JavaScript API](https://developers.google.com/maps/documentation/javascript), this component relies on the following Google Maps Platform APIs which may incur cost and must be enabled.');
 
   md += content;
 
@@ -411,8 +413,9 @@ function generateBreadcrumbs(readmeDir) {
  */
 function writeReadme(basePath, content) {
   const readmePath = join(basePath, 'README.md');
-  const md = generateBreadcrumbs(basePath) +
+  let md = generateBreadcrumbs(basePath) +
       appendStaticHeaderAndFooter(basePath, content);
+  md = updateMarkdownLinks(md);
   try {
     writeFileSync(readmePath, md);
   } catch (e) {
@@ -695,6 +698,7 @@ function makeDocs(manifest) {
     }
     if (md) {
       md = generateBreadcrumbs(dirname(join(BASE_PATH, filename))) + md;
+      md = updateMarkdownLinks(md);
       try {
         writeFileSync(join(BASE_PATH, filename), md);
       } catch (e) {

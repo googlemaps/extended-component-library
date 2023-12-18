@@ -20,7 +20,7 @@ type Attribution = google.maps.places.Attribution;
  * Component that renders any listing attributions from the Places API.
  *
  * When displaying data from the Places API, you are [required to
- * display](https://developers.google.com/maps/documentation/places/web-service/policies?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#other_attribution_requirements)
+ * display](https://developers.google.com/maps/documentation/places/web-service/policies#other_attribution_requirements)
  * any attributions present in the response. This component assists in rendering
  * these listing attributions from a `Place` or `PlaceResult` object.
  *

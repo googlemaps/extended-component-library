@@ -115,14 +115,14 @@ function isMissingExactlyUSASubpremise(result: ValidationResult): boolean {
  *
  * The logic for converting the API response into a single recommended action is
  * based on the principles discussed in the [Build your validation
- * logic](https://developers.google.com/maps/documentation/address-validation/build-validation-logic?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components).
+ * logic](https://developers.google.com/maps/documentation/address-validation/build-validation-logic).
  * There are many ways to analyze the API response; this function serves as
  * a suggested implementation.
  *
  * **Best Practices**
  *
  * * See [Workflow
- * overview](https://developers.google.com/maps/documentation/address-validation/build-validation-logic#workflow-overview?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components)
+ * overview](https://developers.google.com/maps/documentation/address-validation/build-validation-logic#workflow-overview)
  * for the recommended behavior your system should have for each recommended
  * action.
  *
@@ -131,7 +131,7 @@ function isMissingExactlyUSASubpremise(result: ValidationResult): boolean {
  *
  * * If you want to make your own modifications to the logic, we recommend
  * reading through [Build your validation
- * logic](https://developers.google.com/maps/documentation/address-validation/build-validation-logic?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components)
+ * logic](https://developers.google.com/maps/documentation/address-validation/build-validation-logic)
  * for guidance.
  *
  * @param response - A response object from the Address Validation API in the

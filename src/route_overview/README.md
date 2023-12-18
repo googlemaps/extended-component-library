@@ -94,6 +94,6 @@ Used when computing a route from the component's origin, destination, and travel
 
 Note that the SKU below is not triggered if you provide a `DirectionsRoute` object for the component to render directly.
 
-- [SKU: Directions](https://developers.google.com/maps/billing-and-pricing/pricing#directions?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components)
+- [SKU: Directions](https://developers.google.com/maps/billing-and-pricing/pricing?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#directions)
 
 

@@ -158,13 +158,13 @@ export class PlaceFieldBoolean extends PlaceDataConsumer {
    * `PlaceResult`.
    *
    * Allowed [Place
-   * fields](https://developers.google.com/maps/documentation/javascript/reference/place?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components)
+   * fields](https://developers.google.com/maps/documentation/javascript/reference/place)
    * are `hasCurbsidePickup`, `hasDelivery`, `hasDineIn`, `hasTakeout`,
    * `hasWheelchairAccessibleEntrance`, `isReservable`, `servesBeer`,
    * `servesBreakfast`, `servesBrunch`, `servesDinner`, `servesLunch`,
    * `servesVegetarianFood`, `servesWine`, and `isOpen()`. Please note that only
    * `isOpen()` is supported by the legacy [`PlaceResult`
-   * class](https://developers.google.com/maps/documentation/javascript/reference/places-service?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#PlaceResult).
+   * class](https://developers.google.com/maps/documentation/javascript/reference/places-service#PlaceResult).
    *
    * The component also supports the `PlaceResult` field specifier
    * `opening_hours.isOpen()` as an alias for `isOpen()`.

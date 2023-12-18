@@ -51,7 +51,7 @@ a suggested implementation.
 **Best Practices**
 
 * See [Workflow
-overview](https://developers.google.com/maps/documentation/address-validation/build-validation-logic#workflow-overview?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components)
+overview](https://developers.google.com/maps/documentation/address-validation/build-validation-logic?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#workflow-overview)
 for the recommended behavior your system should have for each recommended
 action.
 

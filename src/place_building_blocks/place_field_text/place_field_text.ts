@@ -64,7 +64,7 @@ export type TextField = PlaceTextField|PlaceResultTextField;
  * Place types that can be rendered by PlaceFieldText. These are the "Table 1"
  * place types documented at:
  *
- * https://developers.google.com/maps/documentation/places/web-service/supported_types?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components
+ * https://developers.google.com/maps/documentation/places/web-service/supported_types
  */
 const ALLOWED_PLACE_TYPES = new Set([
   'accounting',
@@ -214,14 +214,14 @@ export class PlaceFieldText extends PlaceDataConsumer {
    * `PlaceResult`.
    *
    * Allowed [`Place`
-   * fields](https://developers.google.com/maps/documentation/javascript/reference/place?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components)
+   * fields](https://developers.google.com/maps/documentation/javascript/reference/place)
    * are: `businessStatus`, `displayName`, `formattedAddress`, `id`,
    * `internationalPhoneNumber`, `location`, `location.lat`, `location.lng`,
    * `nationalPhoneNumber`, `plusCode.compoundCode`, `plusCode.globalCode`,
    * `rating`, `types`, and `userRatingCount`.
    *
    * You may also specify one of the equivalent [`PlaceResult` field
-   * names](https://developers.google.com/maps/documentation/javascript/reference/places-service?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#PlaceResult):
+   * names](https://developers.google.com/maps/documentation/javascript/reference/places-service#PlaceResult):
    * `business_status`, `name`, `formatted_address`, `place_id`,
    * `international_phone_number`, `geometry.location`, `geometry.location.lat`,
    * `geometry.location.lng`, `formatted_phone_number`,

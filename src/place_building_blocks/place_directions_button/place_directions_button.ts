@@ -16,7 +16,7 @@ import {PlaceDataConsumer} from '../place_data_consumer.js';
 
 /**
  * Creates a Google Maps URL for directions from origin to destination
- * (https://developers.google.com/maps/documentation/urls?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#directions-action).
+ * (https://developers.google.com/maps/documentation/urls#directions-action).
  */
 function buildMapsDirectionsURL(
     origin?: WaypointInfo, destination?: WaypointInfo): string {

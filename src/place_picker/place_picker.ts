@@ -215,8 +215,8 @@ export class PlacePicker extends BaseComponent {
   /**
    * The type of predictions to return. Some examples include “restaurant”,
    * “country” and “address”. This property supports any one type found in
-   * Tables 1~3 of [Place Types](
-   * https://developers.google.com/maps/documentation/javascript/supported_types?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components).
+   * Tables 1~3 of [Place
+   * Types](https://developers.google.com/maps/documentation/javascript/supported_types).
    *
    * If no type is specified, predictions of all types will be returned.
    */
@@ -226,8 +226,8 @@ export class PlacePicker extends BaseComponent {
    * This readonly property contains data about the user-selected place.
    *
    * If the user selects a valid place, then the object is guaranteed to contain
-   * at minimum its Place ID, along with all available [Basic Data fields](
-   * https://developers.google.com/maps/documentation/places/web-service/place-data-fields?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#basic).
+   * at minimum its Place ID, along with all available [Basic Data
+   * fields](https://developers.google.com/maps/documentation/places/web-service/place-data-fields#basic).
    *
    * This property is undefined when user input is empty, and null when no
    * results are found based on user input.
@@ -401,7 +401,7 @@ export class PlacePicker extends BaseComponent {
     const {Place: OrigPlace} = await APILoader.importLibrary('places', this) as
         typeof google.maps.places;
     // A Find Place request containing only the Place ID field incurs no charge:
-    // https://developers.google.com/maps/documentation/places/web-service/usage-and-billing?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#find-place-id-only.
+    // https://developers.google.com/maps/documentation/places/web-service/usage-and-billing#find-place-id-only.
     const findRequest: google.maps.places.FindPlaceFromQueryRequest = {
       query,
       fields: ['id'],

@@ -5,11 +5,11 @@ Used to display a map.
 
 #### Documentation
 
-[Adding a map to your website with Web Components](https://developers.google.com/maps/documentation/javascript/web-components/overview?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components)
+[Adding a map to your website with Web Components](https://developers.google.com/maps/documentation/javascript/web-components/overview)
 
 #### Pricing
 
-* [SKU: Dynamic Maps](https://developers.google.com/maps/documentation/javascript/usage-and-billing#dynamic-maps?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components)
+* [SKU: Dynamic Maps](https://developers.google.com/maps/documentation/javascript/usage-and-billing#dynamic-maps)
 
 ### Places API
 
@@ -21,22 +21,22 @@ This component uses the Places API in two ways:
 #### Documentation
 
 * Autocomplete search for the end user's location (intermediate and advanced feature sets only):
-  * Places API [Autocomplete documentation](https://developers.google.com/maps/documentation/javascript/place-autocomplete?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components). 
+  * Places API [Autocomplete documentation](https://developers.google.com/maps/documentation/javascript/place-autocomplete). 
 * Fetching Places data for the "view details" panel (advanced feature set only):
-  * [Place class documentation](https://developers.google.com/maps/documentation/javascript/place?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components)
-  * Displaying Places photos (advanced feature set only): [Photos documentation](https://developers.google.com/maps/documentation/javascript/places?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#places_photos)
+  * [Place class documentation](https://developers.google.com/maps/documentation/javascript/place)
+  * Displaying Places photos (advanced feature set only): [Photos documentation](https://developers.google.com/maps/documentation/javascript/places#places_photos)
 
 Please be sure to check this documentation for additional requirements and recommendations regarding your use.
 
 #### Pricing
 
-- [SKU: Autocomplete (included with Place Details) – Per Session](https://developers.google.com/maps/billing-and-pricing/pricing?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#ac-with-details-session)
-- [SKU: Find Place](https://developers.google.com/maps/billing-and-pricing/pricing?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#find-place) (fallback query)
-- [SKU: Place Details](https://developers.google.com/maps/billing-and-pricing/pricing?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#places-details)
-- [SKU: Basic Data](https://developers.google.com/maps/billing-and-pricing/pricing?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#basic-data)
-- [SKU: Contact Data](https://developers.google.com/maps/billing-and-pricing/pricing?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#contact-data)
-- [SKU: Atmosphere Data](https://developers.google.com/maps/billing-and-pricing/pricing?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#atmosphere-data) 
-- [SKU: Place Photo](https://developers.google.com/maps/billing-and-pricing/pricing?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#places-photo)
+- [SKU: Autocomplete (included with Place Details) – Per Session](https://developers.google.com/maps/billing-and-pricing/pricing#ac-with-details-session)
+- [SKU: Find Place](https://developers.google.com/maps/billing-and-pricing/pricing#find-place) (fallback query)
+- [SKU: Place Details](https://developers.google.com/maps/billing-and-pricing/pricing#places-details)
+- [SKU: Basic Data](https://developers.google.com/maps/billing-and-pricing/pricing#basic-data)
+- [SKU: Contact Data](https://developers.google.com/maps/billing-and-pricing/pricing#contact-data)
+- [SKU: Atmosphere Data](https://developers.google.com/maps/billing-and-pricing/pricing#atmosphere-data) 
+- [SKU: Place Photo](https://developers.google.com/maps/billing-and-pricing/pricing#places-photo)
 
 ### Directions API
 
@@ -44,11 +44,11 @@ Used to display a route from the end user's location to the selected listing, ad
 
 #### Documentation
 
-[Directions API documentation](https://developers.google.com/maps/documentation/javascript/directions?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components). Please be sure to check this documentation for additional requirements and recommendations regarding your use.
+[Directions API documentation](https://developers.google.com/maps/documentation/javascript/directions). Please be sure to check this documentation for additional requirements and recommendations regarding your use.
 
 #### Pricing
 
-- [SKU: Directions](https://developers.google.com/maps/billing-and-pricing/pricing?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#directions)
+- [SKU: Directions](https://developers.google.com/maps/billing-and-pricing/pricing#directions)
 
 ### Distance Matrix API
 
@@ -56,9 +56,9 @@ Used to sort and display travel times from the end user's location. Intermediate
 
 #### Documentation
 
-[Distance Matrix API documentation](https://developers.google.com/maps/documentation/javascript/distancematrix?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components)
+[Distance Matrix API documentation](https://developers.google.com/maps/documentation/javascript/distancematrix)
 
 #### Pricing
 
-- [SKU: Distance Matrix](https://developers.google.com/maps/documentation/distance-matrix/usage-and-billing?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components)
+- [SKU: Distance Matrix](https://developers.google.com/maps/documentation/distance-matrix/usage-and-billing)
 

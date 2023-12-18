@@ -33,7 +33,7 @@ function toStarIcons(rating: number): IconType[] {
  *
  * Reviews are displayed in an order corresponding to the default behavior of
  * the [Place
- * API](https://developers.google.com/maps/documentation/javascript/reference/place?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#Place).
+ * API](https://developers.google.com/maps/documentation/javascript/reference/place#Place).
  *
  * @cssproperty [--gmpx-rating-color] - Color of the star rating icons
  * when filled.

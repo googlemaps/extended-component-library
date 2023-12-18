@@ -9,7 +9,7 @@ You can use Place Picker to produce a well formatted address for any user-entere
 <input name="address" type="hidden" id="selected-address"/>
 ```
 
-The Place Picker component maintains a [Place instance](https://developers.google.com/maps/documentation/javascript/reference/place?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#Place) corresponding to the selected location. When the end user has made a selection, this example updates the input field with the Place's address:
+The Place Picker component maintains a [Place instance](https://developers.google.com/maps/documentation/javascript/reference/place#Place) corresponding to the selected location. When the end user has made a selection, this example updates the input field with the Place's address:
 
 ```js
 const picker = document.getElementById('place-picker');

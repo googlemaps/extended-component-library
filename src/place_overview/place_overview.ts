@@ -66,13 +66,13 @@ declare global {
  *
  * (x-large version) Reviews are displayed in an order corresponding to the
  * default behavior of the [Place
- * API](https://developers.google.com/maps/documentation/javascript/reference/place?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#Place).
+ * API](https://developers.google.com/maps/documentation/javascript/reference/place#Place).
  *
  * ![](./doc_src/place-overview.png)
  *
  * The easiest way to use this component is to start with a Place ID, which can
  * be retrieved from various Google Maps APIs or [looked up
- * directly](https://developers.google.com/maps/documentation/javascript/examples/places-placeid-finder?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components).
+ * directly](https://developers.google.com/maps/documentation/javascript/examples/places-placeid-finder).
  *
  * This component is designed to display any provided buttons for custom
  * actions, such as a [directions
@@ -300,8 +300,8 @@ export class PlaceOverview extends BaseComponent {
 
   /**
    * This component displays the Google logo to abide by Google Maps Platform
-   * [attribution policies](
-   * https://developers.google.com/maps/documentation/places/web-service/policies?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#logo).
+   * [attribution
+   * policies](https://developers.google.com/maps/documentation/places/web-service/policies#logo).
    * However, if you otherwise satisfy these requirements (e.g. by placing this
    * component on the same screen as a Google Map), you may hide the logo.
    */
@@ -313,8 +313,8 @@ export class PlaceOverview extends BaseComponent {
   googleLogoAlreadyDisplayed = false;
 
   /**
-   * The place to be displayed by this component. Provide a [Place ID](
-   * https://developers.google.com/maps/documentation/places/web-service/place-id?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components)
+   * The place to be displayed by this component. Provide a [Place
+   * ID](https://developers.google.com/maps/documentation/places/web-service/place-id)
    * as a string to have the component look up and display details from the
    * Place API. Alternatively, assign a `Place` or `PlaceResult` object to
    * `place` property to render it directly (note that the attribute, on the
@@ -326,17 +326,17 @@ export class PlaceOverview extends BaseComponent {
   /**
    * Specifies a variation of this component, from smallest to largest. Larger
    * variations of this component display more data, which may affect cost:
-   * - `x-small` size uses [Basic Data](
-   * https://developers.google.com/maps/documentation/javascript/place-data-fields?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#basic)
+   * - `x-small` size uses [Basic
+   * Data](https://developers.google.com/maps/documentation/javascript/place-data-fields#basic)
    * and
-   * [Atmosphere Data](
-   * https://developers.google.com/maps/documentation/javascript/place-data-fields?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#atmosphere).
-   * - All other sizes use [Basic Data](
-   * https://developers.google.com/maps/documentation/javascript/place-data-fields?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#basic),
-   * [Contact Data](
-   * https://developers.google.com/maps/documentation/javascript/place-data-fields?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#contact),
-   * and [Atmosphere Data](
-   * https://developers.google.com/maps/documentation/javascript/place-data-fields?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#atmosphere).
+   * [Atmosphere
+   * Data](https://developers.google.com/maps/documentation/javascript/place-data-fields#atmosphere).
+   * - All other sizes use [Basic
+   * Data](https://developers.google.com/maps/documentation/javascript/place-data-fields#basic),
+   * [Contact
+   * Data](https://developers.google.com/maps/documentation/javascript/place-data-fields#contact),
+   * and [Atmosphere
+   * Data](https://developers.google.com/maps/documentation/javascript/place-data-fields#atmosphere).
    */
   @property({reflect: true, type: String})
   size: 'x-small'|'small'|'medium'|'large'|'x-large' = 'x-large';
