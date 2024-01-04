@@ -534,8 +534,7 @@ export class StoreLocator extends BaseComponent {
             .position=${listing.position}
             .title=${listing.title}
             .zIndex=${zIndex}
-            gmp-clickable @gmp-click=${clickHandler}>
-        </gmp-advanced-marker>`;
+            gmp-clickable @gmp-click=${clickHandler}></gmp-advanced-marker>`;
   }
 
   private renderMapDirections() {
