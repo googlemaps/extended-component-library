@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.4](https://github.com/googlemaps/extended-component-library/compare/v0.6.3...v0.6.4) (2024-01-04)
+
+
+### Bug Fixes
+
+* fix issue with location pins not displaying in Store Locator ([fb44403](https://github.com/googlemaps/extended-component-library/commit/fb44403654a5b3206203ba3135bb18027a3a66f3))
+
 ## [0.6.3](https://github.com/googlemaps/extended-component-library/compare/v0.6.2...v0.6.3) (2023-12-07)
 
 
