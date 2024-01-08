@@ -150,4 +150,16 @@ export const storeLocatorStyles = css`
     font-size: 140%;
     margin-right: 0.2em;
   }
+
+  .search-pin {
+    width: 25px;
+    height: 25px;
+    position: relative;
+    top: 15px;
+  }
+
+  .search-pin > circle {
+    fill: #3367D6;
+    fill-opacity: 50%;
+  }
 `;

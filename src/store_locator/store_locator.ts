@@ -12,7 +12,7 @@ import '../place_picker/place_picker.js';
 import '../icon_button/icon_button.js';
 import '../place_building_blocks/place_directions_button/place_directions_button.js';
 
-import {html, nothing, render, svg} from 'lit';
+import {html, nothing} from 'lit';
 import {customElement, property, query, state} from 'lit/decorators.js';
 import {classMap} from 'lit/directives/class-map.js';
 import {join} from 'lit/directives/join.js';
@@ -25,7 +25,7 @@ import {LocalizationController} from '../base/localization_controller.js';
 import {WebFont, WebFontController} from '../base/web_font_controller.js';
 import type {OverlayLayout} from '../overlay_layout/overlay_layout.js';
 import type {PlacePicker} from '../place_picker/place_picker.js';
-import type {AdvancedMarkerElement, LatLng, MapElement, Place, PlaceResult} from '../utils/googlemaps_types.js';
+import type {LatLng, MapElement, Place, PlaceResult} from '../utils/googlemaps_types.js';
 
 import {DistanceInfo, DistanceMeasurer, DistanceSource} from './distances.js';
 import type {InternalListing, StoreLocatorListing} from './interfaces.js';
@@ -496,24 +496,14 @@ export class StoreLocator extends BaseComponent {
 
   private renderSearchMarker() {
     if (this.isIntermediateOrBetter() && this.searchLocation?.location) {
-      const styleMarker = (el?: Element) => {
-        if (!el) return;
-        const div = document.createElement('div');
-        const circle =
-            svg`<circle cx="50" cy="50" r="50" fill="#3367D6" fill-opacity="50%"></circle>`;
-        const markerContent =
-            html`<svg viewbox="0 0 100 100" style="width: 25px; height: 25px; position: relative; top: 15px;">${
-                circle}</svg>`;
-        render(markerContent, div);
-        (el as AdvancedMarkerElement).content = div.firstElementChild;
-      };
-      // clang-format off
-      return html`<gmp-advanced-marker
-                      .position=${this.searchLocation.location}
-                      ${ref(styleMarker)}
-                      title="${this.getMsg('LOCATOR_SEARCH_LOCATION_MARKER_TITLE')}">
-                  </gmp-advanced-marker>`;
-      // clang-format on
+      return html`
+          <gmp-advanced-marker
+              .position=${this.searchLocation.location}
+              title="${this.getMsg('LOCATOR_SEARCH_LOCATION_MARKER_TITLE')}">
+            <svg viewbox="0 0 100 100" class="search-pin">
+              <circle cx="50" cy="50" r="50"></circle>
+            </svg>
+          </gmp-advanced-marker>`;
     }
     return nothing;
   }
