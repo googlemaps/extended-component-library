@@ -76,7 +76,7 @@ Web Components are also designed to be used with JavaScript. Here’s an example
 <gmpx-api-loader key="YOUR_API_KEY"></gmpx-api-loader>
 
 <gmp-map id="my-map" center="33.15,-96.20" zoom="10" map-id="DEMO_MAP_ID">
-  <gmp-advanced-marker class="pannable" position="33.15,-96.20"></gmp-advanced-marker>
+  <gmp-advanced-marker class="pannable" gmp-clickable position="33.15,-96.20"></gmp-advanced-marker>
   <!-- Some more markers ... -->
 </gmp-map>
 
