@@ -11,9 +11,8 @@ import {choose} from 'lit/directives/choose.js';
 import {Deferred} from '../../utils/deferred.js';
 import type {Place} from '../../utils/googlemaps_types.js';
 import {hasDataForOpeningCalculations} from '../../utils/place_utils.js';
+import {Poll} from '../../utils/poll.js';
 import {PlaceDataConsumer} from '../place_data_consumer.js';
-
-
 
 const PLACE_BOOLEAN_FIELDS_SYNC_ACCESS = [
   'hasCurbsidePickup',
@@ -174,7 +173,7 @@ export class PlaceFieldBoolean extends PlaceDataConsumer {
   /** Boolean value to be rendered synchronously. */
   @state() private valueToRender?: boolean|null;
 
-  private updateTimer?: ReturnType<typeof setInterval>;
+  private readonly poll = new Poll();
   private asyncRenderComplete?: Deferred;
 
   protected override render() {
@@ -232,14 +231,12 @@ export class PlaceFieldBoolean extends PlaceDataConsumer {
 
     // Set up polled updates for certain fields.
     if (changedProperties.has('field')) {
-      this.cancelPolledUpdates();
+      this.poll.stop();
       if (this.field) {
         const pollingInterval =
             FIELD_TO_POLLING_INTERVAL_MS[toPlaceBooleanField(this.field)];
         if (pollingInterval) {
-          this.updateTimer = setInterval(() => {
-            this.requestUpdate();
-          }, pollingInterval);
+          this.poll.start(() => void this.requestUpdate(), pollingInterval);
         }
       }
     }
@@ -247,7 +244,7 @@ export class PlaceFieldBoolean extends PlaceDataConsumer {
 
   override disconnectedCallback() {
     super.disconnectedCallback();
-    this.cancelPolledUpdates();
+    this.poll.stop();
     this.resetAsyncRenderPromise();
   }
 
@@ -277,13 +274,6 @@ export class PlaceFieldBoolean extends PlaceDataConsumer {
     } else {
       // Synchronously update the value to render.
       this.valueToRender = getBooleanSync(place, placeField);
-    }
-  }
-
-  private cancelPolledUpdates() {
-    if (this.updateTimer) {
-      clearInterval(this.updateTimer);
-      this.updateTimer = undefined;
     }
   }
 

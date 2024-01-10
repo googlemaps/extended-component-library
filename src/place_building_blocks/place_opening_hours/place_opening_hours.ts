@@ -15,6 +15,7 @@ import {LocalizationController} from '../../base/localization_controller.js';
 import {WebFont, WebFontController} from '../../base/web_font_controller.js';
 import type {Place} from '../../utils/googlemaps_types.js';
 import {formatTimeWithWeekdayMaybe, getUpcomingCloseTime, getUpcomingOpenTime, isSoon, NextCloseTimeStatus, NextOpenTimeStatus} from '../../utils/opening_hours.js';
+import {Poll} from '../../utils/poll.js';
 import {PlaceDataConsumer} from '../place_data_consumer.js';
 
 
@@ -88,25 +89,23 @@ export class PlaceOpeningHours extends PlaceDataConsumer {
 
   @state() private expanded = false;
 
-  private updateTimer?: ReturnType<typeof setInterval>;
+  private readonly poll = new Poll();
 
   protected readonly fontLoader =
       new WebFontController(this, [WebFont.MATERIAL_SYMBOLS_OUTLINED]);
 
   override disconnectedCallback() {
     super.disconnectedCallback();
-    this.cancelPolledUpdates();
+    this.poll.stop();
   }
 
   protected override willUpdate(changedProperties: PropertyValues<this>) {
     super.willUpdate(changedProperties);
 
     // Set up polled updates.
-    this.cancelPolledUpdates();
+    this.poll.stop();
     if (this.getPlace()) {
-      this.updateTimer = setInterval(() => {
-        this.requestUpdate();
-      }, POLLING_INTERVAL_MS);
+      this.poll.start(() => void this.requestUpdate(), POLLING_INTERVAL_MS);
     }
   }
 
@@ -180,13 +179,6 @@ export class PlaceOpeningHours extends PlaceDataConsumer {
       return false;
     }
     return !!(place.businessStatus || place.openingHours);
-  }
-
-  private cancelPolledUpdates() {
-    if (this.updateTimer) {
-      clearInterval(this.updateTimer);
-      this.updateTimer = undefined;
-    }
   }
 
   private getOpenSummaryContent(place: Place) {
