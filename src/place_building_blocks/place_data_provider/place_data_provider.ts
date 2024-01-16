@@ -16,7 +16,7 @@ import {STRING_ARRAY_ATTRIBUTE_CONVERTER} from '../../utils/attribute_converters
 import type {Place, PlaceResult} from '../../utils/googlemaps_types.js';
 import {isNotAvailableError, isPlaceResult, makePlaceFromPlaceResult} from '../../utils/place_utils.js';
 import {PlaceAttribution} from '../place_attribution/place_attribution.js';
-import {PlaceConsumerRegistration, placeConsumerRegistrationContext, placeContext, PlaceDataConsumer} from '../place_data_consumer.js';
+import {type PlaceConsumerRegistration, placeConsumerRegistrationContext, placeContext, PlaceDataConsumer} from '../place_data_consumer.js';
 
 import {CachedPlaceLookup} from './cached_place_lookup.js';
 
