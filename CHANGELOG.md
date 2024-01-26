@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.5](https://github.com/googlemaps/extended-component-library/compare/v0.6.4...v0.6.5) (2024-01-26)
+
+
+### Bug Fixes
+
+* replace usage of deprecated findPlaceFromQuery with searchByText in Place Picker ([dc83f25](https://github.com/googlemaps/extended-component-library/commit/dc83f2540d144391420a2ffdd99ad392549ba225))
+
 ## [0.6.4](https://github.com/googlemaps/extended-component-library/compare/v0.6.3...v0.6.4) (2024-01-04)
 
 
