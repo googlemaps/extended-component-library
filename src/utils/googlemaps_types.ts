@@ -27,6 +27,13 @@ export declare type Review =
   authorAttribution?: AuthorAttribution;
 };
 
+/** Search by text request. */
+export declare interface SearchByTextRequest {
+  textQuery: string;
+  fields: string[];
+  locationBias?: google.maps.LatLngBounds;
+}
+
 /** Updated Place class with new attribution schema. */
 export declare type Place =
     Omit<google.maps.places.Place, 'photos'|'reviews'|'fetchFields'>& {
@@ -35,6 +42,15 @@ export declare type Place =
   fetchFields: (options: google.maps.places.FetchFieldsRequest) =>
       Promise<{place: Place}>;
 };
+
+/** Places library. */
+export declare interface PlacesLibrary extends
+    Omit<google.maps.PlacesLibrary, 'Place'> {
+  Place: {
+    new(options: google.maps.places.PlaceOptions): Place;
+    searchByText: (request: SearchByTextRequest) => Promise<{places: Place[]}>;
+  };
+}
 
 /** google.maps.marker.AdvancedMarkerElement. */
 export type AdvancedMarkerElement = google.maps.marker.AdvancedMarkerElement;

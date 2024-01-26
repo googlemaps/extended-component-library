@@ -17,7 +17,7 @@ import {WebFont, WebFontController} from '../base/web_font_controller.js';
 import {LAT_LNG_LITERAL_ATTRIBUTE_CONVERTER, STRING_ARRAY_ATTRIBUTE_CONVERTER} from '../utils/attribute_converters.js';
 import {getDeepActiveElement} from '../utils/deep_element_access.js';
 import {Deferred} from '../utils/deferred.js';
-import type {Place, PlaceResult} from '../utils/googlemaps_types.js';
+import type {Place, PlaceResult, PlacesLibrary} from '../utils/googlemaps_types.js';
 import {isNotAvailableError, makePlaceFromPlaceResult, mapPlaceFieldsToPlaceResultFields} from '../utils/place_utils.js';
 
 type Autocomplete = google.maps.places.Autocomplete;
@@ -398,22 +398,28 @@ export class PlacePicker extends BaseComponent {
    */
   private async search(query: string): Promise<Place|null> {
     // tslint:disable-next-line:enforce-name-casing
-    const {Place: OrigPlace} = await APILoader.importLibrary('places', this) as
-        typeof google.maps.places;
-    // A Find Place request containing only the Place ID field incurs no charge:
-    // https://developers.google.com/maps/documentation/places/web-service/usage-and-billing#find-place-id-only.
-    const findRequest: google.maps.places.FindPlaceFromQueryRequest = {
-      query,
+    const {Place: OrigPlace} =
+        (await APILoader.importLibrary('places', this)) as unknown as
+        PlacesLibrary;
+    // A TextSearch request containing only the Place ID field incurs no charge:
+    // https://developers.google.com/maps/documentation/places/web-service/usage-and-billing#id-textsearch.
+    const searchRequest = {
+      textQuery: query,
       fields: ['id'],
       locationBias: this.autocomplete.value?.getBounds(),
     };
     let places;
     try {
-      ({places} = await OrigPlace.findPlaceFromQuery(findRequest));
+      ({places} = await OrigPlace.searchByText(searchRequest));
     } catch (error: unknown) {
-      if (isNotAvailableError(error, 'findPlaceFromQuery()')) {
-        // `Place.findPlaceFromQuery()` isn't available in GA; use
+      if (isNotAvailableError(error, 'searchByText()')) {
+        // `Place.searchByText()` isn't available in GA; use
         // `PlacesService.findPlaceFromQuery()` as a fallback.
+        const findRequest = {
+          query,
+          fields: ['id'],
+          locationBias: this.autocomplete.value?.getBounds(),
+        };
         const results = await this.searchWithFindPlaceFromQuery(findRequest);
         places = [];
         for (const placeResult of results) {

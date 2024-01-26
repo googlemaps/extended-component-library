@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {LatLng, LatLngLiteral, Place, PlaceResult} from '../utils/googlemaps_types.js';
+import {LatLng, LatLngLiteral, Place, PlaceResult, SearchByTextRequest} from '../utils/googlemaps_types.js';
 
 import {makeFakeAutocomplete} from './fake_autocomplete.js';
 import {makeFakeDistanceMatrixResponse} from './fake_distance_matrix.js';
@@ -58,13 +58,10 @@ export class FakeGoogleMapsHarness {
           ({results: [] as PlaceResult[], status: 'OK'});
 
   /**
-   * Override this function to control the response of
-   * `Place.findPlaceFromQuery()`.
+   * Override this function to control the response of `Place.searchByText()`.
    */
-  findPlaceFromQueryHandler:
-      (request: google.maps.places.FindPlaceFromQueryRequest) => {
-        places: Place[]
-      } = (request) => ({places: []});
+  searchByTextHandler = (request: SearchByTextRequest) =>
+      ({places: [] as Place[]});
 
   /**
    * Spy for the fake Places Autocomplete.
@@ -125,9 +122,8 @@ export class FakeGoogleMapsHarness {
             return harness.placeConstructor(options);
           }
 
-          static findPlaceFromQuery(
-              request: google.maps.places.FindPlaceFromQueryRequest) {
-            return Promise.resolve(harness.findPlaceFromQueryHandler(request));
+          static searchByText(request: SearchByTextRequest) {
+            return Promise.resolve(harness.searchByTextHandler(request));
           }
         },
 

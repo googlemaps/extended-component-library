@@ -48,9 +48,10 @@ describe('PlacePicker', () => {
   });
 
   beforeEach(() => {
-    // Create a custom stub for `Place.findPlaceFromQuery()`
-    spyOn(env.fakeGoogleMapsHarness!, 'findPlaceFromQueryHandler')
-        .and.returnValue({places: [FAKE_PLACE_FROM_QUERY]});
+    // Create a custom stub for `Place.searchByText()`
+    spyOn(env.fakeGoogleMapsHarness!, 'searchByTextHandler').and.returnValue({
+      places: [FAKE_PLACE_FROM_QUERY]
+    });
 
     // Define a fake Circle class
     const fakeCircle = jasmine.createSpyObj('Circle', ['getBounds']);
@@ -306,9 +307,9 @@ describe('PlacePicker', () => {
     searchButton.click();
     await env.waitForStability();
 
-    expect(env.fakeGoogleMapsHarness!.findPlaceFromQueryHandler)
+    expect(env.fakeGoogleMapsHarness!.searchByTextHandler)
         .toHaveBeenCalledOnceWith({
-          query: '123 Main St',
+          textQuery: '123 Main St',
           fields: ['id'],
           locationBias: FAKE_BOUNDS,
         });
@@ -322,14 +323,14 @@ describe('PlacePicker', () => {
     expect(input.value).toBe('123 Main St, City Name, CA 00000');
   });
 
-  it('sets value from fallback GA API when Place.findPlaceFromQuery is not available',
+  it('sets value from fallback GA API when Place.searchByText is not available',
      async () => {
        env.fakeGoogleMapsHarness!.autocompleteSpy.getBounds.and.returnValue(
            FAKE_BOUNDS);
        const {picker, input, searchButton, clearButton} = await prepareState();
-       (env.fakeGoogleMapsHarness!.findPlaceFromQueryHandler as jasmine.Spy)
+       (env.fakeGoogleMapsHarness!.searchByTextHandler as jasmine.Spy)
            .and.throwError(new Error(
-               'google.maps.places.Place.findPlaceFromQuery() is not available in the SDK!'));
+               'google.maps.places.Place.searchByText() is not available in the SDK!'));
        spyOn(env.fakeGoogleMapsHarness!, 'findPlaceFromQueryGAHandler')
            .and.returnValue({
              results: [{
@@ -364,7 +365,7 @@ describe('PlacePicker', () => {
 
     await enterQueryText(input, '123 Main St');
 
-    (env.fakeGoogleMapsHarness!.findPlaceFromQueryHandler as jasmine.Spy)
+    (env.fakeGoogleMapsHarness!.searchByTextHandler as jasmine.Spy)
         .and.returnValue({
           places: [],
         });
@@ -385,7 +386,7 @@ describe('PlacePicker', () => {
     await enterQueryText(input, '123 Main St');
 
     const error = new Error('some network error');
-    (env.fakeGoogleMapsHarness!.findPlaceFromQueryHandler as jasmine.Spy)
+    (env.fakeGoogleMapsHarness!.searchByTextHandler as jasmine.Spy)
         .and.throwError(error);
     const dispatchEventSpy = spyOn(picker, 'dispatchEvent');
     searchButton.click();
