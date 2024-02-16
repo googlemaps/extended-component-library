@@ -31,7 +31,9 @@ export declare type Review =
 export declare interface SearchByTextRequest {
   textQuery: string;
   fields: string[];
-  locationBias?: google.maps.LatLngBounds;
+  locationBias?: google.maps.LatLngLiteral|google.maps.LatLngBounds;
+  includedType?: string;
+  region?: string;
 }
 
 /** Updated Place class with new attribution schema. */
