@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.6](https://github.com/googlemaps/extended-component-library/compare/v0.6.5...v0.6.6) (2024-02-21)
+
+
+### Bug Fixes
+
+* hide route in Store Locator component when origin/dest is unknown ([8399265](https://github.com/googlemaps/extended-component-library/commit/8399265c15f009509af31ac4ba6a698557eb9100))
+
 ## [0.6.5](https://github.com/googlemaps/extended-component-library/compare/v0.6.4...v0.6.5) (2024-01-26)
 
 
