@@ -528,12 +528,15 @@ export class StoreLocator extends BaseComponent {
   }
 
   private renderMapDirections() {
-    if (this.featureSet === FeatureSet.ADVANCED) {
+    const originLatLng = this.searchLocation?.location;
+    const destinationLatLng = this.selectedListing?.position;
+    if (this.featureSet === FeatureSet.ADVANCED && originLatLng &&
+        destinationLatLng) {
       // clang-format off
       return html`
       <gmpx-route-overview no-pin
-          .originLatLng=${this.searchLocation?.location}
-          .destinationLatLng=${this.selectedListing?.position}>
+          .originLatLng=${originLatLng}
+          .destinationLatLng=${destinationLatLng}>
       </gmpx-route-overview>`;
       // clang-format on
     }
