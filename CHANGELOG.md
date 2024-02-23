@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.7](https://github.com/googlemaps/extended-component-library/compare/v0.6.6...v0.6.7) (2024-02-23)
+
+
+### Bug Fixes
+
+* fix "hasWheelchairAccessibleEntrance" boolean field due to API changes ([3df3d09](https://github.com/googlemaps/extended-component-library/commit/3df3d09d78a66de721295b1a9321def86ba5c1fd))
+
 ## [0.6.6](https://github.com/googlemaps/extended-component-library/compare/v0.6.5...v0.6.6) (2024-02-21)
 
 
