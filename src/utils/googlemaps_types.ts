@@ -37,13 +37,15 @@ export declare interface SearchByTextRequest {
 }
 
 /** Updated Place class with new attribution schema. */
-export declare type Place =
-    Omit<google.maps.places.Place, 'photos'|'reviews'|'fetchFields'>& {
+export declare interface Place extends Omit<
+    google.maps.places.Place,
+    'photos'|'reviews'|'fetchFields'|'hasWheelchairAccessibleEntrance'> {
   photos?: Photo[];
   reviews?: Review[];
+  accessibilityOptions?: {hasWheelchairAccessibleEntrance: boolean|null}|null;
   fetchFields: (options: google.maps.places.FetchFieldsRequest) =>
       Promise<{place: Place}>;
-};
+}
 
 /** Places library. */
 export declare interface PlacesLibrary extends

@@ -99,7 +99,7 @@ function getFieldValue(place: Place, field: PlaceBooleanField): boolean|null|
     case 'hasTakeout':
       return place.hasTakeout;
     case 'hasWheelchairAccessibleEntrance':
-      return place.hasWheelchairAccessibleEntrance;
+      return place.accessibilityOptions?.hasWheelchairAccessibleEntrance;
     case 'isReservable':
       return place.isReservable;
     case 'servesBeer':
@@ -191,14 +191,17 @@ export class PlaceFieldBoolean extends PlaceDataConsumer {
   getRequiredFields(): Array<keyof Place> {
     if (!this.field) return [];
     const placeField = toPlaceBooleanField(this.field);
-    if (placeField === 'isOpen()') {
-      return [
-        'businessStatus',
-        'openingHours',
-        'utcOffsetMinutes',
-      ];
-    } else {
-      return [placeField];
+    switch (placeField) {
+      case 'isOpen()':
+        return [
+          'businessStatus',
+          'openingHours',
+          'utcOffsetMinutes',
+        ];
+      case 'hasWheelchairAccessibleEntrance':
+        return ['accessibilityOptions'];
+      default:
+        return [placeField];
     }
   }
 
