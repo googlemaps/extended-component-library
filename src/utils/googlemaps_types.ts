@@ -40,7 +40,7 @@ export declare interface SearchByTextRequest {
 /** Updated Place class with new attribution schema. */
 export declare interface Place extends Omit<
     google.maps.places.Place,
-    'photos'|'reviews'|'fetchFields'|'hasWheelchairAccessibleEntrance'> {
+    'photos'|'reviews'|'fetchFields'|'accessibilityOptions'> {
   photos?: Photo[];
   reviews?: Review[];
   accessibilityOptions?: {hasWheelchairAccessibleEntrance: boolean|null}|null;
