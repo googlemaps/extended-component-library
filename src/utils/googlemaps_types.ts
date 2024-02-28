@@ -12,8 +12,8 @@
 /** Attribution object for Place photos and reviews. */
 export declare interface AuthorAttribution {
   displayName: string;
-  photoURI?: string;
-  uri?: string;
+  photoURI: string|null;
+  uri: string|null;
 }
 
 /** Place Photo object. */
@@ -24,7 +24,7 @@ export declare type Photo = Omit<google.maps.places.Photo, 'attributions'>& {
 /** Place Review object. */
 export declare type Review =
     Omit<google.maps.places.Review, 'author'|'authorURI'|'authorPhotoURI'>& {
-  authorAttribution?: AuthorAttribution;
+  authorAttribution: AuthorAttribution|null;
 };
 
 /** Search by text request. */
