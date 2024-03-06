@@ -241,6 +241,7 @@ export class APILoader extends BaseComponent {
     APILoader.googleMapsDeferred = new Deferred<typeof google.maps>();
   }
 
+  /** @nocollapse */
   private static pollForGoogleMaps(
       numRetries: number, interval: number, logger?: LoggingController,
       pollCount = 0) {
