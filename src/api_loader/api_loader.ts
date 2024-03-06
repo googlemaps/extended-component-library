@@ -209,6 +209,7 @@ export class APILoader extends BaseComponent {
    * @param consumer Optionally specify the custom element requesting the
    *     library to provide more helpful console warnings when a library cannot
    *     be loaded.
+   * @nocollapse
    */
   static async importLibrary(library: string, consumer?: HTMLElement):
       Promise<google.maps.CoreLibrary|google.maps.MapsLibrary|
