@@ -19,6 +19,14 @@ import type {AuthorAttribution, Photo, Place} from '../../utils/googlemaps_types
 import {renderAttribution} from '../../utils/place_utils.js';
 import {PlaceDataConsumer} from '../place_data_consumer.js';
 
+/**
+ * Maximum width/height of a Place Photo that can be requested, in pixels; see:
+ * https://developers.google.com/maps/documentation/places/web-service/place-photos#maxheightpx-and-maxwidthpx.
+ */
+const MAX_PHOTO_SIZE_PX = 4800;
+
+/** Maximum width/height of a Place Photo to display as tile, in pixels. */
+const MAX_TILE_PHOTO_SIZE_PX = 1200;
 
 /** Spacing for margins and paddings based on baseline font size. */
 const SPACING_BASE = css`calc(${GMPX_FONT_SIZE_BASE} * 0.5)`;
@@ -61,8 +69,14 @@ function formatPhoto(photo: Photo, tileSize: TileSize): FormattedPhoto {
       {maxWidth: Math.ceil(tileSize.widthPx * window.devicePixelRatio)};
 
   return {
-    uri: photo.getURI(),
-    tileUri: photo.getURI(tilePhotoOptions),
+    uri: photo.getURI({
+      maxHeight: MAX_PHOTO_SIZE_PX,
+      maxWidth: MAX_PHOTO_SIZE_PX,
+    }),
+    tileUri: photo.getURI({
+      maxHeight: tilePhotoOptions.maxHeight || MAX_TILE_PHOTO_SIZE_PX,
+      maxWidth: tilePhotoOptions.maxWidth || MAX_TILE_PHOTO_SIZE_PX,
+    }),
     attributions: photo.authorAttributions,
   };
 }
