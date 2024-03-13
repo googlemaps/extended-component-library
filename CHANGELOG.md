@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.6.8](https://github.com/googlemaps/extended-component-library/compare/v0.6.7...v0.6.8) (2024-03-13)
+
+
+### Bug Fixes
+
+* ensure place photos are requested with explicit width & height ([87ae0ce](https://github.com/googlemaps/extended-component-library/commit/87ae0ceebdddc16551c0088ddcde083b4300a97e))
+* make typings of AuthorAttribution consistent with JS API ([f7b190f](https://github.com/googlemaps/extended-component-library/commit/f7b190f8e872b83bb20e0c3dca7fba101ad1d4cd))
+
 ## [0.6.7](https://github.com/googlemaps/extended-component-library/compare/v0.6.6...v0.6.7) (2024-02-23)
 
 
