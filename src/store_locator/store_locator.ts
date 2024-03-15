@@ -12,6 +12,7 @@ import '../place_picker/place_picker.js';
 import '../icon_button/icon_button.js';
 import '../place_building_blocks/place_directions_button/place_directions_button.js';
 
+// Placeholder for objectProperty (google3-only)
 import {html, nothing} from 'lit';
 import {customElement, property, query, state} from 'lit/decorators.js';
 import {classMap} from 'lit/directives/class-map.js';
@@ -199,7 +200,7 @@ export class StoreLocator extends BaseComponent {
    */
   protected override willUpdate(changedProperties: Map<string, unknown>) {
     if (changedProperties.has('listings') ||
-        changedProperties.has('initialized')) {
+        changedProperties.has(/* @state */ 'initialized')) {
       this.internalListings =
           (this.listings ?? []).map((x) => this.createInternalListing(x));
       this.listingDistances.clear();
@@ -210,12 +211,12 @@ export class StoreLocator extends BaseComponent {
     // Perform map updates after the DOM has rendered, so the map element
     // will exist.
     if (changedProperties.has('listings') ||
-        changedProperties.has('initialized')) {
+        changedProperties.has(/* @state */ 'initialized')) {
       this.updateBounds();
     }
 
     if ((changedProperties.has('mapOptions') ||
-         changedProperties.has('initialized')) &&
+         changedProperties.has(/* @state */ 'initialized')) &&
         this.mapOptions) {
       this.mapElement?.innerMap?.setOptions(this.mapOptions);
     }

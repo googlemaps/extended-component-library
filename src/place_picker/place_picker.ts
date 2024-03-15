@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+// Placeholder for objectProperty (google3-only)
 import {css, html, PropertyValues} from 'lit';
 import {customElement, property, query, state} from 'lit/decorators.js';
 
@@ -255,13 +256,13 @@ export class PlacePicker extends BaseComponent {
   private readonly autocomplete = new Deferred<Autocomplete>();
 
   protected override willUpdate(changedProperties: PropertyValues) {
-    if (changedProperties.has('disableSearch') && this.disableSearch &&
-        this.focusController.isKeyboardNavigating &&
+    if (changedProperties.has(/* @state */ 'disableSearch') &&
+        this.disableSearch && this.focusController.isKeyboardNavigating &&
         getDeepActiveElement() === this.searchButtonElement) {
       this.clearButtonElement?.focus();
     }
-    if (changedProperties.has('hideClearButton') && this.hideClearButton &&
-        this.focusController.isKeyboardNavigating &&
+    if (changedProperties.has(/* @state */ 'hideClearButton') &&
+        this.hideClearButton && this.focusController.isKeyboardNavigating &&
         getDeepActiveElement() === this.clearButtonElement) {
       this.inputElement?.focus();
     }
@@ -318,7 +319,7 @@ export class PlacePicker extends BaseComponent {
       const map = await this.getMapById(this.forMap);
       map && this.bindTo(map);
     }
-    if (changedProperties.has('valueInternal')) {
+    if (changedProperties.has(/* @state */ 'valueInternal')) {
       this.dispatchEvent(new Event('gmpx-placechange'));
     }
   }
