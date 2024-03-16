@@ -16,7 +16,6 @@ import type {Place, PlaceResult} from '../../utils/googlemaps_types.js';
 
 import {PlacePhotoGallery} from './place_photo_gallery.js';
 
-
 const fakePlace = makeFakePlace({
   id: '1234567890',
   displayName: 'Place Name',
@@ -103,12 +102,14 @@ describe('PlacePhotoGallery', () => {
     maxTiles?: number,
     place?: Place|PlaceResult,
     clickOnTile?: number,
+    hidden?: boolean,
   }) {
     const root = env.render(html`
       <gmpx-place-photo-gallery
         dir=${config?.rtl ? 'rtl' : 'ltr'}
         max-tiles=${ifDefined(config?.maxTiles)}
         .place=${config?.place}
+        .hidden=${config?.hidden ?? false}
       ></gmpx-place-photo-gallery>
     `);
 
@@ -161,16 +162,38 @@ describe('PlacePhotoGallery', () => {
     const {tiles} = await prepareState({place: fakePlace});
 
     expect(tiles.length).toBe(3);
-    expect(getUri0Spy).toHaveBeenCalledWith({maxHeight: 4800, maxWidth: 4800});
-    expect(getUri0Spy).toHaveBeenCalledWith({maxHeight: 134, maxWidth: 1200});
-    expect(getUri1Spy).toHaveBeenCalledWith({maxHeight: 1200, maxWidth: 142});
-    expect(getUri2Spy).toHaveBeenCalledWith({maxHeight: 1200, maxWidth: 142});
+    expect(getUri0Spy).toHaveBeenCalledWith({maxHeight: window.innerHeight});
+    expect(getUri0Spy).toHaveBeenCalledWith({maxHeight: 134});
+    expect(getUri1Spy).toHaveBeenCalledWith({maxWidth: window.innerWidth});
+    expect(getUri1Spy).toHaveBeenCalledWith({maxWidth: 142});
+    expect(getUri2Spy).toHaveBeenCalledWith({maxWidth: window.innerWidth});
+    expect(getUri2Spy).toHaveBeenCalledWith({maxWidth: 142});
     expect(getComputedStyle(tiles[0]).backgroundImage)
         .toBe('url("https://lh3.googleusercontent.com/places/A")');
     expect(getComputedStyle(tiles[1]).backgroundImage)
         .toBe('url("https://lh3.googleusercontent.com/places/B")');
     expect(getComputedStyle(tiles[2]).backgroundImage)
         .toBe('url("https://lh3.googleusercontent.com/places/C")');
+  });
+
+  it('accounts for device pixel ratio when generating image URIs', async () => {
+    spyOnProperty(window, 'devicePixelRatio').and.returnValue(2);
+    const getUriSpy = spyOn(fakePlace.photos![0], 'getURI').and.callThrough();
+
+    await prepareState({place: fakePlace});
+
+    expect(getUriSpy).toHaveBeenCalledWith({maxHeight: window.innerHeight * 2});
+    expect(getUriSpy).toHaveBeenCalledWith({maxHeight: 134 * 2});
+  });
+
+  it('gets images with max tile size when tile has unknown size', async () => {
+    const getUri0Spy = spyOn(fakePlace.photos![0], 'getURI').and.callThrough();
+    const getUri1Spy = spyOn(fakePlace.photos![1], 'getURI').and.callThrough();
+
+    await prepareState({place: fakePlace, hidden: true});
+
+    expect(getUri0Spy).toHaveBeenCalledWith({maxHeight: 1200});
+    expect(getUri1Spy).toHaveBeenCalledWith({maxWidth: 1200});
   });
 
   it('shows all photos from PlaceResult data as tiles, in order', async () => {
@@ -184,10 +207,12 @@ describe('PlacePhotoGallery', () => {
     const {tiles} = await prepareState({place: fakePlaceResult});
 
     expect(tiles.length).toBe(3);
-    expect(getUrl0Spy).toHaveBeenCalledWith({maxHeight: 4800, maxWidth: 4800});
-    expect(getUrl0Spy).toHaveBeenCalledWith({maxHeight: 134, maxWidth: 1200});
-    expect(getUrl1Spy).toHaveBeenCalledWith({maxHeight: 1200, maxWidth: 142});
-    expect(getUrl2Spy).toHaveBeenCalledWith({maxHeight: 1200, maxWidth: 142});
+    expect(getUrl0Spy).toHaveBeenCalledWith({maxHeight: window.innerHeight});
+    expect(getUrl0Spy).toHaveBeenCalledWith({maxHeight: 134});
+    expect(getUrl1Spy).toHaveBeenCalledWith({maxWidth: window.innerWidth});
+    expect(getUrl1Spy).toHaveBeenCalledWith({maxWidth: 142});
+    expect(getUrl2Spy).toHaveBeenCalledWith({maxWidth: window.innerWidth});
+    expect(getUrl2Spy).toHaveBeenCalledWith({maxWidth: 142});
     expect(getComputedStyle(tiles[0]).backgroundImage)
         .toBe('url("https://lh3.googleusercontent.com/places/A")');
     expect(getComputedStyle(tiles[1]).backgroundImage)

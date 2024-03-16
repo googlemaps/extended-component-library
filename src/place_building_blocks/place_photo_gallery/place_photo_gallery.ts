@@ -43,6 +43,16 @@ interface TileSize {
 }
 
 /**
+ * Returns the desired photo size in pixels based on CSS pixels and max size,
+ * accounting for diff between physical and CSS pixels on current device; see:
+ * https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio.
+ */
+function getPhotoSize(cssPx: number, max: number) {
+  const devicePx = Math.ceil(cssPx * window.devicePixelRatio);
+  return Math.min(devicePx, max);
+}
+
+/**
  * Formats a `google.maps.places.Photo` object for display based on tile size.
  *
  * If photo is wider relative to its height compared to the tile, then its
@@ -60,23 +70,19 @@ interface TileSize {
  */
 function formatPhoto(photo: Photo, tileSize: TileSize): FormattedPhoto {
   const photoSizeRatio = photo.widthPx / photo.heightPx;
+  const windowSizeRatio = window.innerWidth / window.innerHeight;
   const tileSizeRatio = tileSize.widthPx / tileSize.heightPx;
 
-  // Account for diff between physical and CSS pixels on current device; see:
-  // https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio.
+  const lightboxPhotoOptions = photoSizeRatio > windowSizeRatio ?
+      {maxHeight: getPhotoSize(window.innerHeight, MAX_PHOTO_SIZE_PX)} :
+      {maxWidth: getPhotoSize(window.innerWidth, MAX_PHOTO_SIZE_PX)};
   const tilePhotoOptions = photoSizeRatio > tileSizeRatio ?
-      {maxHeight: Math.ceil(tileSize.heightPx * window.devicePixelRatio)} :
-      {maxWidth: Math.ceil(tileSize.widthPx * window.devicePixelRatio)};
+      {maxHeight: getPhotoSize(tileSize.heightPx, MAX_TILE_PHOTO_SIZE_PX)} :
+      {maxWidth: getPhotoSize(tileSize.widthPx, MAX_TILE_PHOTO_SIZE_PX)};
 
   return {
-    uri: photo.getURI({
-      maxHeight: MAX_PHOTO_SIZE_PX,
-      maxWidth: MAX_PHOTO_SIZE_PX,
-    }),
-    tileUri: photo.getURI({
-      maxHeight: tilePhotoOptions.maxHeight || MAX_TILE_PHOTO_SIZE_PX,
-      maxWidth: tilePhotoOptions.maxWidth || MAX_TILE_PHOTO_SIZE_PX,
-    }),
+    uri: photo.getURI(lightboxPhotoOptions),
+    tileUri: photo.getURI(tilePhotoOptions),
     attributions: photo.authorAttributions,
   };
 }
@@ -358,9 +364,13 @@ export class PlacePhotoGallery extends PlaceDataConsumer {
 
   protected override updated() {
     if (!this.tileSize && this.firstTileElement) {
+      // Note that sometimes a tile's BoundingClientRect becomes defined outside
+      // Lit's reactive update cycle. In such cases the tile size will be zero,
+      // and we cap width/height at `MAX_TILE_PHOTO_SIZE_PX` to avoid requesting
+      // an overly large image.
       this.tileSize = {
-        widthPx: this.firstTileElement.clientWidth,
-        heightPx: this.firstTileElement.clientHeight,
+        widthPx: this.firstTileElement.clientWidth || MAX_TILE_PHOTO_SIZE_PX,
+        heightPx: this.firstTileElement.clientHeight || MAX_TILE_PHOTO_SIZE_PX,
       };
     }
   }
