@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.6.9](https://github.com/googlemaps/extended-component-library/compare/v0.6.8...v0.6.9) (2024-03-26)
+
+
+### Bug Fixes
+
+* reduce loading latency of lightbox photos by capping width/height to window ([29e02ea](https://github.com/googlemaps/extended-component-library/commit/29e02eab8439c110c86ba13c088b4223a622eb5a))
+* resolves issue of font-family CSS variable not working on Place Picker ([#191](https://github.com/googlemaps/extended-component-library/issues/191)) ([b45066f](https://github.com/googlemaps/extended-component-library/commit/b45066f6fc323748fd14bbf727728f810f271754))
+
 ## [0.6.8](https://github.com/googlemaps/extended-component-library/compare/v0.6.7...v0.6.8) (2024-03-13)
 
 
