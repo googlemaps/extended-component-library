@@ -124,6 +124,7 @@ export class PlacePicker extends BaseComponent {
       border-radius: 4px;
       color: ${GMPX_COLOR_ON_SURFACE};
       box-sizing: border-box;
+      font-family: inherit;
       font-size: inherit;
       padding: calc(${GMPX_FONT_SIZE_BASE} * ${SPACING_MULTIPLIER})
                calc(${GMPX_FONT_SIZE_BASE} * ${SPACING_MULTIPLIER * 2 + 1});
