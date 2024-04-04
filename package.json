@@ -1,7 +1,7 @@
 {
   "name": "@googlemaps/extended-component-library",
   "version": "0.4.3",
-  "description": "Web Components for building rich experiences with the Google Maps JavaScript API.",
+  "description": "Web components for building rich experiences with the Google Maps JavaScript API.",
   "license": "Apache-2.0",
   "homepage": "https://github.com/googlemaps/extended-component-library",
   "bugs": {
