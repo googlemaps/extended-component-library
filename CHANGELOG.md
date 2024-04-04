@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.1](https://github.com/googlemaps/extended-component-library/compare/v0.5.0...v0.5.1) (2024-04-04)
+
+
+### Bug Fixes
+
+* not really a fix, testing out back patch ([2c55f2e](https://github.com/googlemaps/extended-component-library/commit/2c55f2e72717360882ae3a1c4c54f0b19dfbb57b))
+
 ## [0.5.0](https://github.com/googlemaps/extended-component-library/compare/v0.4.3...v0.5.0) (2023-11-08)
 
 
