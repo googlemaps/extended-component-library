@@ -1,0 +1,55 @@
+on:
+  push:
+    branches:
+      - back-release/**
+
+permissions:
+  contents: write
+  pull-requests: write
+
+name: Release Please (back patches)
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: google-github-actions/release-please-action@v3
+        id: release
+        with:
+          release-type: node
+          token: ${{ secrets.SYNCED_GITHUB_TOKEN_REPO }}
+          package-name: release-please-action
+          bump-minor-pre-major: true
+          extra-files: src/base/constants.ts
+          default-branch: ${{ github.ref_name }}
+
+      # Everything below is for NPM publishing when a release is cut.
+      - uses: actions/checkout@v3
+        # Note the "if" statement on all commands to make sure that publishing
+        # only happens when a release is cut.
+        if: ${{ steps.release.outputs.release_created }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: npm
+        if: ${{ steps.release.outputs.release_created }}
+      - uses: google/wireit@setup-github-actions-caching/v1
+        if: ${{ steps.release.outputs.release_created }}
+      - run: npm ci
+        if: ${{ steps.release.outputs.release_created }}
+      - run: npm run build:bundle
+        env:
+          WIREIT_FAILURES: continue
+        if: ${{ steps.release.outputs.release_created }}
+      # Now configure with the publish service for install.
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          registry-url: 'https://wombat-dressing-room.appspot.com/'
+        if: ${{ steps.release.outputs.release_created }}
+        # NPM release should manually specify "tag", since otherwise it will be tagged as
+        # "latest" by default, which would be bad.
+      - run: npm publish --tag back-release-${{ steps.release.outputs.tag_name }}
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NODE_AUTH_TOKEN}}
+        if: ${{ steps.release.outputs.release_created }}
