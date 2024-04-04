@@ -1,5 +1,5 @@
 /**
- * @fileoverview This file contains Google Maps JS SDK typings, which are
+ * @fileoverview This file contains Google Maps JS API typings, which are
  * published as `@types/google.maps`. However, sometimes there is a delay
  * in published typings. Components should use types from this file so we
  * can centrally shim/unshim them when necessary.
