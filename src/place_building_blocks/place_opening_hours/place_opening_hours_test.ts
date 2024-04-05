@@ -42,7 +42,7 @@ const FAKE_PLACE_PROPS: Pick<Place, 'id'>&Partial<Place> = {
       'Sunday: 10:00 AM - 8:00 PM',
     ],
   },
-  utcOffsetMinutes: 0,  // Important! Specifies when openingHours occur.
+  utcOffsetMinutes: 0,  // Important! Specifies when regularOpeningHours occur.
 };
 
 describe('PlaceOpeningHours', () => {
