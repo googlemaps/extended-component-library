@@ -80,7 +80,7 @@ export const SAMPLE_FAKE_PLACE = makeFakePlace({
   internationalPhoneNumber: '+1 234-567-8910',
   location: new FakeLatLng(1, 2),
   nationalPhoneNumber: '(234) 567-8910',
-  openingHours: {
+  regularOpeningHours: {
     periods: [
       {
         close: {day: 0, hour: 18, minute: 0},

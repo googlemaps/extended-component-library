@@ -21,7 +21,7 @@ import {PlaceOpeningHours} from './place_opening_hours.js';
 const FAKE_PLACE_PROPS: Pick<Place, 'id'>&Partial<Place> = {
   id: '1234567890',
   businessStatus: 'OPERATIONAL' as google.maps.places.BusinessStatus,
-  openingHours: {
+  regularOpeningHours: {
     periods: [
       {
         open: {day: 0, hour: 10, minute: 0},
@@ -83,7 +83,7 @@ describe('PlaceOpeningHours', () => {
   it('renders nothing when place is operational but opening hours is missing',
      async () => {
        const place =
-           makeFakePlace({...FAKE_PLACE_PROPS, openingHours: undefined});
+           makeFakePlace({...FAKE_PLACE_PROPS, regularOpeningHours: undefined});
        const el = await prepareState({place});
 
        expect(el.renderRoot.textContent).toBe('');
@@ -93,7 +93,7 @@ describe('PlaceOpeningHours', () => {
     const place = makeFakePlace({
       ...FAKE_PLACE_PROPS,
       businessStatus: 'CLOSED_TEMPORARILY' as google.maps.places.BusinessStatus,
-      openingHours: undefined,
+      regularOpeningHours: undefined,
     });
     const el = await prepareState({place});
 
@@ -143,7 +143,7 @@ describe('PlaceOpeningHours', () => {
   it('labels place as open 24 hours when close time is null', async () => {
     const place = makeFakePlace({
       ...FAKE_PLACE_PROPS,
-      openingHours: {
+      regularOpeningHours: {
         periods: [
           {
             open: {day: 0, hour: 0, minute: 0},
@@ -161,7 +161,7 @@ describe('PlaceOpeningHours', () => {
   it('omits closing time when data is insufficient', async () => {
     const place = makeFakePlace({
       ...FAKE_PLACE_PROPS,
-      openingHours: {
+      regularOpeningHours: {
         periods: [],
         weekdayDescriptions: [],
       },
@@ -249,7 +249,8 @@ describe('PlaceOpeningHours', () => {
     const details = el.renderRoot.querySelector<HTMLDivElement>('#details');
     expect(details?.textContent)
         .toHaveNormalizedText(
-            FAKE_PLACE_PROPS.openingHours!.weekdayDescriptions.join(' '));
+            FAKE_PLACE_PROPS.regularOpeningHours!.weekdayDescriptions.join(
+                ' '));
   });
 
   it('polls for updates when a Place is set', async () => {

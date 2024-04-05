@@ -172,14 +172,14 @@ interface UpcomingCloseTimeResult {
  */
 export function getUpcomingCloseTime(
     place: Place, now = new Date()): UpcomingCloseTimeResult {
-  if (!place.openingHours || place.utcOffsetMinutes == null) {
+  if (!place.regularOpeningHours || place.utcOffsetMinutes == null) {
     return {status: NextCloseTimeStatus.UNKNOWN};
-  } else if (isPlaceAlwaysOpen(place.openingHours)) {
+  } else if (isPlaceAlwaysOpen(place.regularOpeningHours)) {
     return {status: NextCloseTimeStatus.ALWAYS_OPEN};
   }
 
   const currentPeriod =
-      getCurrentPeriod(place.openingHours, place.utcOffsetMinutes, now);
+      getCurrentPeriod(place.regularOpeningHours, place.utcOffsetMinutes, now);
   if (!currentPeriod.period) {
     return {status: NextCloseTimeStatus.NOT_OPEN_NOW};
   } else if (!currentPeriod.closeDate) {
@@ -220,9 +220,9 @@ interface UpcomingOpenTimeResult {
  */
 export function getUpcomingOpenTime(
     place: Place, now = new Date()): UpcomingOpenTimeResult {
-  if (!place.openingHours || place.utcOffsetMinutes == null) {
+  if (!place.regularOpeningHours || place.utcOffsetMinutes == null) {
     return {status: NextOpenTimeStatus.UNKNOWN};
-  } else if (isPlaceAlwaysOpen(place.openingHours)) {
+  } else if (isPlaceAlwaysOpen(place.regularOpeningHours)) {
     return {status: NextOpenTimeStatus.ALREADY_OPEN};
   }
 
@@ -232,7 +232,7 @@ export function getUpcomingOpenTime(
     status: NextOpenTimeStatus.NEVER_OPEN,
   };
   let closestOpenInterval = Infinity;
-  for (const period of place.openingHours.periods) {
+  for (const period of place.regularOpeningHours.periods) {
     const openDate = getPointDate(period.open, lastSundayStart);
     if (!period.close) {
       return {status: NextOpenTimeStatus.ALREADY_OPEN};
@@ -264,12 +264,12 @@ export function getUpcomingOpenTime(
  * Temporary (until Place is GA) replacement for the built-in isOpen() method.
  */
 export function isOpen(place: Place, now = new Date()): boolean|undefined {
-  if (!place.openingHours || place.utcOffsetMinutes == null) {
+  if (!place.regularOpeningHours || place.utcOffsetMinutes == null) {
     return undefined;
-  } else if (isPlaceAlwaysOpen(place.openingHours)) {
+  } else if (isPlaceAlwaysOpen(place.regularOpeningHours)) {
     return true;
   }
   const {period} =
-      getCurrentPeriod(place.openingHours, place.utcOffsetMinutes, now);
+      getCurrentPeriod(place.regularOpeningHours, place.utcOffsetMinutes, now);
   return !!period;
 }

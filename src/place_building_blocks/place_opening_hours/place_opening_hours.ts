@@ -116,7 +116,7 @@ export class PlaceOpeningHours extends PlaceDataConsumer {
     if (!place) return nothing;
 
     // If opening hours data is missing, try to render business status instead.
-    if (!place.openingHours) {
+    if (!place.regularOpeningHours) {
       if (place.businessStatus === 'OPERATIONAL') return nothing;
       return html`
         <div class="closed">
@@ -125,6 +125,7 @@ export class PlaceOpeningHours extends PlaceDataConsumer {
         </div>
       `;
     }
+    const {weekdayDescriptions} = place.regularOpeningHours;
 
     // if UTC offset data is missing, omit opening status from the summary.
     let summary;
@@ -161,7 +162,7 @@ export class PlaceOpeningHours extends PlaceDataConsumer {
         role="region"
       >
         <ul>
-          ${map(place.openingHours.weekdayDescriptions, (description) => html`
+          ${map(weekdayDescriptions, (description) => html`
             <li>${description}</li>
           `)}
         </ul>
@@ -171,14 +172,14 @@ export class PlaceOpeningHours extends PlaceDataConsumer {
 
   /** @ignore */
   getRequiredFields(): Array<keyof Place> {
-    return ['businessStatus', 'openingHours', 'utcOffsetMinutes'];
+    return ['businessStatus', 'regularOpeningHours', 'utcOffsetMinutes'];
   }
 
   protected override placeHasData(place: Place): boolean {
-    if (place.businessStatus === 'OPERATIONAL' && !place.openingHours) {
+    if (place.businessStatus === 'OPERATIONAL' && !place.regularOpeningHours) {
       return false;
     }
-    return !!(place.businessStatus || place.openingHours);
+    return !!(place.businessStatus || place.regularOpeningHours);
   }
 
   private getOpenSummaryContent(place: Place) {

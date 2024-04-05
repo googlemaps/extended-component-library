@@ -195,7 +195,7 @@ export class PlaceFieldBoolean extends PlaceDataConsumer {
       case 'isOpen()':
         return [
           'businessStatus',
-          'openingHours',
+          'regularOpeningHours',
           'utcOffsetMinutes',
         ];
       case 'hasWheelchairAccessibleEntrance':

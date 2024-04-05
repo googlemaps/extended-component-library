@@ -171,7 +171,7 @@ export async function makePlaceFromPlaceResult(
  */
 export function hasDataForOpeningCalculations(place: Place): boolean {
   return !!(
-      place.businessStatus && place.openingHours &&
+      place.businessStatus && place.regularOpeningHours &&
       (place.utcOffsetMinutes != null));
 }
 
@@ -228,7 +228,7 @@ function convertToPlaceFields(placeResult: PlaceResult): Partial<Place> {
           // A place that is open 24/7 does not return a close period.
           close: period.close ? makeOpeningHoursPoint(period.close) : null,
         }));
-    place.openingHours = {
+    place.regularOpeningHours = {
       periods: periods ?? [],
       weekdayDescriptions: placeResult.opening_hours.weekday_text ?? [],
     };
@@ -320,7 +320,7 @@ const PLACE_TO_PLACE_RESULT_FIELDS:
       'svgIconMaskURI': 'icon_mask_base_uri',
       'internationalPhoneNumber': 'international_phone_number',
       'displayName': 'name',
-      'openingHours': 'opening_hours',
+      'regularOpeningHours': 'opening_hours',
       'photos': 'photos',
       'plusCode': 'plus_code',
       'priceLevel': 'price_level',

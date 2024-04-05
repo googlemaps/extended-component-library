@@ -101,8 +101,8 @@ describe('Opening hours utilities', () => {
   describe('getUpcomingCloseTime', () => {
     it('returns unknown when there isn\'t enough information', async () => {
       const utcOffsetMinutes = NYC_OFFSET;
-      const place =
-          makeFakePlace({id: '123', openingHours: undefined, utcOffsetMinutes});
+      const place = makeFakePlace(
+          {id: '123', regularOpeningHours: undefined, utcOffsetMinutes});
 
       expect(getUpcomingCloseTime(place, new Date())).toEqual({
         status: NextCloseTimeStatus.UNKNOWN
@@ -110,8 +110,11 @@ describe('Opening hours utilities', () => {
     });
 
     it('returns a status when the place is always open', () => {
-      const place = makeFakePlace(
-          {id: '123', openingHours: ALWAYS_OPEN_HOURS, utcOffsetMinutes: 0});
+      const place = makeFakePlace({
+        id: '123',
+        regularOpeningHours: ALWAYS_OPEN_HOURS,
+        utcOffsetMinutes: 0,
+      });
 
       expect(getUpcomingCloseTime(place, new Date())).toEqual({
         status: NextCloseTimeStatus.ALWAYS_OPEN
@@ -123,7 +126,8 @@ describe('Opening hours utilities', () => {
       const monday8AmSf = makeDateInLocale('2023-04-10T08:00', SF_OFFSET);
       const place = makeFakePlace({
         id: '123',
-        openingHours: {periods: [mondayNineToFive], weekdayDescriptions: []},
+        regularOpeningHours:
+            {periods: [mondayNineToFive], weekdayDescriptions: []},
         utcOffsetMinutes: SF_OFFSET
       });
 
@@ -138,7 +142,8 @@ describe('Opening hours utilities', () => {
          const monday4PmSf = makeDateInLocale('2023-04-10T16:00', SF_OFFSET);
          const place = makeFakePlace({
            id: '123',
-           openingHours: {periods: [mondayNineToFive], weekdayDescriptions: []},
+           regularOpeningHours:
+               {periods: [mondayNineToFive], weekdayDescriptions: []},
            utcOffsetMinutes: NYC_OFFSET
          });
 
@@ -149,7 +154,7 @@ describe('Opening hours utilities', () => {
 
     it('returns a closing time for status for a Place closing soon', () => {
       const thursday3PmSf = makeDateInLocale('2023-04-13T15:00', SF_OFFSET);
-      const openingHours: OpeningHours = {
+      const regularOpeningHours: OpeningHours = {
         periods: [
           makePeriod(WED, 9, WED, 17),  // Wed 9am - 5pm
           makePeriod(THU, 9, THU, 17),  // Thurs 9am - 5pm
@@ -157,12 +162,12 @@ describe('Opening hours utilities', () => {
         ],
         weekdayDescriptions: []
       };
-      const place =
-          makeFakePlace({id: '123', openingHours, utcOffsetMinutes: SF_OFFSET});
+      const place = makeFakePlace(
+          {id: '123', regularOpeningHours, utcOffsetMinutes: SF_OFFSET});
 
       expect(getUpcomingCloseTime(place, thursday3PmSf)).toEqual({
         status: NextCloseTimeStatus.WILL_CLOSE,
-        closePoint: openingHours.periods[1].close!,
+        closePoint: regularOpeningHours.periods[1].close!,
         closeDate: makeDateInLocale('2023-04-13T17:00', SF_OFFSET)  // 5pm Thu
       });
     });
@@ -170,18 +175,18 @@ describe('Opening hours utilities', () => {
     it('returns a closing time for a Place closing in over 24 hours from now',
        () => {
          const monday1pmSf = makeDateInLocale('2023-04-10T13:00', SF_OFFSET);
-         const openingHours: OpeningHours = {
+         const regularOpeningHours: OpeningHours = {
            periods: [
              makePeriod(MON, 9, FRI, 17),  // Mon 9am - Fri 5pm
            ],
            weekdayDescriptions: []
          };
          const place = makeFakePlace(
-             {id: '123', openingHours, utcOffsetMinutes: SF_OFFSET});
+             {id: '123', regularOpeningHours, utcOffsetMinutes: SF_OFFSET});
 
          expect(getUpcomingCloseTime(place, monday1pmSf)).toEqual({
            status: NextCloseTimeStatus.WILL_CLOSE,
-           closePoint: openingHours.periods[0].close!,
+           closePoint: regularOpeningHours.periods[0].close!,
            closeDate:
                makeDateInLocale('2023-04-14T17:00', SF_OFFSET)  // 5pm Fri
          });
@@ -190,7 +195,7 @@ describe('Opening hours utilities', () => {
     it('handles a period which wraps the week', () => {
       // Sequence is (week start) -> (now) -> (period end) -> (period start)
       const monday8amSf = makeDateInLocale('2023-04-10T08:00', SF_OFFSET);
-      const openingHours: OpeningHours = {
+      const regularOpeningHours: OpeningHours = {
         periods: [
           makePeriod(WED, 9, WED, 17),  // Wed 9am - 5pm
           makePeriod(THU, 9, THU, 17),  // Thurs 9am - 5pm
@@ -198,12 +203,12 @@ describe('Opening hours utilities', () => {
         ],
         weekdayDescriptions: []
       };
-      const place =
-          makeFakePlace({id: '123', openingHours, utcOffsetMinutes: SF_OFFSET});
+      const place = makeFakePlace(
+          {id: '123', regularOpeningHours, utcOffsetMinutes: SF_OFFSET});
 
       expect(getUpcomingCloseTime(place, monday8amSf)).toEqual({
         status: NextCloseTimeStatus.WILL_CLOSE,
-        closePoint: openingHours.periods[2].close!,
+        closePoint: regularOpeningHours.periods[2].close!,
         closeDate: makeDateInLocale('2023-04-10T09:00', SF_OFFSET)  // 9am Mon
       });
     });
@@ -211,7 +216,7 @@ describe('Opening hours utilities', () => {
     it('handles a period which wraps the week in the other direction', () => {
       // Sequence is (week start) -> (period end) -> (period start) -> (now)
       const saturday11pmSf = makeDateInLocale('2023-04-15T23:00', SF_OFFSET);
-      const openingHours: OpeningHours = {
+      const regularOpeningHours: OpeningHours = {
         periods: [
           makePeriod(WED, 9, WED, 17),  // Wed 9am - 5pm
           makePeriod(THU, 9, THU, 17),  // Thurs 9am - 5pm
@@ -219,12 +224,12 @@ describe('Opening hours utilities', () => {
         ],
         weekdayDescriptions: []
       };
-      const place =
-          makeFakePlace({id: '123', openingHours, utcOffsetMinutes: SF_OFFSET});
+      const place = makeFakePlace(
+          {id: '123', regularOpeningHours, utcOffsetMinutes: SF_OFFSET});
 
       expect(getUpcomingCloseTime(place, saturday11pmSf)).toEqual({
         status: NextCloseTimeStatus.WILL_CLOSE,
-        closePoint: openingHours.periods[2].close!,
+        closePoint: regularOpeningHours.periods[2].close!,
         closeDate: makeDateInLocale('2023-04-16T09:00', SF_OFFSET)  // 9am Sun
       });
     });
@@ -234,7 +239,7 @@ describe('Opening hours utilities', () => {
     it('returns a status if there is not enough information', () => {
       const place = makeFakePlace({
         id: '123',
-        openingHours: {
+        regularOpeningHours: {
           periods: [],
           weekdayDescriptions: [],
         },
@@ -249,7 +254,7 @@ describe('Opening hours utilities', () => {
     it('returns a status if the place is never open', () => {
       const place = makeFakePlace({
         id: '123',
-        openingHours: {
+        regularOpeningHours: {
           periods: [],
           weekdayDescriptions: [],
         },
@@ -265,7 +270,7 @@ describe('Opening hours utilities', () => {
       const tuesdayNoonSf = makeDateInLocale('2023-04-11T12:00', SF_OFFSET);
       const place = makeFakePlace({
         id: '123',
-        openingHours: {
+        regularOpeningHours: {
           periods: [makePeriod(TUE, 9, TUE, 17)],  // Tuesday 9am - 5pm
           weekdayDescriptions: [],
         },
@@ -279,7 +284,7 @@ describe('Opening hours utilities', () => {
 
     it('returns the next time the place will open', () => {
       const thursday6PmSf = makeDateInLocale('2023-04-13T18:00', SF_OFFSET);
-      const openingHours: OpeningHours = {
+      const regularOpeningHours: OpeningHours = {
         periods: [
           makePeriod(WED, 9, WED, 17),  // Wed 9am - 5pm
           makePeriod(THU, 9, THU, 17),  // Thurs 9am - 5pm
@@ -287,12 +292,12 @@ describe('Opening hours utilities', () => {
         ],
         weekdayDescriptions: []
       };
-      const place =
-          makeFakePlace({id: '123', openingHours, utcOffsetMinutes: SF_OFFSET});
+      const place = makeFakePlace(
+          {id: '123', regularOpeningHours, utcOffsetMinutes: SF_OFFSET});
 
       expect(getUpcomingOpenTime(place, thursday6PmSf)).toEqual({
         status: NextOpenTimeStatus.WILL_OPEN,
-        openPoint: openingHours.periods[2].open,
+        openPoint: regularOpeningHours.periods[2].open,
         openDate: makeDateInLocale('2023-04-14T09:00', SF_OFFSET)  // 9am Fri
       });
     });
@@ -304,7 +309,7 @@ describe('Opening hours utilities', () => {
       //
       // Sequence is (now) -> (week start) -> (period start)
       const saturdayNoonSf = makeDateInLocale('2023-04-15T12:00', SF_OFFSET);
-      const openingHours: OpeningHours = {
+      const regularOpeningHours: OpeningHours = {
         periods: [
           makePeriod(WED, 9, WED, 17),  // Wed 9am - 5pm
           makePeriod(THU, 9, THU, 17),  // Thurs 9am - 5pm
@@ -312,12 +317,12 @@ describe('Opening hours utilities', () => {
         ],
         weekdayDescriptions: []
       };
-      const place =
-          makeFakePlace({id: '123', openingHours, utcOffsetMinutes: SF_OFFSET});
+      const place = makeFakePlace(
+          {id: '123', regularOpeningHours, utcOffsetMinutes: SF_OFFSET});
 
       expect(getUpcomingOpenTime(place, saturdayNoonSf)).toEqual({
         status: NextOpenTimeStatus.WILL_OPEN,
-        openPoint: openingHours.periods[0].open,
+        openPoint: regularOpeningHours.periods[0].open,
         openDate: makeDateInLocale('2023-04-19T09:00', SF_OFFSET)  // 9am Wed
       });
     });
@@ -330,31 +335,34 @@ describe('Opening hours utilities', () => {
     });
 
     it('returns true if the place is always open', () => {
-      const place = makeFakePlace(
-          {id: '123', openingHours: ALWAYS_OPEN_HOURS, utcOffsetMinutes: 0});
+      const place = makeFakePlace({
+        id: '123',
+        regularOpeningHours: ALWAYS_OPEN_HOURS,
+        utcOffsetMinutes: 0,
+      });
       expect(isOpen(place)).toBeTrue();
     });
 
     it('returns true if the place is open now', () => {
       const mondayNoonSf = makeDateInLocale('2023-08-07T12:00', SF_OFFSET);
-      const openingHours: OpeningHours = {
+      const regularOpeningHours: OpeningHours = {
         periods: [makePeriod(MON, 9, MON, 17)],  // Wed 9am - 5pm
         weekdayDescriptions: []
       };
-      const place =
-          makeFakePlace({id: '123', openingHours, utcOffsetMinutes: SF_OFFSET});
+      const place = makeFakePlace(
+          {id: '123', regularOpeningHours, utcOffsetMinutes: SF_OFFSET});
 
       expect(isOpen(place, mondayNoonSf)).toBeTrue();
     });
 
     it('returns false if the place is not open now', () => {
       const mondayEarlySf = makeDateInLocale('2023-08-07T06:00', SF_OFFSET);
-      const openingHours: OpeningHours = {
+      const regularOpeningHours: OpeningHours = {
         periods: [makePeriod(MON, 9, MON, 17)],  // Wed 9am - 5pm
         weekdayDescriptions: []
       };
-      const place =
-          makeFakePlace({id: '123', openingHours, utcOffsetMinutes: SF_OFFSET});
+      const place = makeFakePlace(
+          {id: '123', regularOpeningHours, utcOffsetMinutes: SF_OFFSET});
 
       expect(isOpen(place, mondayEarlySf)).toBeFalse();
     });
