@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.10](https://github.com/googlemaps/extended-component-library/compare/v0.6.9...v0.6.10) (2024-04-05)
+
+
+### Bug Fixes
+
+* change deprecated place field name `openingHours` to `regularOpeningHours` ([3d42bdf](https://github.com/googlemaps/extended-component-library/commit/3d42bdf9e60d0d0bc2a4d2e64c05675fe5790236))
+
 ## [0.6.9](https://github.com/googlemaps/extended-component-library/compare/v0.6.8...v0.6.9) (2024-03-26)
 
 
