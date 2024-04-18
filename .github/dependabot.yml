@@ -7,10 +7,12 @@ updates:
     groups:
       production-dependencies:
         dependency-type: "production"
-      build-dependencies:
-        dependency-type: "development"
-        patterns:
-          - "rollup*"
-          - "@rollup*"
       development-dependencies:
         dependency-type: "development"
+        exclude-patterns:
+        - "rollup*"
+        - "@rollup*"
+      rollup:
+        patterns:
+        - "rollup*"
+        - "@rollup*"
