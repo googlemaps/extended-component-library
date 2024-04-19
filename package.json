@@ -84,7 +84,7 @@
     "jasmine": "^5.1.0",
     "markdown-table": "^3.0.3",
     "playwright": "^1.38.1",
-    "rollup": "^3.29.4",
+    "rollup": "^4.14.3",
     "rollup-plugin-summary": "^2.0.0",
     "typescript": "^5.2.2",
     "web-test-runner-jasmine": "^0.0.5",
