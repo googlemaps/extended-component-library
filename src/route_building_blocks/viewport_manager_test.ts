@@ -12,6 +12,10 @@ import {FakeLatLngBounds} from '../testing/fake_lat_lng.js';
 
 import {ViewportManager} from './viewport_manager.js';
 
+function getFakeMap(): google.maps.MapElement {
+  return new FakeMapElement() as unknown as google.maps.MapElement;
+}
+
 describe('ViewportManager', () => {
   const env = new Environment();
 
@@ -20,7 +24,7 @@ describe('ViewportManager', () => {
   });
 
   it('sets the map in the constructor', () => {
-    const map = new FakeMapElement();
+    const map = getFakeMap();
     const manager = new ViewportManager(map);
 
     expect(manager.map).toBe(map);
@@ -28,15 +32,15 @@ describe('ViewportManager', () => {
 
   describe('getInstanceForMap()', () => {
     it('constructs an instance for a map', () => {
-      const map = new FakeMapElement();
+      const map = getFakeMap();
       const manager = ViewportManager.getInstanceForMap(map);
 
       expect(manager.map).toBe(map);
     });
 
     it('constructs separate instances for separate maps', () => {
-      const map1 = new FakeMapElement();
-      const map2 = new FakeMapElement();
+      const map1 = getFakeMap();
+      const map2 = getFakeMap();
       const manager1 = ViewportManager.getInstanceForMap(map1);
       const manager2 = ViewportManager.getInstanceForMap(map2);
 
@@ -44,7 +48,7 @@ describe('ViewportManager', () => {
     });
 
     it('uses the same insntance for the same map', () => {
-      const map = new FakeMapElement();
+      const map = getFakeMap();
       const manager1 = ViewportManager.getInstanceForMap(map);
       const manager2 = ViewportManager.getInstanceForMap(map);
 
@@ -54,7 +58,7 @@ describe('ViewportManager', () => {
 
   describe('registration', () => {
     it('updates the viewport when registering a new component', async () => {
-      const manager = ViewportManager.getInstanceForMap(new FakeMapElement());
+      const manager = ViewportManager.getInstanceForMap(getFakeMap());
       const component = {getBounds: () => null};
       spyOn(manager, 'updateViewport');
       await manager.register(component);
@@ -63,7 +67,7 @@ describe('ViewportManager', () => {
     });
 
     it(`doesn't update when registering an existing component`, async () => {
-      const manager = ViewportManager.getInstanceForMap(new FakeMapElement());
+      const manager = ViewportManager.getInstanceForMap(getFakeMap());
       const component = {getBounds: () => null};
       await manager.register(component);
       spyOn(manager, 'updateViewport');
@@ -73,7 +77,7 @@ describe('ViewportManager', () => {
     });
 
     it('updates when unregistering a registered component', async () => {
-      const manager = ViewportManager.getInstanceForMap(new FakeMapElement());
+      const manager = ViewportManager.getInstanceForMap(getFakeMap());
       const component = {getBounds: () => null};
       await manager.register(component);
       spyOn(manager, 'updateViewport');
@@ -83,7 +87,7 @@ describe('ViewportManager', () => {
     });
 
     it(`doesn't update when unregistering an unknown component`, async () => {
-      const manager = ViewportManager.getInstanceForMap(new FakeMapElement());
+      const manager = ViewportManager.getInstanceForMap(getFakeMap());
       const component = {getBounds: () => null};
       spyOn(manager, 'updateViewport');
       await manager.unregister(component);
@@ -94,7 +98,7 @@ describe('ViewportManager', () => {
 
   describe('setting the viewport', () => {
     it('fits the bounds of a registered component', async () => {
-      const map = new FakeMapElement();
+      const map = getFakeMap();
       const manager = ViewportManager.getInstanceForMap(map);
       const component = {
         getBounds: () => ({north: 1, south: 0, east: 1, west: 0})
@@ -108,7 +112,7 @@ describe('ViewportManager', () => {
     });
 
     it('fits the bounds union of two registered components', async () => {
-      const map = new FakeMapElement();
+      const map = getFakeMap();
       const manager = ViewportManager.getInstanceForMap(map);
       const component1 = {
         getBounds: () => ({north: 1, south: 0, east: 1, west: 0})
@@ -118,7 +122,7 @@ describe('ViewportManager', () => {
       };
 
       await manager.register(component1);
-      map.innerMap.fitBounds.calls.reset();
+      (map as unknown as FakeMapElement).innerMap.fitBounds.calls.reset();
       await manager.register(component2);
 
       expect(map.innerMap.fitBounds)
@@ -127,7 +131,7 @@ describe('ViewportManager', () => {
     });
 
     it('fits the remaining bounds when unregistering a component', async () => {
-      const map = new FakeMapElement();
+      const map = getFakeMap();
       const manager = ViewportManager.getInstanceForMap(map);
       const component1 = {
         getBounds: () => ({north: 1, south: 0, east: 1, west: 0})
@@ -138,7 +142,7 @@ describe('ViewportManager', () => {
 
       await manager.register(component1);
       await manager.register(component2);
-      map.innerMap.fitBounds.calls.reset();
+      (map as unknown as FakeMapElement).innerMap.fitBounds.calls.reset();
       await manager.unregister(component1);
 
       expect(map.innerMap.fitBounds)
@@ -147,28 +151,28 @@ describe('ViewportManager', () => {
     });
 
     it(`doesn't call fitBounds when removing the only component`, async () => {
-      const map = new FakeMapElement();
+      const map = getFakeMap();
       const manager = ViewportManager.getInstanceForMap(map);
       const component = {
         getBounds: () => ({north: 1, south: 0, east: 1, west: 0})
       };
 
       await manager.register(component);
-      map.innerMap.fitBounds.calls.reset();
+      (map as unknown as FakeMapElement).innerMap.fitBounds.calls.reset();
       await manager.unregister(component);
 
       expect(map.innerMap.fitBounds).not.toHaveBeenCalled();
     });
 
     it('fits bounds when calling updateViewport() manually', async () => {
-      const map = new FakeMapElement();
+      const map = getFakeMap();
       const manager = ViewportManager.getInstanceForMap(map);
       const component = {
         getBounds: () => ({north: 1, south: 0, east: 1, west: 0})
       };
 
       await manager.register(component);
-      map.innerMap.fitBounds.calls.reset();
+      (map as unknown as FakeMapElement).innerMap.fitBounds.calls.reset();
       await manager.updateViewport();
 
       expect(map.innerMap.fitBounds)

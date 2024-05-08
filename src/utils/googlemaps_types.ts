@@ -10,52 +10,17 @@
  */
 
 /** Attribution object for Place photos and reviews. */
-export declare interface AuthorAttribution {
-  displayName: string;
-  photoURI: string|null;
-  uri: string|null;
-}
+export type AuthorAttribution = google.maps.places.AuthorAttribution;
 
 /** Place Photo object. */
-export declare type Photo = Omit<google.maps.places.Photo, 'attributions'>& {
-  authorAttributions: AuthorAttribution[];
-};
+export type Photo = google.maps.places.Photo;
 
 /** Place Review object. */
-export declare type Review =
-    Omit<google.maps.places.Review, 'author'|'authorURI'|'authorPhotoURI'>& {
-  authorAttribution: AuthorAttribution|null;
-};
+export type Review = google.maps.places.Review
 
-/** Search by text request. */
-export declare interface SearchByTextRequest {
-  textQuery: string;
-  fields: string[];
-  locationBias?: LatLng|LatLngLiteral|LatLngBounds|LatLngBoundsLiteral;
-  locationRestriction?: LatLngBounds|LatLngBoundsLiteral;
-  includedType?: string;
-  region?: string;
-}
-
-/** Updated Place class with new attribution schema. */
-export declare interface Place extends Omit<
-    google.maps.places.Place,
-    'photos'|'reviews'|'fetchFields'|'accessibilityOptions'> {
-  photos?: Photo[];
-  reviews?: Review[];
-  accessibilityOptions?: {hasWheelchairAccessibleEntrance: boolean|null}|null;
-  fetchFields: (options: google.maps.places.FetchFieldsRequest) =>
-      Promise<{place: Place}>;
-}
-
-/** Places library. */
-export declare interface PlacesLibrary extends
-    Omit<google.maps.PlacesLibrary, 'Place'> {
-  Place: {
-    new(options: google.maps.places.PlaceOptions): Place;
-    searchByText: (request: SearchByTextRequest) => Promise<{places: Place[]}>;
-  };
-}
+export type SearchByTextRequest = google.maps.places.SearchByTextRequest;
+export type Place = google.maps.places.Place;
+export type PlacesLibrary = google.maps.PlacesLibrary;
 
 /** google.maps.marker.AdvancedMarkerElement. */
 export type AdvancedMarkerElement = google.maps.marker.AdvancedMarkerElement;

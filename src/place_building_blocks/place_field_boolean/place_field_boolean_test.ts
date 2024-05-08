@@ -56,7 +56,8 @@ describe('place field boolean test', () => {
       hasDelivery: true,
       hasDineIn: true,
       hasTakeout: true,
-      accessibilityOptions: {hasWheelchairAccessibleEntrance: true},
+      accessibilityOptions: {hasWheelchairAccessibleEntrance: true} as
+          google.maps.places.AccessibilityOptions,
       isReservable: true,
       servesBeer: true,
       servesBreakfast: true,
@@ -91,7 +92,8 @@ describe('place field boolean test', () => {
       hasDelivery: false,
       hasDineIn: false,
       hasTakeout: false,
-      accessibilityOptions: {hasWheelchairAccessibleEntrance: false},
+      accessibilityOptions: {hasWheelchairAccessibleEntrance: false} as
+          google.maps.places.AccessibilityOptions,
       isReservable: false,
       servesBeer: false,
       servesBreakfast: false,
@@ -126,7 +128,8 @@ describe('place field boolean test', () => {
       hasDelivery: null,
       hasDineIn: null,
       hasTakeout: null,
-      accessibilityOptions: {hasWheelchairAccessibleEntrance: null},
+      accessibilityOptions: {hasWheelchairAccessibleEntrance: null} as
+          google.maps.places.AccessibilityOptions,
       isReservable: null,
       servesBeer: null,
       servesBreakfast: null,

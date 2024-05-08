@@ -153,7 +153,8 @@ describe('MapController', () => {
     const viewportManager = host.mapController.viewportManager;
 
     expect(viewportManager).toBeDefined();
-    expect(viewportManager!.map).toBe(mapElement);
+    expect(viewportManager!.map)
+        .toBe(mapElement as unknown as google.maps.MapElement);
   });
 
   it('updates the viewport manager when moved to a different map', async () => {
@@ -163,6 +164,7 @@ describe('MapController', () => {
     const host = mapElement1.appendChild(new TestMapControllerHost());
     mapElement2.appendChild(host);
 
-    expect(host.mapController.viewportManager!.map).toBe(mapElement2);
+    expect(host.mapController.viewportManager!.map)
+        .toBe(mapElement2 as unknown as google.maps.MapElement);
   });
 });
