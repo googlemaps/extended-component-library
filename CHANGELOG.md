@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.11](https://github.com/googlemaps/extended-component-library/compare/v0.6.10...v0.6.11) (2024-05-08)
+
+
+### Bug Fixes
+
+* un-shim Maps JS types and use new published typings ([a7871e3](https://github.com/googlemaps/extended-component-library/commit/a7871e329110b89f23823bb0918a0506318df079))
+
 ## [0.6.10](https://github.com/googlemaps/extended-component-library/compare/v0.6.9...v0.6.10) (2024-04-05)
 
 
