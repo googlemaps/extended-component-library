@@ -1,3 +1,9 @@
+## Explore components in a demo
+
+You can try out components, editing their properties and styles in the component editor. Then you can export them to be used with popular frameworks like React and Angular or no framework at all.
+
+[![Open the demo](https://raw.githubusercontent.com/googlemaps/extended-component-library/main/doc_src/open-demo-button.svg)](https://configure.mapsplatform.google)
+
 ## Styling and theming
 
 To change the look and feel of components, you’ll use [CSS custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*). Each component’s documentation will indicate which CSS custom properties it supports for styling.

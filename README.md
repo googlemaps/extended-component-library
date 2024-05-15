@@ -126,6 +126,12 @@ Map and marker components can be used with the Extended Component Library, or on
 | [Place building blocks](src/place_building_blocks/README.md) | The place data provider component, along with individual place details components, lets you choose how to display Google Maps place information like opening hours, star reviews, and photos in a new, custom view.                   |
 | [Route building blocks](src/route_building_blocks/README.md) | The route data provider component, along with the route marker and polyline components, lets you choose how to display a route on a map using custom markers and polyline styles.                                                     |
 
+## Explore components in a demo
+
+You can try out components, editing their properties and styles in the component editor. Then you can export them to be used with popular frameworks like React and Angular or no framework at all.
+
+[![Open the demo](https://raw.githubusercontent.com/googlemaps/extended-component-library/main/doc_src/open-demo-button.svg)](https://configure.mapsplatform.google)
+
 ## Styling and theming
 
 To change the look and feel of components, you’ll use [CSS custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*). Each component’s documentation will indicate which CSS custom properties it supports for styling.
