@@ -54,13 +54,7 @@ API](https://developers.google.com/maps/documentation/javascript/dynamic-loading
 If an instance of the API is not already available, one will be configured
 and loaded based on a `<gmpx-api-loader>` element in the document.
 
-**Returns:** `Promise<google.maps.CoreLibrary|google.maps.MapsLibrary|
-              google.maps.PlacesLibrary|google.maps.GeocodingLibrary|
-              google.maps.RoutesLibrary|google.maps.MarkerLibrary|
-              google.maps.GeometryLibrary|google.maps.ElevationLibrary|
-              google.maps.StreetViewLibrary|
-              google.maps.JourneySharingLibrary|
-              google.maps.DrawingLibrary|google.maps.VisualizationLibrary>`
+**Returns:** `ReturnType<typeof google.maps.importLibrary>`
 
 **Parameters:**
 

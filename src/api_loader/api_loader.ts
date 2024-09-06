@@ -209,16 +209,10 @@ export class APILoader extends BaseComponent {
    * @param consumer Optionally specify the custom element requesting the
    *     library to provide more helpful console warnings when a library cannot
    *     be loaded.
+   * @returns {ReturnType<typeof google.maps.importLibrary>}
    * @nocollapse
    */
-  static async importLibrary(library: string, consumer?: HTMLElement):
-      Promise<google.maps.CoreLibrary|google.maps.MapsLibrary|
-              google.maps.PlacesLibrary|google.maps.GeocodingLibrary|
-              google.maps.RoutesLibrary|google.maps.MarkerLibrary|
-              google.maps.GeometryLibrary|google.maps.ElevationLibrary|
-              google.maps.StreetViewLibrary|
-              google.maps.JourneySharingLibrary|
-              google.maps.DrawingLibrary|google.maps.VisualizationLibrary> {
+  static async importLibrary(library: string, consumer?: HTMLElement) {
     let googleMaps = APILoader.googleMapsDeferred.value;
     if (!googleMaps) {
       APILoader.pollForGoogleMaps(
