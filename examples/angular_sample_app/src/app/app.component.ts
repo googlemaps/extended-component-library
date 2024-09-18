@@ -26,6 +26,7 @@ const DEFAULT_ZOOM = 4;
 const DEFAULT_ZOOM_WITH_LOCATION = 16;
 
 @Component({
+  standalone: false,
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
