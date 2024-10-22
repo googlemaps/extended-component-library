@@ -383,9 +383,10 @@ export class StoreLocator extends BaseComponent {
           </gmpx-icon-button>`);
     }
     for (const action of listing.actions ?? []) {
-      actionButtons.push(html`
+      actionButtons.push(
+          html`
           <gmpx-icon-button icon="open_in_new" .href=${
-          action.defaultUri ?? nothing}>
+              action.defaultUri ?? nothing}>
             ${action.label}
           </gmpx-icon-button>`);
     }
@@ -426,6 +427,7 @@ export class StoreLocator extends BaseComponent {
             </div>
             <div class="distance">${distanceHtml}</div>
             <gmpx-place-directions-button condensed
+                .ariaLabel=${this.getMsg('LOCATOR_DIRECTIONS_BUTTON_LABEL', listing.title)}
                 .origin=${this.searchLocation?.location ?? undefined}>
             </gmpx-place-directions-button>
           </div>

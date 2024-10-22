@@ -19,6 +19,7 @@ export type StringFunction = (...args: any[]) => string;
 export declare interface StringLiterals extends
     Record<string, string|StringFunction> {
   LOCATOR_BACK_BUTTON_CTA: string;
+  LOCATOR_DIRECTIONS_BUTTON_LABEL: (destination: string) => string;
   LOCATOR_LIST_HEADER: string;
   LOCATOR_LIST_SUBHEADING: string;
   LOCATOR_LIST_SUBHEADING_WITH_SEARCH: string;
@@ -64,6 +65,8 @@ export declare interface StringLiterals extends
  */
 export const STRING_LITERALS_EN_US: StringLiterals = Object.freeze({
   'LOCATOR_BACK_BUTTON_CTA': 'Back',
+  'LOCATOR_DIRECTIONS_BUTTON_LABEL': (destination) =>
+      `Directions to ${destination}`,
   'LOCATOR_LIST_HEADER': 'Find a location near you',
   'LOCATOR_LIST_SUBHEADING': 'All locations',
   'LOCATOR_LIST_SUBHEADING_WITH_SEARCH': 'Nearest locations',
