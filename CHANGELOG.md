@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.12](https://github.com/googlemaps/extended-component-library/compare/v0.6.11...v0.6.12) (2024-10-22)
+
+
+### Bug Fixes
+
+* add accessible label to store locator directions button ([696ae15](https://github.com/googlemaps/extended-component-library/commit/696ae152f1ade2f74dbfe2e8c5e052a656511f13))
+
 ## [0.6.11](https://github.com/googlemaps/extended-component-library/compare/v0.6.10...v0.6.11) (2024-05-08)
 
 
