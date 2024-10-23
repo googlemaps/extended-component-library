@@ -420,7 +420,7 @@ export class StoreLocator extends BaseComponent {
               </div>
             </button>
             <div class="address">
-              ${join(listing.addressLines ?? [], html`<br>`)}
+              ${(listing.addressLines ?? []).map((line) => html`<p>${line}</p>`)}
             </div>
             <div class="actions">
               ${join(actionButtons, html``)}

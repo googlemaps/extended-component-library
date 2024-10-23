@@ -111,6 +111,10 @@ export const storeLocatorStyles = css`
     margin-bottom: 0.5em;
   }
 
+  #location-results-list .address p {
+    margin: 0;
+  }
+
   #location-results-list gmpx-place-directions-button {
     position: absolute;
     right: 1.2em;
