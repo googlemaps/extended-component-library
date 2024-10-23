@@ -415,9 +415,9 @@ export class StoreLocator extends BaseComponent {
             .place=${listing.placeResult}>
           <div class="result-item">
             <button class="select-location" @click=${selectButtonClick}>
-              <h2 class="name">
+              <div class="name">
                 <gmpx-place-field-text field="displayName"></gmpx-place-field-text>
-              </h2>
+              </div>
             </button>
             <div class="address">
               ${join(listing.addressLines ?? [], html`<br>`)}
@@ -465,16 +465,16 @@ export class StoreLocator extends BaseComponent {
     const header = this.featureSet === FeatureSet.BASIC ?
         nothing :
         html`
-        <header>
-          <h1 class="search-title">
+        <div class="header">
+          <div class="search-title">
             <span class="icon material-symbols-outlined">distance</span>
             ${this.getMsg('LOCATOR_LIST_HEADER')}
-          </h1>
+          </div>
           <gmpx-place-picker for-map="main-map" type="geocode"
               .placeholder=${this.getMsg('LOCATOR_SEARCH_PROMPT')}
               @gmpx-placechange=${this.updateSearchLocation}>
           </gmpx-place-picker>
-        </header>
+        </div>
     `;
 
     return html`

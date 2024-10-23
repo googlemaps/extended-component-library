@@ -54,18 +54,18 @@ export const storeLocatorStyles = css`
     padding: 0.5em;
   }
 
-  #locations-panel-list > header {
+  #locations-panel-list > .header {
     padding: 1.4em 1.4em 0 1.4em;
   }
 
-  #locations-panel-list h1.search-title {
+  #locations-panel-list .search-title {
     align-items: center;
     display: flex;
     font: ${GMPX_FONT_TITLE_LARGE};
     margin: 0;
   }
 
-  #locations-panel-list h1.search-title .icon {
+  #locations-panel-list .search-title .icon {
     font-size: 150%;
     margin-right: 0.2em;
   }
@@ -101,7 +101,7 @@ export const storeLocatorStyles = css`
     outline-offset: -2px;
   }
 
-  #location-results-list h2 {
+  #location-results-list .name {
     font: ${GMPX_FONT_TITLE_LARGE};
     margin: 0 0 0.6em 0;
   }
