@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.6.13](https://github.com/googlemaps/extended-component-library/compare/v0.6.12...v0.6.13) (2024-10-23)
+
+
+### Bug Fixes
+
+* remove &lt;br&gt; from Store Locator for a11y ([421ed05](https://github.com/googlemaps/extended-component-library/commit/421ed05d8d22dff8d39628fd3051da0f049d5062))
+* remove header/heading semantics from Store Locator for a11y ([6e7c93a](https://github.com/googlemaps/extended-component-library/commit/6e7c93ab2635107da79ebc3bbffe94c800d054b8))
+
 ## [0.6.12](https://github.com/googlemaps/extended-component-library/compare/v0.6.11...v0.6.12) (2024-10-22)
 
 
