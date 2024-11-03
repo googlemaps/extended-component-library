@@ -19,7 +19,7 @@ function simpleStripComments(xml: string): string {
 }
 
 /**
- * The inner HTML content of `renderRoot`, equivalent to `renderRoot.innerHTML`
+ * The inner HTML content of `renderRoot`, equivalent to `(renderRoot as {innerHTML: string}).innerHTML`
  * when its type is `HTMLElement`. This is needed because `DocumentFragment`
  * does not have the `innerHTML` property.
  */
