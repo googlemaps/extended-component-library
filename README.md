@@ -1,10 +1,26 @@
+![Alpha release](https://img.shields.io/badge/release-alpha-orange)
+![Tests/Build Status](https://github.com/googlemaps/extended-component-library/workflows/Test/badge.svg)
+![Release](https://github.com/googlemaps/extended-component-library/workflows/Release/badge.svg)
+![Stable](https://img.shields.io/badge/stability-stable-green)
+
+![GitHub contributors](https://img.shields.io/github/contributors/googlemaps/extended-component-library?color=green)
+[![Discord](https://img.shields.io/discord/676948200904589322?color=6A7EC2&logo=discord&logoColor=ffffff)][Discord server]
+[![GitHub License](https://img.shields.io/github/license/googlemaps/extended-component-library?color=blue)](LICENSE)
+
 # Extended Component Library
 
-Google Maps Platform’s Extended Component Library is a set of Web Components that helps developers build better maps faster, and with less effort. It encapsulates boilerplate code, best practices, and responsive design, reducing complex map UIs into what is effectively a single HTML element.  
+## Description
+
+Google Maps Platform’s Extended Component Library is a set of Web Components that helps developers build better maps faster, and with less effort. It encapsulates boilerplate code, best practices, and responsive design, reducing complex map UIs into what is effectively a single HTML element.
 
 Ultimately, these components make it easier to read, learn, customize, and maintain maps-related code.
 
-![](https://raw.githubusercontent.com/googlemaps/extended-component-library/main/doc_src/gmpx-header.png)
+![screenshot](https://raw.githubusercontent.com/googlemaps/extended-component-library/main/doc_src/gmpx-header.png)
+
+## Requirements
+
+- A modern frontend framework like Angular, React, or Vue.js
+- An [API key][api-key]
 
 ## Installation
 
@@ -12,7 +28,7 @@ Ultimately, these components make it easier to read, learn, customize, and maint
 
 #### For applications that bundle their code
 
-For best performance, use a package manager and import only the components you need. This package is listed on NPM as 
+For best performance, use a package manager and import only the components you need. This package is listed on NPM as
 [@googlemaps/extended-component-library](https://www.npmjs.com/package/@googlemaps/extended-component-library). Install it with:
 
 ```bash
@@ -37,13 +53,17 @@ When using the CDN-hosted bundle, all components are available globally, and don
 
 ### Getting your API key
 
-The components in this library make use of Google Maps Platform APIs. To start, you'll need to [sign up for Google Maps Platform and create an API key](https://console.cloud.google.com/google/maps-apis/start?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components). Then, place an API Loader element somewhere in the root of your app's HTML, specifying your API key:
+The components in this library make use of Google Maps Platform APIs. To start, you'll need to [sign up for Google Maps Platform ][gmp-start] and create an [API key][api-key]. Then, place an API Loader element somewhere in the root of your app's HTML, specifying your API key:
 
 ```html
 <gmpx-api-loader key="YOUR_API_KEY"></gmpx-api-loader>
 ```
 
-When you sign up, by default, all APIs will be enabled, but you can opt to enable only the APIs needed for each component by referencing the “APIs and pricing" section in that component's documentation. 
+When you sign up, by default, all APIs will be enabled, but you can opt to enable only the APIs needed for each component by referencing the “APIs and pricing" section in that component's documentation.
+
+## Documentation
+
+Documentation for each feature is linked to below in the Usage section.
 
 ## Usage
 
@@ -169,22 +189,39 @@ setStringLiterals({'PLACE_CLOSED': 'Cerrado'});
 
 Refer to `/src/base/strings.ts` for the full list of available terms.
 
+## Contributing
+
+External contributions are not accepted for this repository yet. See [contributing guide] for more info.
+
 ## Terms of Service
 
-This library uses Google Maps Platform services, and any use of Google Maps Platform is subject to the [Terms of Service](https://cloud.google.com/maps-platform/terms?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components).
+This library uses Google Maps Platform services. Use of Google Maps Platform services through this library is subject to the Google Maps Platform [Terms of Service].
 
-For clarity, this library, and each underlying component, is not a Google Maps Platform Core Service. 
-
-## Attribution
-
-As a reminder, you must comply with all applicable attribution requirements for the Google Maps Platform API(s) and SDK(s) used by the Extended Component Library.
+This library is not a Google Maps Platform Core Service. Therefore, the Google Maps Platform Terms of Service (e.g. Technical Support Services, Service Level Agreements, and Deprecation Policy) do not apply to the code in this library.
 
 ## Support
 
-This library is offered via an open source license. It is not governed by the Google Maps Platform [Technical Support Services Guidelines](https://cloud.google.com/maps-platform/terms/tssg?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components), the [SLA](https://cloud.google.com/maps-platform/terms/sla?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components), or the [Deprecation Policy](https://cloud.google.com/maps-platform/terms?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components) (however, any Google Maps Platform services used by the library remain subject to the Google Maps Platform Terms of Service).
+This library is offered via an open source [license](LICENSE). It is not governed by the Google Maps Platform Support [Technical Support Services Guidelines](https://cloud.google.com/maps-platform/terms/tssg), the [SLA](https://cloud.google.com/maps-platform/terms/sla), or the [Deprecation Policy](https://cloud.google.com/maps-platform/terms) (however, any Google Maps Platform services used by the library remain subject to the Google Maps Platform Terms of Service).
 
-This library adheres to [semantic versioning](https://semver.org/) to indicate when backwards-incompatible changes are introduced. Accordingly, while the library is in version 0.x, backwards-incompatible changes may be introduced at any time. 
+This library adheres to [semantic versioning] to indicate when backwards-incompatible changes are introduced. Accordingly, while the library is in version 0.x, backwards-incompatible changes may be introduced at any time.
 
-If you find a bug, or have a feature request, please file an issue on GitHub. If you would like to get answers to technical questions from other Google Maps Platform developers, ask through one of our [developer community channels](https://developers.google.com/maps/developer-community?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components). If you'd like to contribute, please check the [Contributing guide](https://github.com/googlemaps/extended-component-library/blob/main/CONTRIBUTING.md) in the GitHub repository.
+If you find a bug, or have a feature request, please [file an issue] on GitHub. If you would like to get answers to technical questions from other Google Maps Platform developers, ask through one of our [developer community channels]. If you'd like to contribute, please check the [contributing guide].
 
+You can also discuss this library on our [Discord server].
+
+[api-key]: https://developers.google.com/maps/documentation/android-sdk/get-api-key
+[devsite-guide]: https://developers.google.com/maps/documentation/android-sdk/utility
+[gmp-start]: https://console.cloud.google.com/google/maps-apis/start?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components
+[maps-sdk]: https://developers.google.com/maps/documentation/android-sdk
+[documentation]: https://googlemaps.github.io/extended-component-library
+
+[code of conduct]: CODE_OF_CONDUCT.md
+[contributing guide]: CONTRIBUTING.md
+[developer community channels]: https://developers.google.com/maps/developer-community
+[Discord server]: https://discord.gg/hYsWbmk
+[file an issue]: https://github.com/googlemaps/extended-component-library/issues/new/choose
+[pull request]: https://github.com/googlemaps/extended-component-library/compare
+[semantic versioning]: https://semver.org
+[similar inquiry]: https://github.com/googlemaps/extended-component-library/issues
+[Terms of Service]: https://cloud.google.com/maps-platform/terms
 
