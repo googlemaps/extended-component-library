@@ -1,11 +1,13 @@
 ![Alpha release](https://img.shields.io/badge/release-alpha-orange)
-![Tests/Build Status](https://github.com/googlemaps/extended-component-library/workflows/Test/badge.svg)
 ![Release](https://github.com/googlemaps/extended-component-library/workflows/Release/badge.svg)
+
 ![Stable](https://img.shields.io/badge/stability-stable-green)
+![Tests/Build Status](https://github.com/googlemaps/extended-component-library/actions/workflows/test.yml/badge.svg)
+![Tests/Build Status](https://github.com/googlemaps/extended-component-library/workflows/Test/badge.svg)
 
 ![GitHub contributors](https://img.shields.io/github/contributors/googlemaps/extended-component-library?color=green)
-[![Discord](https://img.shields.io/discord/676948200904589322?color=6A7EC2&logo=discord&logoColor=ffffff)][Discord server]
 [![GitHub License](https://img.shields.io/github/license/googlemaps/extended-component-library?color=blue)](LICENSE)
+[![Discord](https://img.shields.io/discord/676948200904589322?color=6A7EC2&logo=discord&logoColor=ffffff)][Discord server]
 
 # Extended Component Library
 
@@ -15,12 +17,7 @@ Google Maps Platform’s Extended Component Library is a set of Web Components t
 
 Ultimately, these components make it easier to read, learn, customize, and maintain maps-related code.
 
-![screenshot](https://raw.githubusercontent.com/googlemaps/extended-component-library/main/doc_src/gmpx-header.png)
-
-## Requirements
-
-- A modern frontend framework like Angular, React, or Vue.js
-- An [API key][api-key]
+![](https://raw.githubusercontent.com/googlemaps/extended-component-library/main/doc_src/gmpx-header.png)
 
 ## Installation
 
@@ -53,17 +50,13 @@ When using the CDN-hosted bundle, all components are available globally, and don
 
 ### Getting your API key
 
-The components in this library make use of Google Maps Platform APIs. To start, you'll need to [sign up for Google Maps Platform ][gmp-start] and create an [API key][api-key]. Then, place an API Loader element somewhere in the root of your app's HTML, specifying your API key:
+The components in this library make use of Google Maps Platform APIs. To start, you'll need to [sign up for Google Maps Platform and create an API key](https://console.cloud.google.com/google/maps-apis/start?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components). Then, place an API Loader element somewhere in the root of your app's HTML, specifying your API key:
 
 ```html
 <gmpx-api-loader key="YOUR_API_KEY"></gmpx-api-loader>
 ```
 
-When you sign up, by default, all APIs will be enabled, but you can opt to enable only the APIs needed for each component by referencing the “APIs and pricing" section in that component's documentation.
-
-## Documentation
-
-Documentation for each feature is linked to below in the Usage section.
+When you sign up, by default, all APIs will be enabled, but you can opt to enable only the APIs needed for each component by referencing the “APIs and pricing" section in that component's documentation. 
 
 ## Usage
 
@@ -119,7 +112,7 @@ Web Components work well with most popular frontend frameworks such as Angular, 
 
 **React**: The Extended Component Library ships with native React components for easy integration. Please see [React Support](src/react/README.md) to get started, then refer to the [example app](examples/react_sample_app).
 
-**Angular**: Angular works well with Web Components. See the Angular [example app](examples/angular_sample_app) to get started. 
+**Angular**: Angular works well with Web Components. See the Angular [example app](examples/angular_sample_app) to get started.
 
 ## Components available with Maps JS SDK
 
@@ -166,7 +159,7 @@ body {
 
 Global theming options let you consistently customize the color and typography for components in your application. You can choose a font and color scheme to match your brand, or default to the look of Google Maps. These are available as *global style tokens*, applicable across multiple components. This table lists the global style tokens used in the library: these are a good starting point to consistently adjust the look and feel of components on your page.
 
-| CSS custom property                 | Default         | Description           | 
+| CSS custom property                 | Default         | Description           |
 | ----------------------------------- | --------------- | --------------------- |
 | `--gmpx-color-surface`              | `#fff`          | Surface theme color, used as a background. |
 | `--gmpx-color-on-surface`           | `#212121`       | Color used for text and other elements placed on top of the surface color. |
@@ -189,9 +182,19 @@ setStringLiterals({'PLACE_CLOSED': 'Cerrado'});
 
 Refer to `/src/base/strings.ts` for the full list of available terms.
 
+## Terms of Service
+
+This library uses Google Maps Platform services, and any use of Google Maps Platform is subject to the [Terms of Service](https://cloud.google.com/maps-platform/terms?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components).
+
+For clarity, this library, and each underlying component, is not a Google Maps Platform Core Service.
+
+## Attribution
+
+As a reminder, you must comply with all applicable attribution requirements for the Google Maps Platform API(s) and SDK(s) used by the Extended Component Library.
+
 ## Contributing
 
-External contributions are not accepted for this repository yet. See [contributing guide] for more info.
+External contributions are not yet accepted for this repository. See [contributing guide] for more info.
 
 ## Terms of Service
 
@@ -211,7 +214,7 @@ You can also discuss this library on our [Discord server].
 
 [api-key]: https://developers.google.com/maps/documentation/android-sdk/get-api-key
 [devsite-guide]: https://developers.google.com/maps/documentation/android-sdk/utility
-[gmp-start]: https://console.cloud.google.com/google/maps-apis/start?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components
+[gmp-start]: https://console.cloud.google.com/google/maps-apis/start
 [maps-sdk]: https://developers.google.com/maps/documentation/android-sdk
 [documentation]: https://googlemaps.github.io/extended-component-library
 
@@ -224,4 +227,3 @@ You can also discuss this library on our [Discord server].
 [semantic versioning]: https://semver.org
 [similar inquiry]: https://github.com/googlemaps/extended-component-library/issues
 [Terms of Service]: https://cloud.google.com/maps-platform/terms
-
