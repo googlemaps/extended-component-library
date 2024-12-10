@@ -1,3 +1,4 @@
+[![npm](https://img.shields.io/npm/v/@googlemaps/extended-component-library)][npm-pkg]
 ![Alpha release](https://img.shields.io/badge/release-alpha-orange)
 ![Release](https://github.com/googlemaps/extended-component-library/workflows/Release/badge.svg)
 
@@ -19,14 +20,20 @@ Ultimately, these components make it easier to read, learn, customize, and maint
 
 ![](https://raw.githubusercontent.com/googlemaps/extended-component-library/main/doc_src/gmpx-header.png)
 
+## Requirements
+
+* [Sign up with Google Maps Platform]
+* A Google Maps Platform [project] with the [**Maps Javascript API**][maps-sdk] enabled
+* An [API key] associated with the project above
+* [@googlemaps/extended-component-library NPM package][npm-pkg]
+
 ## Installation
 
 ### Loading the library
 
 #### For applications that bundle their code
 
-For best performance, use a package manager and import only the components you need. This package is listed on NPM as
-[@googlemaps/extended-component-library](https://www.npmjs.com/package/@googlemaps/extended-component-library). Install it with:
+Install the [@googlemaps/extended-component-library NPM package][npm-pkg] with:
 
 ```bash
 npm i @googlemaps/extended-component-library
@@ -50,13 +57,13 @@ When using the CDN-hosted bundle, all components are available globally, and don
 
 ### Getting your API key
 
-The components in this library make use of Google Maps Platform APIs. To start, you'll need to [sign up for Google Maps Platform and create an API key](https://console.cloud.google.com/google/maps-apis/start?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components). Then, place an API Loader element somewhere in the root of your app's HTML, specifying your API key:
+Place an API Loader element somewhere in the root of your app's HTML, specifying your API key:
 
 ```html
 <gmpx-api-loader key="YOUR_API_KEY"></gmpx-api-loader>
 ```
 
-When you sign up, by default, all APIs will be enabled, but you can opt to enable only the APIs needed for each component by referencing the “APIs and pricing" section in that component's documentation. 
+When you sign up, by default, all APIs will be enabled, but you can opt to enable only the APIs needed for each component by referencing the “APIs and pricing" section in that component's documentation.
 
 ## Usage
 
@@ -196,6 +203,10 @@ As a reminder, you must comply with all applicable attribution requirements for 
 
 External contributions are not yet accepted for this repository. See [contributing guide] for more info.
 
+## Attribution
+
+As a reminder, you must comply with all applicable attribution requirements for the Google Maps Platform API(s) and SDK(s) used by the Extended Component Library.
+
 ## Terms of Service
 
 This library uses Google Maps Platform services. Use of Google Maps Platform services through this library is subject to the Google Maps Platform [Terms of Service].
@@ -212,11 +223,10 @@ If you find a bug, or have a feature request, please [file an issue] on GitHub. 
 
 You can also discuss this library on our [Discord server].
 
-[api-key]: https://developers.google.com/maps/documentation/android-sdk/get-api-key
-[devsite-guide]: https://developers.google.com/maps/documentation/android-sdk/utility
-[gmp-start]: https://console.cloud.google.com/google/maps-apis/start
-[maps-sdk]: https://developers.google.com/maps/documentation/android-sdk
+[API key]: https://developers.google.com/maps/documentation/javascript/get-api-key
+[maps-sdk]: https://developers.google.com/maps/documentation/javascript
 [documentation]: https://googlemaps.github.io/extended-component-library
+[npm-pkg]: https://npmjs.com/package/@googlemaps/extended-component-library
 
 [code of conduct]: CODE_OF_CONDUCT.md
 [contributing guide]: CONTRIBUTING.md
@@ -225,9 +235,12 @@ You can also discuss this library on our [Discord server].
 [Discord server]: https://discord.gg/hYsWbmk
 [file an issue]: https://github.com/googlemaps/extended-component-library/issues/new/choose
 [license]: LICENSE
+[project]: https://developers.google.com/maps/documentation/javascript/cloud-setup#enabling-apis
 [pull request]: https://github.com/googlemaps/extended-component-library/compare
 [semantic versioning]: https://semver.org
+[Sign up with Google Maps Platform]: https://console.cloud.google.com/google/maps-apis/start
 [similar inquiry]: https://github.com/googlemaps/extended-component-library/issues
 [SLA]: https://cloud.google.com/maps-platform/terms/sla
 [Technical Support Services Guidelines]: https://cloud.google.com/maps-platform/terms/tssg
 [Terms of Service]: https://cloud.google.com/maps-platform/terms
+
