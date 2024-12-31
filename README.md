@@ -1,13 +1,11 @@
 [![npm](https://img.shields.io/npm/v/@googlemaps/extended-component-library)][npm-pkg]
-![Alpha release](https://img.shields.io/badge/release-alpha-orange)
+![Alpha](https://img.shields.io/badge/release-alpha-orange)
 ![Release](https://github.com/googlemaps/extended-component-library/workflows/Release/badge.svg)
+[![Tests/Build](https://github.com/googlemaps/extended-component-library/actions/workflows/test.yml/badge.svg)](https://github.com/googlemaps/extended-component-library/actions/workflows/test.yml)
 
-![Stable](https://img.shields.io/badge/stability-stable-green)
-![Tests/Build Status](https://github.com/googlemaps/extended-component-library/actions/workflows/test.yml/badge.svg)
-![Tests/Build Status](https://github.com/googlemaps/extended-component-library/workflows/Test/badge.svg)
-
-![GitHub contributors](https://img.shields.io/github/contributors/googlemaps/extended-component-library?color=green)
-[![GitHub License](https://img.shields.io/github/license/googlemaps/extended-component-library?color=blue)](LICENSE)
+![Contributors](https://img.shields.io/github/contributors/googlemaps/extended-component-library?color=green)
+[![License](https://img.shields.io/github/license/googlemaps/extended-component-library?color=blue)][license]
+[![StackOverflow](https://img.shields.io/stackexchange/stackoverflow/t/google-maps?color=orange&label=google-maps&logo=stackoverflow)](https://stackoverflow.com/questions/tagged/google-maps)
 [![Discord](https://img.shields.io/discord/676948200904589322?color=6A7EC2&logo=discord&logoColor=ffffff)][Discord server]
 
 # Extended Component Library
@@ -228,7 +226,7 @@ You can also discuss this library on our [Discord server].
 [documentation]: https://googlemaps.github.io/extended-component-library
 [npm-pkg]: https://npmjs.com/package/@googlemaps/extended-component-library
 
-[code of conduct]: CODE_OF_CONDUCT.md
+[code of conduct]: ?tab=coc-ov-file#readme
 [contributing guide]: CONTRIBUTING.md
 [Deprecation Policy]: https://cloud.google.com/maps-platform/terms
 [developer community channels]: https://developers.google.com/maps/developer-community
