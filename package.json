@@ -73,8 +73,8 @@
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "^0.8.4",
     "@playwright/test": "^1.38.1",
-    "@rollup/plugin-node-resolve": "^15.2.1",
-    "@rollup/plugin-replace": "^5.0.2",
+    "@rollup/plugin-node-resolve": "^16.0.0",
+    "@rollup/plugin-replace": "^6.0.2",
     "@rollup/plugin-terser": "^0.4.3",
     "@types/google.maps": "~3.55.8",
     "@types/jasmine": "^4.3.6",
@@ -84,8 +84,8 @@
     "jasmine": "^5.1.0",
     "markdown-table": "^3.0.3",
     "playwright": "^1.38.1",
-    "rollup": "^3.29.4",
-    "rollup-plugin-summary": "^2.0.0",
+    "rollup": "^4.34.9",
+    "rollup-plugin-summary": "^3.0.0",
     "typescript": "^5.2.2",
     "web-test-runner-jasmine": "^0.0.5",
     "wireit": "^0.14.0"
