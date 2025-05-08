@@ -1,6 +1,6 @@
 {
   "name": "@googlemaps/extended-component-library",
-  "version": "0.6.13",
+  "version": "0.6.12",
   "description": "Web Components for building rich experiences with the Google Maps JavaScript API.",
   "license": "Apache-2.0",
   "homepage": "https://github.com/googlemaps/extended-component-library",
@@ -72,7 +72,7 @@
   },
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "^0.8.4",
-    "@playwright/test": "^1.38.1",
+    "@playwright/test": "^1.52.0",
     "@rollup/plugin-node-resolve": "^15.2.1",
     "@rollup/plugin-replace": "^5.0.2",
     "@rollup/plugin-terser": "^0.4.3",
@@ -88,7 +88,7 @@
     "rollup-plugin-summary": "^2.0.0",
     "typescript": "^5.2.2",
     "web-test-runner-jasmine": "^0.0.5",
-    "wireit": "^0.14.0"
+    "wireit": "^0.14.12"
   },
   "wireit": {
     "cem": {
@@ -100,86 +100,42 @@
         "!**/*_test.ts",
         "!src/testing/*.ts"
       ],
-      "output": [
-        "custom-elements.json"
-      ]
+      "output": ["custom-elements.json"]
     },
     "docs": {
       "command": "node build/make_docs.js",
-      "dependencies": [
-        "cem"
-      ],
-      "files": [
-        "**/doc_src/*",
-        "build/make_docs.js",
-        "custom-elements.json"
-      ],
-      "output": [
-        "README.md",
-        "src/**/README.md",
-        "!src/react/README.md"
-      ]
+      "dependencies": ["cem"],
+      "files": ["**/doc_src/*", "build/make_docs.js", "custom-elements.json"],
+      "output": ["README.md", "src/**/README.md", "!src/react/README.md"]
     },
     "build": {
-      "dependencies": [
-        "build:ts"
-      ]
+      "dependencies": ["build:ts"]
     },
     "build:react": {
       "command": "node build/make_react.js",
-      "dependencies": [
-        "cem"
-      ],
-      "files": [
-        "build/make_react.js",
-        "custom-elements.json"
-      ],
-      "output": [
-        "src/react/index.ts"
-      ]
+      "dependencies": ["cem"],
+      "files": ["build/make_react.js", "custom-elements.json"],
+      "output": ["src/react/index.ts"]
     },
     "build:ts": {
       "command": "tsc",
-      "dependencies": [
-        "build:react"
-      ],
-      "files": [
-        "tsconfig.json",
-        "src/**/*.ts"
-      ],
-      "output": [
-        ".tsbuildinfo",
-        "lib/**/*"
-      ],
+      "dependencies": ["build:react"],
+      "files": ["tsconfig.json", "src/**/*.ts"],
+      "output": [".tsbuildinfo", "lib/**/*"],
       "clean": "if-file-deleted"
     },
     "build:package": {
       "command": ". build/finalize_package.sh",
-      "dependencies": [
-        "build:ts"
-      ],
-      "files": [
-        "build/finalize_package.sh",
-        "lib/base/constants.js"
-      ],
-      "output": [
-        "lib/**/*.js",
-        "lib/**/*.md"
-      ],
+      "dependencies": ["build:ts"],
+      "files": ["build/finalize_package.sh", "lib/base/constants.js"],
+      "output": ["lib/**/*.js", "lib/**/*.md"],
       "clean": false
     },
     "build:bundle": {
       "command": "rollup -c build/rollup.config.js",
-      "dependencies": [
-        "build:package"
-      ],
-      "files": [
-        "build/rollup.config.js",
-        "lib/**/*.js"
-      ],
-      "output": [
-        "dist/index.min.js"
-      ]
+      "dependencies": ["build:package"],
+      "files": ["build/rollup.config.js", "lib/**/*.js"],
+      "output": ["dist/index.min.js"]
     },
     "example:prepare": {
       "command": "chmod +x build/start_example.sh"
@@ -189,10 +145,7 @@
       "env": {
         "PORT": "8001"
       },
-      "dependencies": [
-        "build:package",
-        "example:prepare"
-      ],
+      "dependencies": ["build:package", "example:prepare"],
       "service": {
         "readyWhen": {
           "lineMatches": "You can now view \\S+ in the browser"
@@ -204,10 +157,7 @@
       "env": {
         "PORT": "8002"
       },
-      "dependencies": [
-        "build:bundle",
-        "example:prepare"
-      ],
+      "dependencies": ["build:bundle", "example:prepare"],
       "service": {
         "readyWhen": {
           "lineMatches": "Web Dev Server started"
@@ -219,10 +169,7 @@
       "env": {
         "PORT": "8003"
       },
-      "dependencies": [
-        "build:package",
-        "example:prepare"
-      ],
+      "dependencies": ["build:package", "example:prepare"],
       "service": {
         "readyWhen": {
           "lineMatches": "Angular Live Development Server is listening on localhost"
@@ -236,19 +183,13 @@
         "example:js_sample_app",
         "example:angular_sample_app"
       ],
-      "files": [
-        "e2e/**/*.js"
-      ],
+      "files": ["e2e/**/*.js"],
       "output": []
     },
     "test": {
       "command": "wtr",
-      "dependencies": [
-        "build:ts"
-      ],
-      "files": [
-        "web-test-runner.config.js"
-      ],
+      "dependencies": ["build:ts"],
+      "files": ["web-test-runner.config.js"],
       "output": []
     }
   }

@@ -13,7 +13,7 @@ jobs:
       with:
         node-version: 18
         cache: npm
-    - uses: google/wireit@setup-github-actions-caching/v1
+    - uses: google/wireit@setup-github-actions-caching/v2
 
     - run: npm ci
     - run: npx playwright install --with-deps
@@ -22,7 +22,7 @@ jobs:
         MAPS_API_KEY: ${{secrets.MAPS_API_KEY}}
         WIREIT_FAILURES: continue
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       if: always()
       with:
         name: playwright-report
