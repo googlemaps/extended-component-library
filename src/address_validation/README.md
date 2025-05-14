@@ -67,9 +67,9 @@ for guidance.
 
 **Parameters:**
 
-| Name       | Optional? | Type                        | Description                                                           |
-| ---------- | --------- | --------------------------- | --------------------------------------------------------------------- |
-| `response` |           | `AddressValidationResponse` | A response object from the Address Validation API in the Maps JS SDK. |
+| Name       | Optional? | Type                | Description                                                           |
+| ---------- | --------- | ------------------- | --------------------------------------------------------------------- |
+| `response` |           | `AddressValidation` | A response object from the Address Validation API in the Maps JS SDK. |
 
 #### Importing
 

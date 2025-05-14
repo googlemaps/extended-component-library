@@ -96,7 +96,7 @@ export declare interface PostalAddress {
 export declare interface Address {
   formattedAddress: string|null;
   postalAddress: PostalAddress|null;
-  addressComponents: AddressComponent[];
+  components: AddressComponent[];
   missingComponentTypes?: string[];
   unconfirmedComponentTypes?: string[];
   unresolvedTokens?: string[];
@@ -124,18 +124,17 @@ export declare interface Verdict {
   hasReplacedComponents: boolean;
 }
 
-/** google.maps.addressValidation.ValidationResult */
-export declare interface ValidationResult {
+/** google.maps.addressValidation.AddressValidation */
+export declare interface AddressValidation {
+  responseId: string|null;
   verdict: Verdict|null;
-  address: Address;
+  address: Address|null;
+
+  // These properties exist but are not needed for the ECL.
   // geocode: Geocode;
   // metadata: AddressMetadata;
   // uspsData: UspsData;
-  // englishLatinAddress: Address;
-}
 
-/** google.maps.addressValidation.AddressValidationResponse */
-export declare interface AddressValidationResponse {
-  result: ValidationResult;
-  responseId: string;
+  // This property is not yet published.
+  // englishLatinAddress: Address;
 }

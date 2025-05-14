@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Address, AddressValidationResponse, Granularity, ValidationResult} from '../utils/googlemaps_types.js';
+import {Address, AddressValidation, Granularity} from '../utils/googlemaps_types.js';
 
 
 /** Suggested action to take for this validation result. */
@@ -32,8 +32,8 @@ function isUSA(address: Address): boolean {
   return address.postalAddress?.regionCode === 'US';
 }
 
-function isMissingNonSubpremiseComponent(result: ValidationResult): boolean {
-  const missingComponents = result.address.missingComponentTypes || [];
+function isMissingNonSubpremiseComponent(result: AddressValidation): boolean {
+  const missingComponents = result.address?.missingComponentTypes || [];
   return (missingComponents.length > 1) ||
       ((missingComponents.length === 1) &&
        (missingComponents[0] !== SUBPREMISE));
@@ -44,34 +44,36 @@ function isMissingNonSubpremiseComponent(result: ValidationResult): boolean {
  * `ROUTE` level. `PREMISE`, `SUBPREMISE`, and `PREMISE_PROXIMITY` are all
  * considered as good as `ROUTE` or better.
  */
-function hasValidationGranularityOther(result: ValidationResult): boolean {
+function hasValidationGranularityOther(result: AddressValidation): boolean {
   return !result.verdict?.validationGranularity ||
       result.verdict.validationGranularity === Granularity.OTHER;
 }
 
-function hasSuspiciousComponent(result: ValidationResult): boolean {
-  return result.address.addressComponents.some(
-      c => c.confirmationLevel === 'UNCONFIRMED_AND_SUSPICIOUS');
+function hasSuspiciousComponent(result: AddressValidation): boolean {
+  return !!(result.address?.components.some(
+          c => c.confirmationLevel === 'UNCONFIRMED_AND_SUSPICIOUS'));
 }
 
-function hasUnresolvedToken(result: ValidationResult): boolean {
-  return (result.address.unresolvedTokens || []).length > 0;
+function hasUnresolvedToken(result: AddressValidation): boolean {
+  return !!result.address &&
+      (result.address.unresolvedTokens || []).length > 0;
 }
 
 /**
  * Returns true if the result has an inference for a component other than the
  * postal code, administrative area (1, 2, or 3), or country.
  */
-function hasMajorInference(result: ValidationResult): boolean {
+function hasMajorInference(result: AddressValidation): boolean {
   const minorComponents = new Set([
     POSTAL_CODE, POSTAL_CODE_SUFFIX, ADMINISTRATIVE_AREA_LEVEL_1,
     ADMINISTRATIVE_AREA_LEVEL_2, ADMINISTRATIVE_AREA_LEVEL_3, COUNTRY
   ]);
-  return result.address.addressComponents.some(
-      c => c.isInferred && !minorComponents.has(c.componentType));
+  return !!result.address &&
+      result.address.components.some(
+          c => c.isInferred && !minorComponents.has(c.componentType))
 }
 
-function hasReplacement(result: ValidationResult): boolean {
+function hasReplacement(result: AddressValidation): boolean {
   return !!result.verdict?.hasReplacedComponents;
 }
 
@@ -79,10 +81,14 @@ function hasReplacement(result: ValidationResult): boolean {
  * Returns true if this is a US address that is missing a subpremise component
  * (and nothing else).
  */
-function isMissingExactlyUSASubpremise(result: ValidationResult): boolean {
-  return isUSA(result.address) &&
+function isMissingExactlyUSASubpremise(result: AddressValidation): boolean {
+  return !!result.address && isUSA(result.address) &&
       (result.address.missingComponentTypes?.length === 1) &&
       (result.address.missingComponentTypes[0] === SUBPREMISE);
+}
+
+function isIncompleteResult({verdict, address}: AddressValidation): boolean {
+  return !verdict || !address;
 }
 
 /**
@@ -137,18 +143,19 @@ function isMissingExactlyUSASubpremise(result: ValidationResult): boolean {
  * @param response - A response object from the Address Validation API in the
  *     Maps JS SDK.
  */
-export function suggestValidationAction(response: AddressValidationResponse):
+export function suggestValidationAction(response: AddressValidation):
     ValidationSuggestion {
-  const result = response.result;
-  if (isMissingNonSubpremiseComponent(result) ||
-      hasValidationGranularityOther(result) || hasSuspiciousComponent(result) ||
-      hasUnresolvedToken(result)) {
+  if (isIncompleteResult(response) ||
+      isMissingNonSubpremiseComponent(response) ||
+      hasValidationGranularityOther(response) ||
+      hasSuspiciousComponent(response) || hasUnresolvedToken(response)) {
     return {suggestedAction: SuggestedAction.FIX};
-  } else if (hasMajorInference(result) || hasReplacement(result)) {
-    return {suggestedAction: SuggestedAction.CONFIRM};
-  } else if (isMissingExactlyUSASubpremise(result)) {
-    return {suggestedAction: SuggestedAction.ADD_SUBPREMISES};
-  } else {
-    return {suggestedAction: SuggestedAction.ACCEPT};
   }
+  if (hasMajorInference(response) || hasReplacement(response)) {
+    return {suggestedAction: SuggestedAction.CONFIRM};
+  }
+  if (isMissingExactlyUSASubpremise(response)) {
+    return {suggestedAction: SuggestedAction.ADD_SUBPREMISES};
+  } 
+  return {suggestedAction: SuggestedAction.ACCEPT};
 }

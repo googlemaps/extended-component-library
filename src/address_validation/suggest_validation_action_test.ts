@@ -6,7 +6,7 @@
 
 // import 'jasmine'; (google3-only)
 
-import {Address, AddressComponent, AddressValidationResponse, ConfirmationLevel, Granularity, Verdict} from '../utils/googlemaps_types.js';
+import {Address, AddressComponent, AddressValidation, ConfirmationLevel, Granularity, Verdict} from '../utils/googlemaps_types.js';
 
 import {SuggestedAction, suggestValidationAction} from './suggest_validation_action.js';
 
@@ -31,22 +31,33 @@ const LOCALITY_COMPONENT: AddressComponent = {
 };
 
 function makeFakeValidationResponse(
-    address: Partial<Address>, verdict: Verdict): AddressValidationResponse {
+    address: Partial<Address>, verdict: Verdict|null): AddressValidation {
   return {
-    result: {
-      verdict,
-      address: {
-        formattedAddress: null,
-        postalAddress: null,
-        addressComponents: [],
-        ...address
-      },
+    verdict,
+    address: {
+      formattedAddress: null,
+      postalAddress: null,
+      components: [],
+      ...address
     },
-    responseId: ''
+
+    responseId: '',
   };
 }
 
 describe('SuggestValidationAction', () => {
+  it('returns FIX when an address is missing', () => {
+    const suggestion = suggestValidationAction(
+        {address: null, responseId: '', verdict: GOOD_VERDICT});
+    expect(suggestion.suggestedAction).toBe(SuggestedAction.FIX);
+  });
+
+  it('returns FIX when verdict is missing', () => {
+    const suggestion =
+        suggestValidationAction(makeFakeValidationResponse({}, null));
+    expect(suggestion.suggestedAction).toBe(SuggestedAction.FIX);
+  });
+
   it('returns FIX when an address is missing a non-subpremise component',
      () => {
        const suggestion = suggestValidationAction(makeFakeValidationResponse(
@@ -63,7 +74,7 @@ describe('SuggestValidationAction', () => {
   it('returns FIX when there is a suspicious component', () => {
     const suggestion = suggestValidationAction(makeFakeValidationResponse(
         {
-          addressComponents: [{
+          components: [{
             ...LOCALITY_COMPONENT,
             confirmationLevel: ConfirmationLevel.UNCONFIRMED_AND_SUSPICIOUS
           }]
@@ -81,7 +92,7 @@ describe('SuggestValidationAction', () => {
   it('returns CONFIRM when there is a non-minor inferred component', () => {
     const suggestion = suggestValidationAction(makeFakeValidationResponse(
         {
-          addressComponents: [{
+          components: [{
             ...LOCALITY_COMPONENT,
             isInferred: true,
           }]
