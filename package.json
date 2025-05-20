@@ -79,7 +79,7 @@
     "@types/google.maps": "~3.55.8",
     "@types/jasmine": "^4.3.6",
     "@types/react": "^18.2.24",
-    "@web/test-runner": "^0.17.1",
+    "@web/test-runner": "^0.20.1",
     "@web/test-runner-playwright": "^0.10.1",
     "jasmine": "^5.1.0",
     "markdown-table": "^3.0.3",
@@ -87,7 +87,7 @@
     "rollup": "^3.29.4",
     "rollup-plugin-summary": "^2.0.0",
     "typescript": "^5.2.2",
-    "web-test-runner-jasmine": "^0.0.5",
+    "web-test-runner-jasmine": "^0.0.7",
     "wireit": "^0.14.12"
   },
   "wireit": {
