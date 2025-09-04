@@ -177,7 +177,7 @@ For clarity, this library, and each underlying component, is not a Google Maps P
 
 ### European Economic Area (EEA) developers
 
-If your billing address is in the European Economic Area, effective on 8 July 2025, the [Google Maps Platform EEA Terms of Service](https://cloud.google.com/terms/maps-platform/eea) will apply to your use of the Services. Functionality varies by region. [Learn more](https://developers.google.com/maps/comms/eea/faq).
+If your billing address is in the European Economic Area, effective on 8 July 2025, the [Google Maps Platform EEA Terms of Service](https://cloud.google.com/terms/maps-platform/eea?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components) will apply to your use of the Services. Functionality varies by region. [Learn more](https://developers.google.com/maps/comms/eea/faq?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components).
 
 ## Attribution
 
