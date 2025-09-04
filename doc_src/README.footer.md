@@ -47,6 +47,10 @@ This library uses Google Maps Platform services, and any use of Google Maps Plat
 
 For clarity, this library, and each underlying component, is not a Google Maps Platform Core Service. 
 
+### European Economic Area (EEA) developers
+
+If your billing address is in the European Economic Area, effective on 8 July 2025, the [Google Maps Platform EEA Terms of Service](https://cloud.google.com/terms/maps-platform/eea) will apply to your use of the Services. Functionality varies by region. [Learn more](https://developers.google.com/maps/comms/eea/faq).
+
 ## Attribution
 
 As a reminder, you must comply with all applicable attribution requirements for the Google Maps Platform API(s) and SDK(s) used by the Extended Component Library.

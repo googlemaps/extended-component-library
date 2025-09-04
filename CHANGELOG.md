@@ -1,12 +1,5 @@
 # Changelog
 
-## [0.6.14](https://github.com/googlemaps/extended-component-library/compare/v0.6.13...v0.6.14) (2025-05-14)
-
-
-### Bug Fixes
-
-* update suggestValidationAction with updated AddressValidation syntax ([07ff780](https://github.com/googlemaps/extended-component-library/commit/07ff7809d065f2660617fd824436c16c5e35a6c3))
-
 ## [0.6.12](https://github.com/googlemaps/extended-component-library/compare/v0.6.11...v0.6.12) (2024-10-22)
 
 
