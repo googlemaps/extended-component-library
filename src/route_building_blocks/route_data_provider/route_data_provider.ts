@@ -13,8 +13,8 @@ import {LAT_LNG_LITERAL_ATTRIBUTE_CONVERTER} from '../../utils/attribute_convert
 import {routeContext} from '../route_data_consumer.js';
 
 type DirectionsRoute = google.maps.DirectionsRoute;
-type LatLng = google.maps.LatLng;
-type LatLngLiteral = google.maps.LatLngLiteral;
+export type LatLng = google.maps.LatLng;
+export type LatLngLiteral = google.maps.LatLngLiteral;
 
 /**
  * Provides route data to child components as context.
