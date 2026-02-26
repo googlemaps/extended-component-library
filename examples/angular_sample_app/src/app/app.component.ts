@@ -14,7 +14,7 @@ import '@googlemaps/extended-component-library/place_building_blocks/place_data_
 import '@googlemaps/extended-component-library/place_picker.js';
 import '@googlemaps/extended-component-library/place_overview.js';
 
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import type {OverlayLayout} from '@googlemaps/extended-component-library/overlay_layout.js';
 import type {PlacePicker} from '@googlemaps/extended-component-library/place_picker.js';
 
@@ -26,7 +26,7 @@ const DEFAULT_ZOOM = 4;
 const DEFAULT_ZOOM_WITH_LOCATION = 16;
 
 @Component({
-  standalone: false,
+  changeDetection: ChangeDetectionStrategy.Eager,standalone: false,
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
