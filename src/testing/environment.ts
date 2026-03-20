@@ -14,7 +14,7 @@ import {FakeAdvancedMarkerElement, FakeMapElement} from './fake_gmp_components.j
 import {FakeGoogleMapsHarness} from './fake_google_maps.js';
 
 declare global {
-  module jasmine {
+  namespace jasmine {
     interface Matchers<T> {
       toHaveNormalizedText(expected: string): boolean;
     }
