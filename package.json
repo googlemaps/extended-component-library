@@ -75,7 +75,7 @@
     "@playwright/test": "^1.52.0",
     "@rollup/plugin-node-resolve": "^15.2.1",
     "@rollup/plugin-replace": "^5.0.2",
-    "@rollup/plugin-terser": "^0.4.3",
+    "@rollup/plugin-terser": "^1.0.0",
     "@types/google.maps": "~3.55.8",
     "@types/jasmine": "^4.3.6",
     "@types/react": "^18.2.24",
