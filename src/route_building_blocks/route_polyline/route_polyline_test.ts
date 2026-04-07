@@ -10,8 +10,8 @@ import {html, TemplateResult} from 'lit';
 
 import {Environment} from '../../testing/environment.js';
 import {FakeMapElement} from '../../testing/fake_gmp_components.js';
-import {FakeLatLng, FakeLatLngBounds} from '../../testing/fake_lat_lng.js';
-import {makeFakeLeg, makeFakeRoute, makeFakeStep} from '../../testing/fake_route.js';
+import {FakeLatLng, FakeLatLngAltitude, FakeLatLngBounds} from '../../testing/fake_lat_lng.js';
+import {makeFakeDirectionsLeg, makeFakeDirectionsRoute, makeFakeDirectionsStep, makeFakeRoute} from '../../testing/fake_route.js';
 
 import {RoutePolyline} from './route_polyline.js';
 
@@ -119,26 +119,38 @@ describe('RoutePolyline', () => {
     });
   });
 
-  it(`sets its path from a route's step`, async () => {
+  it(`sets its path from a Route's path property`, async () => {
     const {polyline, setPathSpy} = await prepareState();
-    const path: google.maps.LatLng[] = [];
-    polyline.route =
-        makeFakeRoute({legs: [makeFakeLeg({steps: [makeFakeStep({path})]})]});
+    const path = [new FakeLatLngAltitude(1, 1), new FakeLatLngAltitude(2, 2)];
+    polyline.route = makeFakeRoute({path});
     await env.waitForStability();
 
     expect(setPathSpy).toHaveBeenCalledOnceWith(path);
   });
 
-  it('concatenates the paths from multiple steps', async () => {
+  it(`sets its path from a DirectionsRoute's step`, async () => {
+    const {polyline, setPathSpy} = await prepareState();
+    const path: google.maps.LatLng[] = [new FakeLatLng(1, 1)];
+    polyline.route = makeFakeDirectionsRoute({
+      legs: [makeFakeDirectionsLeg({steps: [makeFakeDirectionsStep({path})]})]
+    });
+    await env.waitForStability();
+
+    expect(setPathSpy).toHaveBeenCalledOnceWith(path);
+  });
+
+  it('concatenates the paths from multiple DirectionsRoute steps', async () => {
     const {polyline, setPathSpy} = await prepareState();
     const [ll1, ll2, ll3, ll4] = [
       new FakeLatLng(1, 1), new FakeLatLng(2, 2), new FakeLatLng(3, 3),
       new FakeLatLng(4, 4)
     ];
-    polyline.route = makeFakeRoute({
-      legs: [makeFakeLeg({
-        steps:
-            [makeFakeStep({path: [ll1, ll2]}), makeFakeStep({path: [ll3, ll4]})]
+    polyline.route = makeFakeDirectionsRoute({
+      legs: [makeFakeDirectionsLeg({
+        steps: [
+          makeFakeDirectionsStep({path: [ll1, ll2]}),
+          makeFakeDirectionsStep({path: [ll3, ll4]})
+        ]
       })]
     });
     await env.waitForStability();
@@ -146,16 +158,18 @@ describe('RoutePolyline', () => {
     expect(setPathSpy).toHaveBeenCalledOnceWith([ll1, ll2, ll3, ll4]);
   });
 
-  it('concatenates the paths from multiple legs', async () => {
+  it('concatenates the paths from multiple DirectionsRoute legs', async () => {
     const {polyline, setPathSpy} = await prepareState();
     const [ll1, ll2, ll3, ll4] = [
       new FakeLatLng(1, 1), new FakeLatLng(2, 2), new FakeLatLng(3, 3),
       new FakeLatLng(4, 4)
     ];
-    polyline.route = makeFakeRoute({
+    polyline.route = makeFakeDirectionsRoute({
       legs: [
-        makeFakeLeg({steps: [makeFakeStep({path: [ll1, ll2]})]}),
-        makeFakeLeg({steps: [makeFakeStep({path: [ll3, ll4]})]})
+        makeFakeDirectionsLeg(
+            {steps: [makeFakeDirectionsStep({path: [ll1, ll2]})]}),
+        makeFakeDirectionsLeg(
+            {steps: [makeFakeDirectionsStep({path: [ll3, ll4]})]})
       ]
     });
     await env.waitForStability();
@@ -198,9 +212,22 @@ describe('RoutePolyline', () => {
   });
 
   describe('viewport management', () => {
-    it(`fits in the map's viewport`, async () => {
+    it(`fits in the map's viewport using a Route`, async () => {
       const bounds = new FakeLatLngBounds();
-      const route = makeFakeRoute({bounds});
+      const route = makeFakeRoute({viewport: bounds});
+      const {fitBoundsSpy} = await prepareState(html`
+        <gmp-map>
+          <gmpx-route-polyline .route=${route} fit-in-viewport>
+          </gmpx-route-polyline>
+        </gmp-map>
+      `);
+
+      expect(fitBoundsSpy).toHaveBeenCalledWith(bounds);
+    });
+
+    it(`fits in the map's viewport using a DirectionsRoute`, async () => {
+      const bounds = new FakeLatLngBounds();
+      const route = makeFakeDirectionsRoute({bounds});
       const {fitBoundsSpy} = await prepareState(html`
         <gmp-map>
           <gmpx-route-polyline .route=${route} fit-in-viewport>
@@ -213,7 +240,7 @@ describe('RoutePolyline', () => {
 
     it(`doesn't set the viewport if fit-in-viewport is false`, async () => {
       const bounds = new FakeLatLngBounds();
-      const route = makeFakeRoute({bounds});
+      const route = makeFakeRoute({viewport: bounds});
       const {fitBoundsSpy} = await prepareState(html`
         <gmp-map>
           <gmpx-route-polyline .route=${route}></gmpx-route-polyline>
@@ -235,7 +262,7 @@ describe('RoutePolyline', () => {
 
     it(`sets the viewport when connecting`, async () => {
       const bounds = new FakeLatLngBounds();
-      const route = makeFakeRoute({bounds});
+      const route = makeFakeRoute({viewport: bounds});
       const {polyline, map, fitBoundsSpy} = await prepareState(html`
         <gmp-map></gmp-map>
         <gmpx-route-polyline .route=${route} fit-in-viewport>
@@ -249,10 +276,10 @@ describe('RoutePolyline', () => {
 
     it(`fits two polylines in the map's viewport`, async () => {
       const route1 = makeFakeRoute({
-        bounds: new FakeLatLngBounds({north: 1, south: 0, east: 1, west: 0})
+        viewport: new FakeLatLngBounds({north: 1, south: 0, east: 1, west: 0})
       });
       const route2 = makeFakeRoute({
-        bounds: new FakeLatLngBounds({north: 2, south: 1, east: 2, west: 1})
+        viewport: new FakeLatLngBounds({north: 2, south: 1, east: 2, west: 1})
       });
       const {fitBoundsSpy} = await prepareState(html`
         <gmp-map>
@@ -270,10 +297,10 @@ describe('RoutePolyline', () => {
 
     it(`adjusts the viewport when disconnecting a polyline`, async () => {
       const route1 = makeFakeRoute({
-        bounds: new FakeLatLngBounds({north: 1, south: 0, east: 1, west: 0})
+        viewport: new FakeLatLngBounds({north: 1, south: 0, east: 1, west: 0})
       });
       const route2 = makeFakeRoute({
-        bounds: new FakeLatLngBounds({north: 2, south: 1, east: 2, west: 1})
+        viewport: new FakeLatLngBounds({north: 2, south: 1, east: 2, west: 1})
       });
       const {map, polyline, fitBoundsSpy} = await prepareState(html`
         <gmp-map>
@@ -293,10 +320,10 @@ describe('RoutePolyline', () => {
 
     it(`adjusts the viewport when unsetting fit-in-viewport`, async () => {
       const route1 = makeFakeRoute({
-        bounds: new FakeLatLngBounds({north: 1, south: 0, east: 1, west: 0})
+        viewport: new FakeLatLngBounds({north: 1, south: 0, east: 1, west: 0})
       });
       const route2 = makeFakeRoute({
-        bounds: new FakeLatLngBounds({north: 2, south: 1, east: 2, west: 1})
+        viewport: new FakeLatLngBounds({north: 2, south: 1, east: 2, west: 1})
       });
       const {polyline, fitBoundsSpy} = await prepareState(html`
         <gmp-map>
@@ -316,7 +343,7 @@ describe('RoutePolyline', () => {
 
     it(`adjusts the viewport when updating route data`, async () => {
       const route = makeFakeRoute({
-        bounds: new FakeLatLngBounds({north: 1, south: 0, east: 1, west: 0})
+        viewport: new FakeLatLngBounds({north: 1, south: 0, east: 1, west: 0})
       });
       const {polyline, fitBoundsSpy} = await prepareState(html`
         <gmp-map>
@@ -325,7 +352,7 @@ describe('RoutePolyline', () => {
         </gmp-map>
       `);
       polyline.route = makeFakeRoute({
-        bounds: new FakeLatLngBounds({north: 3, south: 2, east: 3, west: 2})
+        viewport: new FakeLatLngBounds({north: 3, south: 2, east: 3, west: 2})
       });
       await env.waitForStability();
 

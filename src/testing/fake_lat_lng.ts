@@ -4,10 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-type LatLng = google.maps.LatLng;
-type LatLngLiteral = google.maps.LatLngLiteral;
-type LatLngBounds = google.maps.LatLngBounds;
-type LatLngBoundsLiteral = google.maps.LatLngBoundsLiteral;
+import type {LatLng, LatLngAltitude, LatLngAltitudeLiteral, LatLngBounds, LatLngBoundsLiteral, LatLngLiteral} from '../utils/googlemaps_types.js';
 
 /**
  * A fake `LatLng` class for testing purposes, that does not depend on the
@@ -37,6 +34,46 @@ export class FakeLatLng implements LatLng {
   }
   toString(): string {
     return `(${this.latitude},${this.longitude})`;
+  }
+}
+
+/**
+ * A fake `LatLngAltitude` class for testing purposes, that does not depend on
+ * the `google.maps.LatLngAltitude` constructor loaded by the API.
+ */
+export class FakeLatLngAltitude implements LatLngAltitude {
+  readonly lat: number;
+  readonly lng: number;
+  readonly altitude: number;
+
+  constructor(
+      latOrLiteral: number|LatLngAltitudeLiteral|LatLngLiteral,
+      lng: number = 0,
+      altitude: number = 0,
+  ) {
+    if (typeof latOrLiteral === 'number') {
+      this.lat = latOrLiteral;
+      this.lng = lng;
+      this.altitude = altitude;
+    } else {
+      this.lat = latOrLiteral.lat;
+      this.lng = latOrLiteral.lng;
+      this.altitude = (latOrLiteral as LatLngAltitudeLiteral).altitude ?? 0;
+    }
+  }
+
+  equals(other: LatLngAltitude|LatLngAltitudeLiteral|null): boolean {
+    if (!other) return false;
+    return this.lat === other.lat && this.lng === other.lng &&
+        this.altitude === other.altitude;
+  }
+
+  toJSON(): LatLngAltitudeLiteral {
+    return {lat: this.lat, lng: this.lng, altitude: this.altitude};
+  }
+
+  toString(): string {
+    return `(${this.lat},${this.lng},${this.altitude})`;
   }
 }
 
