@@ -12,7 +12,7 @@ import {Environment} from '../testing/environment.js';
 import {FakeLatLng} from '../testing/fake_lat_lng.js';
 import {makeFakePlace, SAMPLE_FAKE_PLACE, SAMPLE_FAKE_PLACE_RESULT} from '../testing/fake_place.js';
 
-import type {PlaceResult} from './googlemaps_types.js';
+import type {Place, PlaceResult} from './googlemaps_types.js';
 import {isPlaceResult, makePlaceFromPlaceResult, makeWaypoint, numericToPriceLevel, priceLevelToNumeric, renderAttribution} from './place_utils.js';
 
 type PriceLevel = google.maps.places.PriceLevel;
@@ -30,6 +30,18 @@ describe('isPlaceResult', () => {
   it('says that a fake Place is not a PlaceResult', () => {
     const fakePlace = makeFakePlace({id: 'some_id', displayName: 'Name'});
     expect(isPlaceResult(fakePlace)).toBe(false);
+  });
+
+  it('says that a Place with an id getter is not a PlaceResult', () => {
+    class FakePlace {
+      get id() {
+        return 'some_id';
+      }
+      get displayName() {
+        return 'Name';
+      }
+    }
+    expect(isPlaceResult(new FakePlace() as Place)).toBe(false);
   });
 });
 

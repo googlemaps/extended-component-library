@@ -21,8 +21,7 @@ import {isOpen} from './opening_hours.js';
 export function isPlaceResult(place: Place|PlaceResult): place is PlaceResult {
   // To avoid depending on loading the API at runtime, we do not use
   // `instanceof google.map.places.Place`.
-  // TODO: fix for property renaming safety?
-  return !place.hasOwnProperty('id');
+  return (place as Place).id === undefined;
 }
 
 /**
