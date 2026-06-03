@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.15](https://github.com/googlemaps/extended-component-library/compare/v0.6.14...v0.6.15) (2026-06-03)
+
+
+### Bug Fixes
+
+* make `isPlaceResult()` type predicate more robust to JS API changes ([d13ae7f](https://github.com/googlemaps/extended-component-library/commit/d13ae7f41e8bf1a55cbf8ae72990f9be0bada62d))
+
 ## [0.6.12](https://github.com/googlemaps/extended-component-library/compare/v0.6.11...v0.6.12) (2024-10-22)
 
 
