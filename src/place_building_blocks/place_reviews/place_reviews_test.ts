@@ -11,6 +11,7 @@ import {map} from 'lit/directives/map.js';
 
 import {Environment} from '../../testing/environment.js';
 import {makeFakePlace, SAMPLE_FAKE_PLACE} from '../../testing/fake_place.js';
+import {mapsJsData} from '../../utils/googlemaps_types.js';
 
 import {PlaceReviews} from './place_reviews.js';
 
@@ -63,18 +64,24 @@ describe('PlaceReviews', () => {
   it('renders the right URIs', async () => {
     const place = makeFakePlace({
       id: '',
-      reviews: [{
-        authorAttribution: {
+      reviews: [mapsJsData({
+        authorAttribution: mapsJsData({
           displayName: 'Author',
           photoURI: 'https://lh3.googlusercontent.com/a/1',
           uri: 'https://www.google.com/maps/contrib/1/reviews',
-        },
+        }),
         publishTime: new Date(1234567890),
         rating: 5,
         relativePublishTimeDescription: '1 month ago',
         text: '',
         textLanguageCode: 'en',
-      }],
+        flagContentURI: null,
+        googleMapsURI: null,
+        originalText: null,
+        originalTextLanguageCode: null,
+        visitDateMonth: null,
+        visitDateYear: null,
+      })],
     });
     const [reviews] = await prepareState(html`
       <gmpx-place-reviews .place=${place}></gmpx-place-reviews>

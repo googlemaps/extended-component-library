@@ -31,13 +31,16 @@ declare global {
 
 /** A fake `google.maps.MapElement` class for testing purposes. */
 export class FakeMapElement extends LitElement {
-  center: LatLng|LatLngLiteral|null = null;
-
   readonly innerMap = jasmine.createSpyObj<google.maps.Map>(
       'Map', ['fitBounds', 'panTo', 'setOptions']);
 
+  center: LatLng|LatLngLiteral|null = null;
   mapId: string|null = null;
   zoom: number|null = null;
+  headingInteractionDisabled: boolean|null = null;
+  internalUsageAttributionIds: Iterable<string>|null = null;
+  renderingType: google.maps.RenderingTypeString|null = null;
+  tiltInteractionDisabled: boolean|null = null;
 }
 
 /**
@@ -57,5 +60,16 @@ export class FakeAdvancedMarkerElement extends LitElement {
   }
   get content(): Element|null|undefined {
     return this.innerContent;
+  }
+
+  get element(): HTMLElement {
+    return this;
+  }
+
+  addListener(eventName: string, handler: Function):
+      google.maps.MapsEventListener {
+    return {
+      remove: () => {},
+    };
   }
 }

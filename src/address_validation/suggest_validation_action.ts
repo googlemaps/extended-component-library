@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Address, AddressValidation, Granularity} from '../utils/googlemaps_types.js';
+import {Address, AddressValidation} from '../utils/googlemaps_types.js';
 
 
 /** Suggested action to take for this validation result. */
@@ -46,7 +46,7 @@ function isMissingNonSubpremiseComponent(result: AddressValidation): boolean {
  */
 function hasValidationGranularityOther(result: AddressValidation): boolean {
   return !result.verdict?.validationGranularity ||
-      result.verdict.validationGranularity === Granularity.OTHER;
+      result.verdict.validationGranularity === 'OTHER';
 }
 
 function hasSuspiciousComponent(result: AddressValidation): boolean {
@@ -70,7 +70,9 @@ function hasMajorInference(result: AddressValidation): boolean {
   ]);
   return !!result.address &&
       result.address.components.some(
-          c => c.isInferred && !minorComponents.has(c.componentType))
+          // TODO: Align with 3.65 typings
+          // @ts-ignore
+          c => c.isInferred && !minorComponents.has(c.componentType!))
 }
 
 function hasReplacement(result: AddressValidation): boolean {

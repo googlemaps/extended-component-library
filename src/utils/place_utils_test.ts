@@ -15,7 +15,13 @@ import {makeFakePlace, SAMPLE_FAKE_PLACE, SAMPLE_FAKE_PLACE_RESULT} from '../tes
 import type {Place, PlaceResult} from './googlemaps_types.js';
 import {isPlaceResult, makePlaceFromPlaceResult, makeWaypoint, numericToPriceLevel, priceLevelToNumeric, renderAttribution} from './place_utils.js';
 
-type PriceLevel = google.maps.places.PriceLevel;
+
+/**
+ * Recursively removes toJSON() methods from Maps JS API-style data objects.
+ */
+function stripToJSON<T>(obj: unknown): unknown {
+  return obj ? JSON.parse(JSON.stringify(obj)) : obj;
+}
 
 describe('isPlaceResult', () => {
   it('says that the empty object is a PlaceResult', () => {
@@ -47,11 +53,11 @@ describe('isPlaceResult', () => {
 
 describe('priceLevelToNumeric', () => {
   it('converts all price levels', () => {
-    expect(priceLevelToNumeric('FREE' as PriceLevel)).toEqual(0);
-    expect(priceLevelToNumeric('INEXPENSIVE' as PriceLevel)).toEqual(1);
-    expect(priceLevelToNumeric('MODERATE' as PriceLevel)).toEqual(2);
-    expect(priceLevelToNumeric('EXPENSIVE' as PriceLevel)).toEqual(3);
-    expect(priceLevelToNumeric('VERY_EXPENSIVE' as PriceLevel)).toEqual(4);
+    expect(priceLevelToNumeric('FREE')).toEqual(0);
+    expect(priceLevelToNumeric('INEXPENSIVE')).toEqual(1);
+    expect(priceLevelToNumeric('MODERATE')).toEqual(2);
+    expect(priceLevelToNumeric('EXPENSIVE')).toEqual(3);
+    expect(priceLevelToNumeric('VERY_EXPENSIVE')).toEqual(4);
   });
 
   it('returns numbers unchanged', () => {
@@ -59,22 +65,22 @@ describe('priceLevelToNumeric', () => {
   });
 
   it('returns null on invalid values', () => {
-    expect(priceLevelToNumeric('INVALID' as PriceLevel)).toEqual(null);
+    expect(priceLevelToNumeric('INVALID' as any)).toEqual(null);
   });
 });
 
 describe('numericToPriceLevel', () => {
   it('converts all valid numbers', () => {
-    expect(numericToPriceLevel(0)).toEqual('FREE' as PriceLevel);
-    expect(numericToPriceLevel(1)).toEqual('INEXPENSIVE' as PriceLevel);
-    expect(numericToPriceLevel(2)).toEqual('MODERATE' as PriceLevel);
-    expect(numericToPriceLevel(3)).toEqual('EXPENSIVE' as PriceLevel);
-    expect(numericToPriceLevel(4)).toEqual('VERY_EXPENSIVE' as PriceLevel);
+    expect(numericToPriceLevel(0)).toEqual('FREE');
+    expect(numericToPriceLevel(1)).toEqual('INEXPENSIVE');
+    expect(numericToPriceLevel(2)).toEqual('MODERATE');
+    expect(numericToPriceLevel(3)).toEqual('EXPENSIVE');
+    expect(numericToPriceLevel(4)).toEqual('VERY_EXPENSIVE');
   });
 
   it('returns enum values unchanged', () => {
-    expect(numericToPriceLevel('FREE' as PriceLevel))
-        .toEqual('FREE' as PriceLevel);
+    expect(numericToPriceLevel('FREE'))
+        .toEqual('FREE');
   });
 
   it('returns null on invalid numbers', () => {
@@ -164,10 +170,13 @@ describe('makePlaceFromPlaceResult', () => {
   it('copies all equivalent fields from PlaceResult to Place', async () => {
     const place = await makePlaceFromPlaceResult(SAMPLE_FAKE_PLACE_RESULT);
 
-    expect(place.addressComponents)
-        .toEqual(SAMPLE_FAKE_PLACE.addressComponents);
+    // Since distinct toJSON() function instances are considered unequal, they
+    // need to be stripped before comparison.
+    expect(stripToJSON(place.addressComponents))
+        .toEqual(stripToJSON(SAMPLE_FAKE_PLACE.addressComponents));
     expect(place.adrFormatAddress).toEqual(SAMPLE_FAKE_PLACE.adrFormatAddress);
-    expect(place.attributions).toEqual(SAMPLE_FAKE_PLACE.attributions);
+    expect(stripToJSON(place.attributions))
+        .toEqual(stripToJSON(SAMPLE_FAKE_PLACE.attributions));
     expect(place.businessStatus).toEqual(SAMPLE_FAKE_PLACE.businessStatus);
     expect(place.displayName).toEqual(SAMPLE_FAKE_PLACE.displayName);
     expect(place.googleMapsURI).toEqual(SAMPLE_FAKE_PLACE.googleMapsURI);
@@ -177,10 +186,12 @@ describe('makePlaceFromPlaceResult', () => {
     expect(place.id).toEqual(SAMPLE_FAKE_PLACE.id);
     expect(place.internationalPhoneNumber)
         .toEqual(SAMPLE_FAKE_PLACE.internationalPhoneNumber);
-    expect(place.location).toEqual(SAMPLE_FAKE_PLACE.location);
+    expect(stripToJSON(place.location))
+        .toEqual(stripToJSON(SAMPLE_FAKE_PLACE.location));
     expect(place.nationalPhoneNumber)
         .toEqual(SAMPLE_FAKE_PLACE.nationalPhoneNumber);
-    expect(place.plusCode).toEqual(SAMPLE_FAKE_PLACE.plusCode);
+    expect(stripToJSON(place.plusCode))
+        .toEqual(stripToJSON(SAMPLE_FAKE_PLACE.plusCode));
     expect(place.priceLevel).toEqual(SAMPLE_FAKE_PLACE.priceLevel);
     expect(place.rating).toEqual(SAMPLE_FAKE_PLACE.rating);
     expect(place.svgIconMaskURI).toEqual(SAMPLE_FAKE_PLACE.svgIconMaskURI);
@@ -192,16 +203,16 @@ describe('makePlaceFromPlaceResult', () => {
     expect(place.reviews!.length).toEqual(SAMPLE_FAKE_PLACE.reviews!.length);
     SAMPLE_FAKE_PLACE.reviews!.forEach((expectedReview, i) => {
       const review = place.reviews![i];
-      expect(review.authorAttribution)
-          .toEqual(expectedReview.authorAttribution);
-      expect(review).toEqual(expectedReview);
+      expect(stripToJSON(review.authorAttribution))
+          .toEqual(stripToJSON(expectedReview.authorAttribution));
+      expect(stripToJSON(review)).toEqual(stripToJSON(expectedReview));
     });
 
     expect(place.photos!.length).toEqual(SAMPLE_FAKE_PLACE.photos!.length);
     SAMPLE_FAKE_PLACE.photos!.forEach((expectedPhoto, i) => {
       const photo = place.photos![i];
-      expect(photo.authorAttributions)
-          .toEqual(expectedPhoto.authorAttributions);
+      expect(stripToJSON(photo.authorAttributions))
+          .toEqual(stripToJSON(expectedPhoto.authorAttributions));
       expect(photo.heightPx).toEqual(expectedPhoto.heightPx);
       expect(photo.widthPx).toEqual(expectedPhoto.widthPx);
       expect(photo.getURI()).toEqual(expectedPhoto.getURI());

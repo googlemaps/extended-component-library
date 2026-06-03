@@ -4,16 +4,19 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+// TODO: Align with 3.65 typings
+// @ts-nocheck
+
 // import 'jasmine'; (google3-only)
 
-import {Address, AddressComponent, AddressValidation, ConfirmationLevel, Granularity, Verdict} from '../utils/googlemaps_types.js';
+import {Address, AddressComponent, AddressValidation, Verdict} from '../utils/googlemaps_types.js';
 
 import {SuggestedAction, suggestValidationAction} from './suggest_validation_action.js';
 
 const GOOD_VERDICT: Verdict = {
-  inputGranularity: Granularity.PREMISE,
-  validationGranularity: Granularity.PREMISE,
-  geocodeGranularity: Granularity.PREMISE,
+  inputGranularity: 'PREMISE',
+  validationGranularity: 'PREMISE',
+  geocodeGranularity: 'PREMISE',
   isAddressComplete: true,
   hasUnconfirmedComponents: false,
   hasInferredComponents: false,
@@ -67,7 +70,7 @@ describe('SuggestValidationAction', () => {
 
   it('returns FIX when the validation granularity is OTHER', () => {
     const suggestion = suggestValidationAction(makeFakeValidationResponse(
-        {}, {...GOOD_VERDICT, validationGranularity: Granularity.OTHER}));
+        {}, {...GOOD_VERDICT, validationGranularity: 'OTHER'}));
     expect(suggestion.suggestedAction).toBe(SuggestedAction.FIX);
   });
 
@@ -76,7 +79,7 @@ describe('SuggestValidationAction', () => {
         {
           components: [{
             ...LOCALITY_COMPONENT,
-            confirmationLevel: ConfirmationLevel.UNCONFIRMED_AND_SUSPICIOUS
+            confirmationLevel: 'UNCONFIRMED_AND_SUSPICIOUS'
           }]
         },
         GOOD_VERDICT));

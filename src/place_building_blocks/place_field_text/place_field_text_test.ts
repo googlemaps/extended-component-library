@@ -12,7 +12,7 @@ import {map} from 'lit/directives/map.js';
 import {Environment} from '../../testing/environment.js';
 import {FakeLatLng} from '../../testing/fake_lat_lng.js';
 import {makeFakePlace} from '../../testing/fake_place.js';
-import type {PlaceResult} from '../../utils/googlemaps_types.js';
+import {mapsJsData, type PlaceResult} from '../../utils/googlemaps_types.js';
 
 import {PLACE_RESULT_TEXT_FIELDS, PLACE_TEXT_FIELDS, PlaceFieldText, TextField} from './place_field_text.js';
 
@@ -26,24 +26,24 @@ function getText(root: HTMLElement, field?: TextField): string|null|undefined {
 }
 
 const fakePlace = makeFakePlace({
-  businessStatus: 'OPERATIONAL' as google.maps.places.BusinessStatus,
+  businessStatus: 'OPERATIONAL',
   displayName: 'Name',
   formattedAddress: '123 Main Street',
   id: '1234567890',
   internationalPhoneNumber: '+1 234-567-8910',
   location: new FakeLatLng(1, 2),
   nationalPhoneNumber: '(234) 567-8910',
-  plusCode: {
+  plusCode: mapsJsData({
     compoundCode: '1234+AB Some Place',
     globalCode: 'ABCD1234+AB',
-  },
+  }),
   rating: 4.5,
   types: ['restaurant'],
   userRatingCount: 123,
 });
 
 const placeResult: PlaceResult = {
-  business_status: 'OPERATIONAL' as google.maps.places.BusinessStatus,
+  business_status: 'OPERATIONAL',
   name: 'Name',
   formatted_address: '123 Main Street',
   place_id: '1234567890',
@@ -215,15 +215,15 @@ describe('PlaceFieldText', () => {
   it('renders all business statuses correctly', async () => {
     const operationalPlace = makeFakePlace({
       id: '1234567890',
-      businessStatus: 'OPERATIONAL' as google.maps.places.BusinessStatus
+      businessStatus: 'OPERATIONAL'
     });
     const permanentPlace = makeFakePlace({
       id: '1234567890',
-      businessStatus: 'CLOSED_PERMANENTLY' as google.maps.places.BusinessStatus
+      businessStatus: 'CLOSED_PERMANENTLY'
     });
     const temporaryPlace = makeFakePlace({
       id: '1234567890',
-      businessStatus: 'CLOSED_TEMPORARILY' as google.maps.places.BusinessStatus
+      businessStatus: 'CLOSED_TEMPORARILY'
     });
     const [operationalField, permanentField, temporaryField] =
         await prepareState(html`

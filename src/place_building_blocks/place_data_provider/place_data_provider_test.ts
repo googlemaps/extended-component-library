@@ -63,10 +63,15 @@ describe('PlaceDataProvider', () => {
     fetchFieldsSpy.and.callFake(
         async ({fields}: google.maps.places.FetchFieldsRequest) => {
           if (fields.includes('displayName')) {
-            place.displayName = 'Fake Place';
+            // Properties of Place are getter-only in the typings
+            Object.defineProperty(place, 'displayName', {
+              get: () => 'Fake Place',
+            });
           }
           if (fields.includes('rating')) {
-            place.rating = 5;
+            Object.defineProperty(place, 'rating', {
+              get: () => 5,
+            });
           }
           return {place};
         });

@@ -19,9 +19,8 @@ function makeDistanceMatrixRequestCache() {
         // Requests with a transient error of OVER_QUERY_LIMIT
         // and UNKNOWN_ERROR should be retried. See full list of statuses
         // https://developers.google.com/maps/documentation/javascript/reference/distance-matrix#DistanceMatrixStatus
-        return error.code ===
-            'OVER_QUERY_LIMIT' as google.maps.DistanceMatrixStatus ||
-            error.code === 'UNKNOWN_ERROR' as google.maps.DistanceMatrixStatus;
+        return error.code === 'OVER_QUERY_LIMIT' ||
+            error.code === 'UNKNOWN_ERROR';
       });
 }
 
@@ -93,7 +92,7 @@ export class DistanceMeasurer {
     const request: google.maps.DistanceMatrixRequest = {
       origins: [origin],
       destinations: destinationsForLookup,
-      travelMode: 'DRIVING' as google.maps.TravelMode,
+      travelMode: 'DRIVING',
       unitSystem: units,
     };
     let responsePromise = DistanceMeasurer.cache.get(request);

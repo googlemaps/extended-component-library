@@ -10,6 +10,7 @@ import {html, TemplateResult} from 'lit';
 
 import {Environment} from '../../testing/environment.js';
 import {makeFakePlace} from '../../testing/fake_place.js';
+import {mapsJsData} from '../../utils/googlemaps_types.js';
 
 import {PlaceAttribution} from './place_attribution.js';
 
@@ -64,8 +65,8 @@ describe('place attribution test', () => {
     const place = makeFakePlace({
       id: '1234567890',
       attributions: [
-        {provider: 'Foo', providerURI: 'https://foo.com'},
-        {provider: 'Bar', providerURI: null}
+        mapsJsData({provider: 'Foo', providerURI: 'https://foo.com'}),
+        mapsJsData({provider: 'Bar', providerURI: null})
       ]
     });
 

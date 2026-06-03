@@ -16,7 +16,7 @@ import {makeFakeDistanceMatrixResponse} from '../testing/fake_distance_matrix.js
 import type {FakeMapElement} from '../testing/fake_gmp_components.js';
 import {FakeLatLng, FakeLatLngBounds} from '../testing/fake_lat_lng.js';
 import {Deferred} from '../utils/deferred.js';
-import type {LatLngLiteral, Place} from '../utils/googlemaps_types.js';
+import {mapsJsData, type LatLngLiteral, type Place} from '../utils/googlemaps_types.js';
 
 import {DistanceMeasurer} from './distances.js';
 import {FeatureSet, StoreLocatorListing} from './interfaces.js';
@@ -179,11 +179,11 @@ describe('StoreLocator', () => {
        spyOnProperty(placePicker!, 'value').and.returnValue({
          id: 'foo_origin_id',
          location: origin,
-         addressComponents: [{
+         addressComponents: [mapsJsData({
            types: ['foo', 'country'],
            shortText: 'US',
            longText: 'United States'
-         }],
+         })],
        } as Partial<Place>as Place);
 
        // Distance Matrix will set Location B as closer
@@ -222,8 +222,8 @@ describe('StoreLocator', () => {
     spyOnProperty(placePicker!, 'value').and.returnValue({
       id: 'foo_origin_id',
       location: new FakeLatLng(10, 10),
-      addressComponents:
-          [{types: ['foo', 'country'], shortText: 'CA', longText: 'Canada'}],
+      addressComponents: [mapsJsData(
+          {types: ['foo', 'country'], shortText: 'CA', longText: 'Canada'})],
     } as Partial<Place>as Place);
 
     // Distance Matrix will set Location B as closer

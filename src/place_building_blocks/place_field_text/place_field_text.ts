@@ -286,15 +286,16 @@ export class PlaceFieldText extends PlaceDataConsumer {
     }
   }
 
-  private renderBusinessStatus(status: google.maps.places.BusinessStatus|null|
-                               undefined): string|null|undefined {
+  private renderBusinessStatus(
+      status: google.maps.places.BusinessStatusString|null|undefined): string
+      |null|undefined {
     if (!status) return status;
     switch (status) {
-      case 'CLOSED_PERMANENTLY' as google.maps.places.BusinessStatus:
+      case 'CLOSED_PERMANENTLY':
         return this.getMsg('PLACE_CLOSED_PERMANENTLY');
-      case 'CLOSED_TEMPORARILY' as google.maps.places.BusinessStatus:
+      case 'CLOSED_TEMPORARILY':
         return this.getMsg('PLACE_CLOSED_TEMPORARILY');
-      case 'OPERATIONAL' as google.maps.places.BusinessStatus:
+      case 'OPERATIONAL':
         return this.getMsg('PLACE_OPERATIONAL');
       default:
         return undefined;

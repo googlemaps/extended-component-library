@@ -41,7 +41,7 @@ const EMPTY_FAKE_STEP: DirectionsStep = {
   maneuver: '',
   start_location: new FakeLatLng(0, 0),
   start_point: new FakeLatLng(0, 0),
-  travel_mode: 'DRIVING' as google.maps.TravelMode,
+  travel_mode: 'DRIVING',
 };
 
 /**

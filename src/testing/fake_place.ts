@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type {Photo, Place} from '../utils/googlemaps_types.js';
+import {mapsJsData, type Photo, type Place} from '../utils/googlemaps_types.js';
 
 import {FakeLatLng} from './fake_lat_lng.js';
 
@@ -16,10 +16,9 @@ type PlacePhoto = google.maps.places.PlacePhoto;
  * loading the API. It is *not* recognized as an `instanceof` the `Place`
  * constructor loaded with the API.
  *
- * @param fields - An object of fields of the `Place`. The `id` field is
- *     required and the rest are optional.
+ * @param fields - An object of fields of the `Place`.
  */
-export function makeFakePlace(fields: Pick<Place, 'id'>&Partial<Place>): Place {
+export function makeFakePlace(fields: Partial<Place>): Place {
   return {
     // Fake version of isOpen() simply checks whether the business is
     // operational.
@@ -45,8 +44,8 @@ export function makeFakePlace(fields: Pick<Place, 'id'>&Partial<Place>): Place {
  * @param uri - The URI to return when `getURI()` is called.
  */
 export function makeFakePhoto(
-    fields: Omit<Photo, 'getURI'>, uri: string): Photo {
-  return {getURI: () => uri, ...fields};
+    fields: Omit<Photo, 'getURI'|'toJSON'>, uri: string): Photo {
+  return mapsJsData({getURI: () => uri, ...fields});
 }
 
 /**
@@ -63,15 +62,19 @@ export function makeFakePlacePhoto(
 /** A sample `google.maps.places.Place` object for testing purposes. */
 export const SAMPLE_FAKE_PLACE = makeFakePlace({
   addressComponents: [
-    {longText: '123', shortText: '123', types: ['street_number']},
-    {longText: 'Main Street', shortText: 'Main St', types: ['route']},
+    mapsJsData({longText: '123', shortText: '123', types: ['street_number']}),
+    mapsJsData(
+        {longText: 'Main Street', shortText: 'Main St', types: ['route']}),
   ],
   adrFormatAddress: '<span class="street-address">123 Main Street</span>',
   attributions: [
-    {provider: 'Provider 1', providerURI: 'https://www.someprovider.com/1'},
-    {provider: 'Provider 2', providerURI: null},
+    mapsJsData({
+      provider: 'Provider 1',
+      providerURI: 'https://www.someprovider.com/1'
+    }),
+    mapsJsData({provider: 'Provider 2', providerURI: null}),
   ],
-  businessStatus: 'OPERATIONAL' as google.maps.places.BusinessStatus,
+  businessStatus: 'OPERATIONAL',
   displayName: 'Place Name',
   googleMapsURI: 'https://maps.google.com/',
   formattedAddress: '123 Main Street',
@@ -80,16 +83,16 @@ export const SAMPLE_FAKE_PLACE = makeFakePlace({
   internationalPhoneNumber: '+1 234-567-8910',
   location: new FakeLatLng(1, 2),
   nationalPhoneNumber: '(234) 567-8910',
-  regularOpeningHours: {
+  regularOpeningHours: mapsJsData({
     periods: [
-      {
-        close: {day: 0, hour: 18, minute: 0},
-        open: {day: 0, hour: 11, minute: 0},
-      },
-      {
-        close: {day: 6, hour: 18, minute: 0},
-        open: {day: 6, hour: 12, minute: 30},
-      },
+      mapsJsData({
+        close: mapsJsData({day: 0, hour: 18, minute: 0}),
+        open: mapsJsData({day: 0, hour: 11, minute: 0}),
+      }),
+      mapsJsData({
+        close: mapsJsData({day: 6, hour: 18, minute: 0}),
+        open: mapsJsData({day: 6, hour: 12, minute: 30}),
+      }),
     ],
     weekdayDescriptions: [
       'Monday: Closed',
@@ -100,90 +103,116 @@ export const SAMPLE_FAKE_PLACE = makeFakePlace({
       'Saturday: 11:00 AM - 6:00 PM',
       'Sunday: 12:30 PM - 6:00 PM',
     ],
-  },
-  photos: [
-    makeFakePhoto(
-        {
-          authorAttributions: [
+    specialDays: [],
+  }),
+  photos:
+      [
+        makeFakePhoto(
             {
-              displayName: 'Author A1',
-              photoURI: '',
-              uri: 'https://www.google.com/maps/contrib/A1',
+              authorAttributions: [
+                mapsJsData({
+                  displayName: 'Author A1',
+                  photoURI: '',
+                  uri: 'https://www.google.com/maps/contrib/A1',
+                }),
+                mapsJsData({
+                  displayName: 'Author A2',
+                  photoURI: '',
+                  uri: '',
+                }),
+              ],
+              heightPx: 1000,
+              widthPx: 2000,
+              googleMapsURI: null,
+              flagContentURI: null,
             },
+            'https://lh3.googlusercontent.com/places/A'),
+        makeFakePhoto(
             {
-              displayName: 'Author A2',
-              photoURI: '',
-              uri: '',
+              authorAttributions: [
+                mapsJsData({
+                  displayName: 'Author B1',
+                  photoURI: '',
+                  uri: 'https://www.google.com/maps/contrib/B1',
+                }),
+              ],
+              heightPx: 1000,
+              widthPx: 2000,
+              googleMapsURI: null,
+              flagContentURI: null,
             },
-          ],
-          heightPx: 1000,
-          widthPx: 2000,
-        },
-        'https://lh3.googlusercontent.com/places/A'),
-    makeFakePhoto(
-        {
-          authorAttributions: [
+            'https://lh3.googlusercontent.com/places/B'),
+        makeFakePhoto(
             {
-              displayName: 'Author B1',
-              photoURI: '',
-              uri: 'https://www.google.com/maps/contrib/B1',
+              authorAttributions: [],
+              heightPx: 1000,
+              widthPx: 2000,
+              googleMapsURI: null,
+              flagContentURI: null,
             },
-          ],
-          heightPx: 1000,
-          widthPx: 2000,
-        },
-        'https://lh3.googlusercontent.com/places/B'),
-    makeFakePhoto(
-        {
-          authorAttributions: [],
-          heightPx: 1000,
-          widthPx: 2000,
-        },
-        'https://lh3.googlusercontent.com/places/C'),
-  ],
-  plusCode: {
+            'https://lh3.googlusercontent.com/places/C'),
+      ],
+  plusCode: mapsJsData({
     compoundCode: '1234+AB Some Place',
     globalCode: 'ABCD1234+AB',
-  },
-  priceLevel: 'INEXPENSIVE' as google.maps.places.PriceLevel,
+  }),
+  priceLevel: 'INEXPENSIVE',
   rating: 4.5,
   reviews: [
-    {
-      authorAttribution: {
+    mapsJsData({
+      authorAttribution: mapsJsData({
         displayName: 'Author 1',
         uri: 'https://www.google.com/maps/contrib/1/reviews',
         photoURI: 'https://lh3.googlusercontent.com/a/1',
-      },
+      }),
       publishTime: new Date(1234567890),
       rating: 5,
       relativePublishTimeDescription: '1 month ago',
       text: 'it\'s lit!',
       textLanguageCode: 'en',
-    },
-    {
-      authorAttribution: {
+      flagContentURI: null,
+      googleMapsURI: null,
+      originalText: null,
+      originalTextLanguageCode: null,
+      visitDateMonth: null,
+      visitDateYear: null,
+    }),
+    mapsJsData({
+      authorAttribution: mapsJsData({
         displayName: 'Author 2',
         uri: 'https://www.google.com/maps/contrib/2/reviews',
         photoURI: 'https://lh3.googlusercontent.com/a/2',
-      },
+      }),
       publishTime: new Date(1234567890),
       rating: null,
       relativePublishTimeDescription: '2 months ago',
       text: '¡Que bacano!',
       textLanguageCode: 'es',
-    },
-    {
-      authorAttribution: {
+      flagContentURI: null,
+      googleMapsURI: null,
+      originalText: null,
+      originalTextLanguageCode: null,
+      visitDateMonth: null,
+      visitDateYear: null,
+    }),
+    mapsJsData({
+      authorAttribution: mapsJsData({
         displayName: 'Author 3',
         uri: '',
         photoURI: 'https://lh3.googlusercontent.com/a/3',
-      },
+      }),
       publishTime: new Date(1234567890),
       rating: 4,
       relativePublishTimeDescription: '3 months ago',
       text: '',
       textLanguageCode: 'en',
-    },
+      flagContentURI: null,
+      googleMapsURI: null,
+      originalText: null,
+      originalTextLanguageCode: null,
+      visitDateMonth: null,
+      visitDateYear: null,
+    }),
   ],
   svgIconMaskURI: 'https://maps.gstatic.com/mapfiles/mask.png',
   types: ['restaurant', 'food', 'establishment'],
@@ -199,7 +228,7 @@ export const SAMPLE_FAKE_PLACE_RESULT: google.maps.places.PlaceResult = {
     {long_name: 'Main Street', short_name: 'Main St', types: ['route']},
   ],
   adr_address: '<span class="street-address">123 Main Street</span>',
-  business_status: 'OPERATIONAL' as google.maps.places.BusinessStatus,
+  business_status: 'OPERATIONAL',
   formatted_address: '123 Main Street',
   formatted_phone_number: '(234) 567-8910',
   geometry: {

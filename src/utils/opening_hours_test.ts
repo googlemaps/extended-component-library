@@ -7,16 +7,18 @@
 // import 'jasmine'; (google3-only)
 
 import {makeFakePlace} from '../testing/fake_place.js';
+import {mapsJsData} from './googlemaps_types.js';
 
 import {formatTimeWithWeekdayMaybe, getUpcomingCloseTime, getUpcomingOpenTime, isOpen, isSoon, NextCloseTimeStatus, NextOpenTimeStatus} from './opening_hours.js';
 
 type OpeningHours = google.maps.places.OpeningHours;
 type OpeningHoursPeriod = google.maps.places.OpeningHoursPeriod;
 
-const ALWAYS_OPEN_HOURS: OpeningHours = {
+const ALWAYS_OPEN_HOURS: OpeningHours = mapsJsData({
   periods: [makePeriod(0, 0)],
-  weekdayDescriptions: []
-};
+  weekdayDescriptions: [],
+  specialDays: [],
+});
 
 const SF_OFFSET = -7 * 60;
 const NYC_OFFSET = -4 * 60;
@@ -33,12 +35,12 @@ const SAT = 6;
 function makePeriod(
     startDay: number, startHour: number, endDay?: number,
     endHour?: number): OpeningHoursPeriod {
-  const open = {day: startDay, hour: startHour, minute: 0};
+  const open = mapsJsData({day: startDay, hour: startHour, minute: 0});
   if ((endDay == null) || (endHour == null)) {
-    return {open, close: null};
+    return mapsJsData({open, close: null});
   }
-  const close = {day: endDay, hour: endHour, minute: 0};
-  return {open, close};
+  const close = mapsJsData({day: endDay, hour: endHour, minute: 0});
+  return mapsJsData({open, close});
 }
 
 function makeDateInLocale(
@@ -56,7 +58,7 @@ describe('Opening hours utilities', () => {
   describe('formatTimeWithWeekdayMaybe', () => {
     it('formats a relative time with a weekday when the absolute point is over 24 hours in the future',
        () => {
-         const point = {day: SAT, hour: 17, minute: 0};  // Saturday, 5:00 PM
+         const point = mapsJsData({day: SAT, hour: 17, minute: 0});  // Saturday, 5:00 PM
          const pointDate = new Date(
              '2023-04-08T17:00-04:00');  // Saturday, 5:00 PM Eastern Time
 
@@ -69,7 +71,7 @@ describe('Opening hours utilities', () => {
 
     it('formats a relative time without a weekday when the absolute point is less than 24 hours in the future',
        () => {
-         const point = {day: SAT, hour: 17, minute: 0};  // Saturday, 5:00 PM
+         const point = mapsJsData({day: SAT, hour: 17, minute: 0});  // Saturday, 5:00 PM
          const pointDate = new Date(
              '2023-04-08T17:00-04:00');  // Saturday, 5:00 PM Eastern Time
 
@@ -126,8 +128,8 @@ describe('Opening hours utilities', () => {
       const monday8AmSf = makeDateInLocale('2023-04-10T08:00', SF_OFFSET);
       const place = makeFakePlace({
         id: '123',
-        regularOpeningHours:
-            {periods: [mondayNineToFive], weekdayDescriptions: []},
+        regularOpeningHours: mapsJsData(
+            {periods: [mondayNineToFive], weekdayDescriptions: [], specialDays: []}),
         utcOffsetMinutes: SF_OFFSET
       });
 
@@ -142,8 +144,8 @@ describe('Opening hours utilities', () => {
          const monday4PmSf = makeDateInLocale('2023-04-10T16:00', SF_OFFSET);
          const place = makeFakePlace({
            id: '123',
-           regularOpeningHours:
-               {periods: [mondayNineToFive], weekdayDescriptions: []},
+           regularOpeningHours: mapsJsData(
+               {periods: [mondayNineToFive], weekdayDescriptions: [], specialDays: []}),
            utcOffsetMinutes: NYC_OFFSET
          });
 
@@ -154,14 +156,15 @@ describe('Opening hours utilities', () => {
 
     it('returns a closing time for status for a Place closing soon', () => {
       const thursday3PmSf = makeDateInLocale('2023-04-13T15:00', SF_OFFSET);
-      const regularOpeningHours: OpeningHours = {
+      const regularOpeningHours: OpeningHours = mapsJsData({
         periods: [
           makePeriod(WED, 9, WED, 17),  // Wed 9am - 5pm
           makePeriod(THU, 9, THU, 17),  // Thurs 9am - 5pm
           makePeriod(FRI, 9, SAT, 2),   // Friday 9am - Sat 2am
         ],
-        weekdayDescriptions: []
-      };
+        weekdayDescriptions: [],
+        specialDays: [],
+      });
       const place = makeFakePlace(
           {id: '123', regularOpeningHours, utcOffsetMinutes: SF_OFFSET});
 
@@ -175,12 +178,13 @@ describe('Opening hours utilities', () => {
     it('returns a closing time for a Place closing in over 24 hours from now',
        () => {
          const monday1pmSf = makeDateInLocale('2023-04-10T13:00', SF_OFFSET);
-         const regularOpeningHours: OpeningHours = {
+         const regularOpeningHours: OpeningHours = mapsJsData({
            periods: [
              makePeriod(MON, 9, FRI, 17),  // Mon 9am - Fri 5pm
            ],
-           weekdayDescriptions: []
-         };
+           weekdayDescriptions: [],
+           specialDays: [],
+         });
          const place = makeFakePlace(
              {id: '123', regularOpeningHours, utcOffsetMinutes: SF_OFFSET});
 
@@ -195,14 +199,15 @@ describe('Opening hours utilities', () => {
     it('handles a period which wraps the week', () => {
       // Sequence is (week start) -> (now) -> (period end) -> (period start)
       const monday8amSf = makeDateInLocale('2023-04-10T08:00', SF_OFFSET);
-      const regularOpeningHours: OpeningHours = {
+      const regularOpeningHours: OpeningHours = mapsJsData({
         periods: [
           makePeriod(WED, 9, WED, 17),  // Wed 9am - 5pm
           makePeriod(THU, 9, THU, 17),  // Thurs 9am - 5pm
           makePeriod(FRI, 18, MON, 9),  // Friday 6pm - Mon 9am
         ],
-        weekdayDescriptions: []
-      };
+        weekdayDescriptions: [],
+        specialDays: [],
+      });
       const place = makeFakePlace(
           {id: '123', regularOpeningHours, utcOffsetMinutes: SF_OFFSET});
 
@@ -216,14 +221,15 @@ describe('Opening hours utilities', () => {
     it('handles a period which wraps the week in the other direction', () => {
       // Sequence is (week start) -> (period end) -> (period start) -> (now)
       const saturday11pmSf = makeDateInLocale('2023-04-15T23:00', SF_OFFSET);
-      const regularOpeningHours: OpeningHours = {
+      const regularOpeningHours: OpeningHours = mapsJsData({
         periods: [
           makePeriod(WED, 9, WED, 17),  // Wed 9am - 5pm
           makePeriod(THU, 9, THU, 17),  // Thurs 9am - 5pm
           makePeriod(FRI, 18, SUN, 9),  // Friday 6pm - Sun 9am
         ],
-        weekdayDescriptions: []
-      };
+        weekdayDescriptions: [],
+        specialDays: [],
+      });
       const place = makeFakePlace(
           {id: '123', regularOpeningHours, utcOffsetMinutes: SF_OFFSET});
 
@@ -239,10 +245,11 @@ describe('Opening hours utilities', () => {
     it('returns a status if there is not enough information', () => {
       const place = makeFakePlace({
         id: '123',
-        regularOpeningHours: {
+        regularOpeningHours: mapsJsData({
           periods: [],
           weekdayDescriptions: [],
-        },
+          specialDays: [],
+        }),
         utcOffsetMinutes: undefined
       });
 
@@ -254,10 +261,11 @@ describe('Opening hours utilities', () => {
     it('returns a status if the place is never open', () => {
       const place = makeFakePlace({
         id: '123',
-        regularOpeningHours: {
+        regularOpeningHours: mapsJsData({
           periods: [],
           weekdayDescriptions: [],
-        },
+          specialDays: [],
+        }),
         utcOffsetMinutes: 0
       });
 
@@ -270,10 +278,11 @@ describe('Opening hours utilities', () => {
       const tuesdayNoonSf = makeDateInLocale('2023-04-11T12:00', SF_OFFSET);
       const place = makeFakePlace({
         id: '123',
-        regularOpeningHours: {
+        regularOpeningHours: mapsJsData({
           periods: [makePeriod(TUE, 9, TUE, 17)],  // Tuesday 9am - 5pm
           weekdayDescriptions: [],
-        },
+          specialDays: [],
+        }),
         utcOffsetMinutes: SF_OFFSET
       });
 
@@ -284,14 +293,15 @@ describe('Opening hours utilities', () => {
 
     it('returns the next time the place will open', () => {
       const thursday6PmSf = makeDateInLocale('2023-04-13T18:00', SF_OFFSET);
-      const regularOpeningHours: OpeningHours = {
+      const regularOpeningHours: OpeningHours = mapsJsData({
         periods: [
           makePeriod(WED, 9, WED, 17),  // Wed 9am - 5pm
           makePeriod(THU, 9, THU, 17),  // Thurs 9am - 5pm
           makePeriod(FRI, 9, SAT, 2),   // Friday 9am - Sat 2am
         ],
-        weekdayDescriptions: []
-      };
+        weekdayDescriptions: [],
+        specialDays: [],
+      });
       const place = makeFakePlace(
           {id: '123', regularOpeningHours, utcOffsetMinutes: SF_OFFSET});
 
@@ -309,14 +319,15 @@ describe('Opening hours utilities', () => {
       //
       // Sequence is (now) -> (week start) -> (period start)
       const saturdayNoonSf = makeDateInLocale('2023-04-15T12:00', SF_OFFSET);
-      const regularOpeningHours: OpeningHours = {
+      const regularOpeningHours: OpeningHours = mapsJsData({
         periods: [
           makePeriod(WED, 9, WED, 17),  // Wed 9am - 5pm
           makePeriod(THU, 9, THU, 17),  // Thurs 9am - 5pm
           makePeriod(FRI, 9, SAT, 2),   // Friday 9am - Sat 2am
         ],
-        weekdayDescriptions: []
-      };
+        weekdayDescriptions: [],
+        specialDays: [],
+      });
       const place = makeFakePlace(
           {id: '123', regularOpeningHours, utcOffsetMinutes: SF_OFFSET});
 
@@ -345,10 +356,11 @@ describe('Opening hours utilities', () => {
 
     it('returns true if the place is open now', () => {
       const mondayNoonSf = makeDateInLocale('2023-08-07T12:00', SF_OFFSET);
-      const regularOpeningHours: OpeningHours = {
+      const regularOpeningHours: OpeningHours = mapsJsData({
         periods: [makePeriod(MON, 9, MON, 17)],  // Wed 9am - 5pm
-        weekdayDescriptions: []
-      };
+        weekdayDescriptions: [],
+        specialDays: [],
+      });
       const place = makeFakePlace(
           {id: '123', regularOpeningHours, utcOffsetMinutes: SF_OFFSET});
 
@@ -357,10 +369,11 @@ describe('Opening hours utilities', () => {
 
     it('returns false if the place is not open now', () => {
       const mondayEarlySf = makeDateInLocale('2023-08-07T06:00', SF_OFFSET);
-      const regularOpeningHours: OpeningHours = {
+      const regularOpeningHours: OpeningHours = mapsJsData({
         periods: [makePeriod(MON, 9, MON, 17)],  // Wed 9am - 5pm
-        weekdayDescriptions: []
-      };
+        weekdayDescriptions: [],
+        specialDays: [],
+      });
       const place = makeFakePlace(
           {id: '123', regularOpeningHours, utcOffsetMinutes: SF_OFFSET});
 

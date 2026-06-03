@@ -12,7 +12,7 @@ import {map} from 'lit/directives/map.js';
 import {Environment} from '../../testing/environment.js';
 import {makeFakePlace} from '../../testing/fake_place.js';
 import {LifecycleSpyController} from '../../testing/lifecycle_spy.js';
-import type {PlaceResult} from '../../utils/googlemaps_types.js';
+import {mapsJsData, type PlaceResult} from '../../utils/googlemaps_types.js';
 
 import {BooleanField, PLACE_BOOLEAN_FIELDS, PlaceFieldBoolean} from './place_field_boolean.js';
 
@@ -67,8 +67,8 @@ describe('place field boolean test', () => {
       servesVegetarianFood: true,
       servesWine: true,
 
-      businessStatus: 'OPERATIONAL' as google.maps.places.BusinessStatus,
-      regularOpeningHours: {periods: [], weekdayDescriptions: []},
+      businessStatus: 'OPERATIONAL',
+      regularOpeningHours: mapsJsData({periods: [], weekdayDescriptions: [], specialDays: []}),
       utcOffsetMinutes: 0,
       isOpen: async () => true,
     });
@@ -103,8 +103,8 @@ describe('place field boolean test', () => {
       servesVegetarianFood: false,
       servesWine: false,
 
-      businessStatus: 'OPERATIONAL' as google.maps.places.BusinessStatus,
-      regularOpeningHours: {periods: [], weekdayDescriptions: []},
+      businessStatus: 'OPERATIONAL',
+      regularOpeningHours: mapsJsData({periods: [], weekdayDescriptions: [], specialDays: []}),
       utcOffsetMinutes: 0,
       isOpen: async () => false,
     });
@@ -209,7 +209,7 @@ describe('place field boolean test', () => {
     // behavior for `isOpen()`, in combination with PlaceBooleanField's own
     // field checking.
     const openPlaceResult: PlaceResult = {
-      business_status: 'OPERATIONAL' as google.maps.places.BusinessStatus,
+      business_status: 'OPERATIONAL',
       utc_offset_minutes: 0,
       opening_hours: {
         // This gets discarded and replaced with the fake implementation.
@@ -217,8 +217,7 @@ describe('place field boolean test', () => {
       }
     };
     const closedPlaceResult: PlaceResult = {
-      business_status: 'CLOSED_TEMPORARILY' as
-          google.maps.places.BusinessStatus,
+      business_status: 'CLOSED_TEMPORARILY',
       utc_offset_minutes: 0,
       opening_hours: {
         // This gets discarded and replaced with the fake implementation.
@@ -226,7 +225,7 @@ describe('place field boolean test', () => {
       }
     };
     const undefinedPlaceResult: PlaceResult = {
-      business_status: 'OPERATIONAL' as google.maps.places.BusinessStatus,
+      business_status: 'OPERATIONAL',
     };
 
     const [openEl, closedEl, undefinedEl] = await prepareState(html`
@@ -246,13 +245,13 @@ describe('place field boolean test', () => {
   it('handles the field value opening_hours.isOpen', async () => {
     const openPlace = makeFakePlace({
       id: '1234567890',
-      businessStatus: 'OPERATIONAL' as google.maps.places.BusinessStatus,
-      regularOpeningHours: {periods: [], weekdayDescriptions: []},
+      businessStatus: 'OPERATIONAL',
+      regularOpeningHours: mapsJsData({periods: [], weekdayDescriptions: [], specialDays: []}),
       utcOffsetMinutes: 0,
       isOpen: async () => true,
     });
     const openPlaceResult: PlaceResult = {
-      business_status: 'OPERATIONAL' as google.maps.places.BusinessStatus,
+      business_status: 'OPERATIONAL',
       utc_offset_minutes: 0,
       opening_hours: {
         // This gets discarded and replaced with the fake implementation.
@@ -277,19 +276,19 @@ describe('place field boolean test', () => {
     const isOpenSpy = jasmine.createSpy('isOpen');
     const noBusinessStatusPlace = makeFakePlace({
       id: '1234567890',
-      regularOpeningHours: {periods: [], weekdayDescriptions: []},
+      regularOpeningHours: mapsJsData({periods: [], weekdayDescriptions: [], specialDays: []}),
       isOpen: isOpenSpy,
     });
     const noOpeningHoursPlace = makeFakePlace({
       id: '1234567890',
-      businessStatus: 'OPERATIONAL' as google.maps.places.BusinessStatus,
+      businessStatus: 'OPERATIONAL',
       utcOffsetMinutes: 0,
       isOpen: isOpenSpy,
     });
     const noUtcOffsetPlace = makeFakePlace({
       id: '1234567890',
-      businessStatus: 'OPERATIONAL' as google.maps.places.BusinessStatus,
-      regularOpeningHours: {periods: [], weekdayDescriptions: []},
+      businessStatus: 'OPERATIONAL',
+      regularOpeningHours: mapsJsData({periods: [], weekdayDescriptions: [], specialDays: []}),
       isOpen: isOpenSpy,
     });
 
@@ -310,8 +309,8 @@ describe('place field boolean test', () => {
     const isOpenSpy = jasmine.createSpy('isOpen').and.resolveTo(true);
     const place = makeFakePlace({
       id: '1234567890',
-      businessStatus: 'OPERATIONAL' as google.maps.places.BusinessStatus,
-      regularOpeningHours: {periods: [], weekdayDescriptions: []},
+      businessStatus: 'OPERATIONAL',
+      regularOpeningHours: mapsJsData({periods: [], weekdayDescriptions: [], specialDays: []}),
       utcOffsetMinutes: 0,
       isOpen: isOpenSpy,
     });
@@ -350,7 +349,7 @@ describe('place field boolean test', () => {
        const place = makeFakePlace({
          id: '1234567890',
          businessStatus: 'OPERATIONAL' as google.maps.places.BusinessStatus,
-         regularOpeningHours: {periods: [], weekdayDescriptions: []},
+         regularOpeningHours: mapsJsData({periods: [], weekdayDescriptions: [], specialDays: []}),
          utcOffsetMinutes: 0,
        });
        const [el] = await prepareState(html`

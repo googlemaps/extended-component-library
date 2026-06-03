@@ -11,7 +11,7 @@ import {html} from 'lit';
 import {Environment} from '../../testing/environment.js';
 import {makeFakePlace} from '../../testing/fake_place.js';
 import {LifecycleSpyController} from '../../testing/lifecycle_spy.js';
-import type {Place, PlaceResult} from '../../utils/googlemaps_types.js';
+import {mapsJsData, type Place, type PlaceResult} from '../../utils/googlemaps_types.js';
 import {PlaceFieldBoolean} from '../place_field_boolean/place_field_boolean.js';
 import {PlaceFieldText} from '../place_field_text/place_field_text.js';
 
@@ -20,17 +20,17 @@ import {PlaceOpeningHours} from './place_opening_hours.js';
 
 const FAKE_PLACE_PROPS: Pick<Place, 'id'>&Partial<Place> = {
   id: '1234567890',
-  businessStatus: 'OPERATIONAL' as google.maps.places.BusinessStatus,
-  regularOpeningHours: {
+  businessStatus: 'OPERATIONAL',
+  regularOpeningHours: mapsJsData({
     periods: [
-      {
-        open: {day: 0, hour: 10, minute: 0},
-        close: {day: 0, hour: 20, minute: 0},
-      },
-      {
-        open: {day: 6, hour: 10, minute: 0},
-        close: {day: 6, hour: 21, minute: 30},
-      },
+      mapsJsData({
+        open: mapsJsData({day: 0, hour: 10, minute: 0}),
+        close: mapsJsData({day: 0, hour: 20, minute: 0}),
+      }),
+      mapsJsData({
+        open: mapsJsData({day: 6, hour: 10, minute: 0}),
+        close: mapsJsData({day: 6, hour: 21, minute: 30}),
+      }),
     ],
     weekdayDescriptions: [
       'Monday: Closed',
@@ -41,7 +41,8 @@ const FAKE_PLACE_PROPS: Pick<Place, 'id'>&Partial<Place> = {
       'Saturday: 10:00 AM - 9:30 PM',
       'Sunday: 10:00 AM - 8:00 PM',
     ],
-  },
+    specialDays: [],
+  }),
   utcOffsetMinutes: 0,  // Important! Specifies when regularOpeningHours occur.
 };
 
@@ -92,7 +93,7 @@ describe('PlaceOpeningHours', () => {
   it('renders business status when place is temporarily closed', async () => {
     const place = makeFakePlace({
       ...FAKE_PLACE_PROPS,
-      businessStatus: 'CLOSED_TEMPORARILY' as google.maps.places.BusinessStatus,
+      businessStatus: 'CLOSED_TEMPORARILY',
       regularOpeningHours: undefined,
     });
     const el = await prepareState({place});
@@ -143,15 +144,16 @@ describe('PlaceOpeningHours', () => {
   it('labels place as open 24 hours when close time is null', async () => {
     const place = makeFakePlace({
       ...FAKE_PLACE_PROPS,
-      regularOpeningHours: {
+      regularOpeningHours: mapsJsData({
         periods: [
-          {
-            open: {day: 0, hour: 0, minute: 0},
+          mapsJsData({
+            open: mapsJsData({day: 0, hour: 0, minute: 0}),
             close: null,
-          },
+          }),
         ],
         weekdayDescriptions: [],
-      },
+        specialDays: [],
+      }),
     });
     const el = await prepareState({place});
 
@@ -161,10 +163,11 @@ describe('PlaceOpeningHours', () => {
   it('omits closing time when data is insufficient', async () => {
     const place = makeFakePlace({
       ...FAKE_PLACE_PROPS,
-      regularOpeningHours: {
+      regularOpeningHours: mapsJsData({
         periods: [],
         weekdayDescriptions: [],
-      },
+        specialDays: [],
+      }),
     });
     const el = await prepareState({place});
 

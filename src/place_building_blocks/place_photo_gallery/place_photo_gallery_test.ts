@@ -12,7 +12,7 @@ import {ifDefined} from 'lit/directives/if-defined.js';
 import {Environment} from '../../testing/environment.js';
 import {makeFakePhoto, makeFakePlace, makeFakePlacePhoto} from '../../testing/fake_place.js';
 import {getDeepActiveElement} from '../../utils/deep_element_access.js';
-import type {Place, PlaceResult} from '../../utils/googlemaps_types.js';
+import {mapsJsData, type Place, type PlaceResult} from '../../utils/googlemaps_types.js';
 
 import {PlacePhotoGallery} from './place_photo_gallery.js';
 
@@ -23,32 +23,36 @@ const fakePlace = makeFakePlace({
     makeFakePhoto(
         {
           authorAttributions: [
-            {
+            mapsJsData({
               displayName: 'Author A1',
               photoURI: '',
               uri: 'https://www.google.com/maps/contrib/A1',
-            },
-            {
+            }),
+            mapsJsData({
               displayName: 'Author A2',
               photoURI: '',
               uri: '',
-            },
+            }),
           ],
           heightPx: 1000,
           widthPx: 2000,
+          googleMapsURI: null,
+          flagContentURI: null,
         },
         'https://lh3.googleusercontent.com/places/A'),
     makeFakePhoto(
         {
           authorAttributions: [
-            {
+            mapsJsData({
               displayName: 'Author B1',
               photoURI: '',
               uri: 'https://www.google.com/maps/contrib/B1',
-            },
+            }),
           ],
           heightPx: 2000,
           widthPx: 1000,
+          googleMapsURI: null,
+          flagContentURI: null,
         },
         'https://lh3.googleusercontent.com/places/B'),
     makeFakePhoto(
@@ -56,6 +60,8 @@ const fakePlace = makeFakePlace({
           authorAttributions: [],
           heightPx: 1340,
           widthPx: 1420,
+          googleMapsURI: null,
+          flagContentURI: null,
         },
         'https://lh3.googleusercontent.com/places/C'),
   ],

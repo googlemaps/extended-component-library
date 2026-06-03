@@ -9,7 +9,8 @@ import {html} from 'lit';
 import {APILoader} from '../api_loader/api_loader.js';
 
 import {extractTextAndURL} from './dom_utils.js';
-import type {LatLng, LatLngLiteral, Place, PlaceResult, PriceLevel} from './googlemaps_types.js';
+import {mapsJsData} from './googlemaps_types.js';
+import type {LatLng, LatLngLiteral, Place, PlaceResult, PriceLevelString} from './googlemaps_types.js';
 import {isOpen} from './opening_hours.js';
 
 /**
@@ -58,15 +59,16 @@ function isLatLng(data: LatLng|LatLngLiteral): data is LatLng {
   return typeof data.lat === 'function';
 }
 
-const PRICE_LEVEL_CONVERSIONS: Record<PriceLevel, number> = Object.freeze({
-  'FREE': 0,
-  'INEXPENSIVE': 1,
-  'MODERATE': 2,
-  'EXPENSIVE': 3,
-  'VERY_EXPENSIVE': 4,
-});
+const PRICE_LEVEL_CONVERSIONS: Record<PriceLevelString, number> =
+    Object.freeze({
+      'FREE': 0,
+      'INEXPENSIVE': 1,
+      'MODERATE': 2,
+      'EXPENSIVE': 3,
+      'VERY_EXPENSIVE': 4,
+    });
 
-const REVERSE_PRICE_LEVEL_CONVERSIONS: Record<number, PriceLevel> =
+const REVERSE_PRICE_LEVEL_CONVERSIONS: Record<number, PriceLevelString> =
     Object.freeze(Object.fromEntries(
         Object.entries(PRICE_LEVEL_CONVERSIONS).map(tup => tup.reverse())));
 
@@ -74,7 +76,8 @@ const REVERSE_PRICE_LEVEL_CONVERSIONS: Record<number, PriceLevel> =
  * Converts an enum price level to the corresponding numeric value. If passed a
  * numeric value, it will return it unchanged.
  */
-export function priceLevelToNumeric(level: number|PriceLevel): number|null {
+export function priceLevelToNumeric(level: number|PriceLevelString): number|
+    null {
   if (typeof level === 'number') return level;
   return PRICE_LEVEL_CONVERSIONS[level] ?? null;
 }
@@ -83,7 +86,8 @@ export function priceLevelToNumeric(level: number|PriceLevel): number|null {
  * Converts a numeric price level to the corresponding enum value. If passed an
  * enum value, it will return it unchanged.
  */
-export function numericToPriceLevel(level: number|PriceLevel): PriceLevel|null {
+export function numericToPriceLevel(level: number|PriceLevelString):
+    PriceLevelString|null {
   if (typeof level !== 'number') return level;
   return REVERSE_PRICE_LEVEL_CONVERSIONS[level] ?? null;
 }
@@ -176,124 +180,119 @@ export function hasDataForOpeningCalculations(place: Place): boolean {
 
 /** Converts `PlaceResult` data to `Place`-compatible field values. */
 function convertToPlaceFields(placeResult: PlaceResult): Partial<Place> {
-  const place: Partial<Place> = {};
-  if (placeResult.address_components !== undefined) {
-    place.addressComponents = placeResult.address_components.map(
-        (component: google.maps.GeocoderAddressComponent) => ({
-          longText: component.long_name,
-          shortText: component.short_name,
-          types: component.types,
-        }));
-  }
-  if (placeResult.adr_address !== undefined) {
-    place.adrFormatAddress = placeResult.adr_address;
-  }
-  if (placeResult.business_status !== undefined) {
-    place.businessStatus = placeResult.business_status;
-  }
-  if (placeResult.formatted_address !== undefined) {
-    place.formattedAddress = placeResult.formatted_address;
-  }
-  if (placeResult.formatted_phone_number !== undefined) {
-    place.nationalPhoneNumber = placeResult.formatted_phone_number;
-  }
-  if (placeResult.geometry !== undefined) {
-    const geometry = placeResult.geometry;
-    if (geometry.location) place.location = geometry.location;
-    if (geometry.viewport) place.viewport = geometry.viewport;
-  }
-  if (placeResult.html_attributions !== undefined) {
-    place.attributions = placeResult.html_attributions.map((html: string) => {
-      const {text, url} = extractTextAndURL(html);
-      return {provider: text ?? '', providerURI: url ?? null};
-    });
-  }
-  if (placeResult.icon_background_color !== undefined) {
-    place.iconBackgroundColor = placeResult.icon_background_color;
-  }
-  if (placeResult.icon_mask_base_uri !== undefined) {
-    place.svgIconMaskURI = placeResult.icon_mask_base_uri;
-  }
-  if (placeResult.international_phone_number !== undefined) {
-    place.internationalPhoneNumber = placeResult.international_phone_number;
-  }
-  if (placeResult.name !== undefined) {
-    place.displayName = placeResult.name;
-  }
-  if (placeResult.opening_hours !== undefined) {
-    const periods = placeResult.opening_hours.periods?.map(
-        (period: google.maps.places.PlaceOpeningHoursPeriod) => ({
-          open: makeOpeningHoursPoint(period.open),
-          // A place that is open 24/7 does not return a close period.
-          close: period.close ? makeOpeningHoursPoint(period.close) : null,
-        }));
-    place.regularOpeningHours = {
-      periods: periods ?? [],
-      weekdayDescriptions: placeResult.opening_hours.weekday_text ?? [],
-    };
-  }
-  if (placeResult.photos !== undefined) {
-    place.photos =
-        placeResult.photos.map((photo: google.maps.places.PlacePhoto) => {
-          const attributions = photo.html_attributions.map((html) => {
-            const {text, url} = extractTextAndURL(html);
-            return {displayName: text ?? '', photoURI: '', uri: url || ''};
-          });
-          return {
-            authorAttributions: attributions,
-            getURI: photo.getUrl,
-            heightPx: photo.height,
-            widthPx: photo.width,
-          };
+  return {
+    ...(placeResult.address_components !== undefined && {
+      addressComponents: placeResult.address_components.map(
+          (component: google.maps.GeocoderAddressComponent) => mapsJsData({
+            longText: component.long_name,
+            shortText: component.short_name,
+            types: component.types,
+          }))
+    }),
+    ...(placeResult.adr_address !== undefined &&
+        {adrFormatAddress: placeResult.adr_address}),
+    ...(placeResult.business_status !== undefined &&
+        {businessStatus: placeResult.business_status}),
+    ...(placeResult.formatted_address !== undefined &&
+        {formattedAddress: placeResult.formatted_address}),
+    ...(placeResult.formatted_phone_number !== undefined &&
+        {nationalPhoneNumber: placeResult.formatted_phone_number}),
+    ...(placeResult.geometry !== undefined && {
+      location: placeResult.geometry.location,
+      viewport: placeResult.geometry.viewport,
+    }),
+    ...(placeResult.html_attributions !== undefined && {
+      attributions: placeResult.html_attributions.map((html: string) => {
+        const {text, url} = extractTextAndURL(html);
+        return mapsJsData({
+          provider: text ?? '',
+          providerURI: url ?? null,
         });
-  }
-  if (placeResult.place_id !== undefined) {
-    place.id = placeResult.place_id;
-  }
-  if (placeResult.plus_code !== undefined) {
-    place.plusCode = {
-      compoundCode: placeResult.plus_code.compound_code ?? null,
-      globalCode: placeResult.plus_code.global_code,
-    };
-  }
-  if (placeResult.price_level !== undefined) {
-    place.priceLevel = numericToPriceLevel(placeResult.price_level);
-  }
-  if (placeResult.rating !== undefined) {
-    place.rating = placeResult.rating;
-  }
-  if (placeResult.reviews !== undefined) {
-    place.reviews = placeResult.reviews.map(
-        (review: google.maps.places.PlaceReview) => ({
-          authorAttribution: {
-            displayName: review.author_name,
-            photoURI: review.profile_photo_url,
-            uri: review.author_url || '',
-          },
-          // Convert publish time from milliseconds to a Date object.
-          publishTime: new Date(review.time),
-          rating: review.rating ?? null,
-          relativePublishTimeDescription: review.relative_time_description,
-          text: review.text,
-          textLanguageCode: review.language,
-        }));
-  }
-  if (placeResult.types !== undefined) {
-    place.types = placeResult.types;
-  }
-  if (placeResult.url !== undefined) {
-    place.googleMapsURI = placeResult.url;
-  }
-  if (placeResult.user_ratings_total !== undefined) {
-    place.userRatingCount = placeResult.user_ratings_total;
-  }
-  if (placeResult.utc_offset_minutes !== undefined) {
-    place.utcOffsetMinutes = placeResult.utc_offset_minutes;
-  }
-  if (placeResult.website !== undefined) {
-    place.websiteURI = placeResult.website;
-  }
-  return place;
+      })
+    }),
+    ...(placeResult.icon_background_color !== undefined &&
+        {iconBackgroundColor: placeResult.icon_background_color}),
+    ...(placeResult.icon_mask_base_uri !== undefined &&
+        {svgIconMaskURI: placeResult.icon_mask_base_uri}),
+    ...(placeResult.international_phone_number !== undefined &&
+        {internationalPhoneNumber: placeResult.international_phone_number}),
+    ...(placeResult.name !== undefined && {displayName: placeResult.name}),
+    ...(placeResult.opening_hours !== undefined && {
+      regularOpeningHours: mapsJsData({
+        periods:
+            placeResult.opening_hours.periods?.map(
+                (period:
+                     google.maps.places.PlaceOpeningHoursPeriod) => mapsJsData({
+                  open: makeOpeningHoursPoint(period.open),
+                  // A place that is open 24/7 does not return a close period.
+                  close: period.close ? makeOpeningHoursPoint(period.close) :
+                                        null,
+                })) ??
+            [],
+        weekdayDescriptions: placeResult.opening_hours.weekday_text ?? [],
+        specialDays: [],
+      })
+    }),
+    ...(placeResult.photos !== undefined && {
+      photos: placeResult.photos.map((photo: google.maps.places.PlacePhoto) => {
+        const attributions = photo.html_attributions.map((html) => {
+          const {text, url} = extractTextAndURL(html);
+          return mapsJsData({
+            displayName: text ?? '',
+            photoURI: '',
+            uri: url || '',
+          });
+        });
+        return mapsJsData({
+          authorAttributions: attributions,
+          getURI: photo.getUrl,
+          heightPx: photo.height,
+          widthPx: photo.width,
+          flagContentURI: null,
+          googleMapsURI: null,
+        });
+      })
+    }),
+    ...(placeResult.place_id !== undefined && {id: placeResult.place_id}),
+    ...(placeResult.plus_code !== undefined && {
+      plusCode: mapsJsData({
+        compoundCode: placeResult.plus_code.compound_code ?? null,
+        globalCode: placeResult.plus_code.global_code,
+      })
+    }),
+    ...(placeResult.price_level !== undefined &&
+        {priceLevel: numericToPriceLevel(placeResult.price_level)}),
+    ...(placeResult.rating !== undefined && {rating: placeResult.rating}),
+    ...(placeResult.reviews !== undefined && {
+      reviews: placeResult.reviews.map(
+          (review: google.maps.places.PlaceReview) => mapsJsData({
+            authorAttribution: mapsJsData({
+              displayName: review.author_name,
+              photoURI: review.profile_photo_url,
+              uri: review.author_url || '',
+            }),
+            // Convert publish time from milliseconds to a Date object.
+            publishTime: new Date(review.time),
+            rating: review.rating ?? null,
+            relativePublishTimeDescription: review.relative_time_description,
+            text: review.text,
+            textLanguageCode: review.language,
+            flagContentURI: null,
+            googleMapsURI: null,
+            originalText: null,
+            originalTextLanguageCode: null,
+            visitDateMonth: null,
+            visitDateYear: null,
+          }))
+    }),
+    ...(placeResult.types !== undefined && {types: placeResult.types}),
+    ...(placeResult.url !== undefined && {googleMapsURI: placeResult.url}),
+    ...(placeResult.user_ratings_total !== undefined &&
+        {userRatingCount: placeResult.user_ratings_total}),
+    ...(placeResult.utc_offset_minutes !== undefined &&
+        {utcOffsetMinutes: placeResult.utc_offset_minutes}),
+    ...(placeResult.website !== undefined && {websiteURI: placeResult.website}),
+  };
 }
 
 /**
@@ -303,7 +302,7 @@ function convertToPlaceFields(placeResult: PlaceResult): Partial<Place> {
 function makeOpeningHoursPoint(
     {day, hours, minutes}: google.maps.places.PlaceOpeningHoursTime):
     google.maps.places.OpeningHoursPoint {
-  return {day, hour: hours, minute: minutes};
+  return mapsJsData({day, hour: hours, minute: minutes});
 }
 
 const PLACE_TO_PLACE_RESULT_FIELDS:

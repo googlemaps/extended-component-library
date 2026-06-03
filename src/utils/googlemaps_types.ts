@@ -43,8 +43,8 @@ export type MapElement = google.maps.MapElement;
 /** google.maps.places.PlaceResult */
 export type PlaceResult = google.maps.places.PlaceResult;
 
-/** google.maps.places.PriceLevel */
-export type PriceLevel = google.maps.places.PriceLevel;
+/** google.maps.places.PriceLevelString */
+export type PriceLevelString = google.maps.places.PriceLevelString;
 
 /** HTML tag names for Maps JS web components. */
 export interface HTMLElementTagNameMap {
@@ -52,89 +52,22 @@ export interface HTMLElementTagNameMap {
   'gmp-advanced-marker': AdvancedMarkerElement;
 }
 
-/** google.maps.addressValidation.ComponentName */
-export declare interface ComponentName {
-  text: string;
-  languageCode: string;
-}
-
-/** google.maps.addressValidation.ConfirmationLevel */
-export enum ConfirmationLevel {
-  CONFIRMATION_LEVEL_UNSPECIFIED = 'CONFIRMATION_LEVEL_UNSPECIFIED',
-  CONFIRMED = 'CONFIRMED',
-  UNCONFIRMED_BUT_PLAUSIBLE = 'UNCONFIRMED_BUT_PLAUSIBLE',
-  UNCONFIRMED_AND_SUSPICIOUS = 'UNCONFIRMED_AND_SUSPICIOUS'
-}
-
 /** google.maps.addressValidation.AddressComponent */
-export declare interface AddressComponent {
-  componentName: ComponentName;
-  componentType: string;
-  confirmationLevel: ConfirmationLevel|null;
-  isInferred: boolean;
-  isSpellCorrected: boolean;
-  isReplaced: boolean;
-  isUnexpected: boolean;
-}
-
-/** google.maps.addressValidation.PostalAddress */
-export declare interface PostalAddress {
-  revision?: number;
-  regionCode?: string;
-  languageCode?: string;
-  postalCode?: string;
-  sortingCode?: string;
-  administrativeArea?: string;
-  locality?: string;
-  sublocality?: string;
-  addressLines?: string[];
-  recipients?: string[];
-  organization?: string;
-}
+export type AddressComponent = google.maps.addressValidation.AddressComponent;
 
 /** google.maps.addressValidation.Address */
-export declare interface Address {
-  formattedAddress: string|null;
-  postalAddress: PostalAddress|null;
-  components: AddressComponent[];
-  missingComponentTypes?: string[];
-  unconfirmedComponentTypes?: string[];
-  unresolvedTokens?: string[];
-}
-
-/** google.maps.addressValidation.Granularity */
-export enum Granularity {
-  GRANULARITY_UNSPECIFIED = 'GRANULARITY_UNSPECIFIED',
-  SUB_PREMISE = 'SUB_PREMISE',
-  PREMISE = 'PREMISE',
-  PREMISE_PROXIMITY = 'PREMISE_PROXIMITY',
-  BLOCK = 'BLOCK',
-  ROUTE = 'ROUTE',
-  OTHER = 'OTHER'
-}
+export type Address = google.maps.addressValidation.Address;
 
 /** google.maps.addressValidation.Verdict */
-export declare interface Verdict {
-  inputGranularity: Granularity|null;
-  validationGranularity: Granularity|null;
-  geocodeGranularity: Granularity|null;
-  isAddressComplete: boolean;
-  hasUnconfirmedComponents: boolean;
-  hasInferredComponents: boolean;
-  hasReplacedComponents: boolean;
-}
+export type Verdict = google.maps.addressValidation.Verdict;
 
 /** google.maps.addressValidation.AddressValidation */
-export declare interface AddressValidation {
-  responseId: string|null;
-  verdict: Verdict|null;
-  address: Address|null;
+export type AddressValidation = google.maps.addressValidation.AddressValidation;
 
-  // These properties exist but are not needed for the ECL.
-  // geocode: Geocode;
-  // metadata: AddressMetadata;
-  // uspsData: UspsData;
-
-  // This property is not yet published.
-  // englishLatinAddress: Address;
+/**
+ * Adds a toJSON() method to a plain object, making it assignable to the data
+ * types in the Google Maps JS API typings (google.maps.places.Photo, etc.)
+ */
+export function mapsJsData<T>(data: T): T&{toJSON(): T} {
+  return {...data, toJSON: () => data};
 }
