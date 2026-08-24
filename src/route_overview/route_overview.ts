@@ -141,7 +141,7 @@ export class RouteOverview extends BaseComponent {
             .zIndex=${this.zIndex}>
           <svg width="20" height="20" style="position: relative; top: 13px;">
             <circle cx="10" cy="10" r="6" stroke="black" stroke-width="3" 
-                fill="white"/>
+                fill="white"></circle>
           </svg>
         </gmpx-route-marker>
         <gmpx-route-marker
@@ -150,9 +150,9 @@ export class RouteOverview extends BaseComponent {
             .zIndex=${this.zIndex + 1}>
           <svg width="20" height="20" style="position: relative; top: 13px;">
             <circle cx="10" cy="10" r="7" stroke="black" stroke-width="3" 
-                fill="white"/>
+                fill="white"></circle>
             <circle cx="10" cy="10" r="1.8" stroke="black" stroke-width="3" 
-                fill="black"/>
+                fill="black"></circle>
           </svg>
         </gmpx-route-marker>
         ${when(!this.noPin, () => html`
