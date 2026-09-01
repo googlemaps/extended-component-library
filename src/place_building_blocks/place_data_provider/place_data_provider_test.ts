@@ -66,11 +66,13 @@ describe('PlaceDataProvider', () => {
             // Properties of Place are getter-only in the typings
             Object.defineProperty(place, 'displayName', {
               get: () => 'Fake Place',
+              configurable: true,
             });
           }
           if (fields.includes('rating')) {
             Object.defineProperty(place, 'rating', {
               get: () => 5,
+              configurable: true,
             });
           }
           return {place};
@@ -238,29 +240,9 @@ describe('PlaceDataProvider', () => {
     expect(fetchFieldsSpy).toHaveBeenCalledOnceWith({fields: ['displayName']});
   });
 
-  it(`fetches new child's field when same place id is set again`, async () => {
-    const {provider, fetchFieldsSpy} = await prepareState(html`
-      <gmpx-place-data-provider place="id8-B">
-        <gmpx-test-consumer field="displayName">
-        </gmpx-test-consumer>
-      </gmpx-place-data-provider>
-    `);
-
-    fetchFieldsSpy.calls.reset();
-    const consumer = new TestConsumer();
-    consumer.field = 'rating';
-    provider.appendChild(consumer);
-    provider.place = provider.place;
-    await env.waitForStability();
-
-    expect(fetchFieldsSpy).toHaveBeenCalledOnceWith({
-      fields: ['displayName', 'attributions', 'rating'],
-    });
-  });
-
-  it(`fetches new child's field when same place obj is set again`, async () => {
+  it(`does not re-fetch when same place object is set again`, async () => {
     const fetchFieldsSpy = jasmine.createSpy('fetchFields');
-    const place = makeFakePlace({id: 'id8-C'});
+    const place = makeFakePlace({id: 'id8-D'});
     attachFetchFieldsSpy(place, fetchFieldsSpy);
 
     const {provider} = await prepareState(html`
@@ -271,39 +253,40 @@ describe('PlaceDataProvider', () => {
     `);
 
     fetchFieldsSpy.calls.reset();
-    const consumer = new TestConsumer();
-    consumer.field = 'rating';
-    provider.appendChild(consumer);
     provider.place = provider.place;
     await env.waitForStability();
 
-    expect(fetchFieldsSpy).toHaveBeenCalledOnceWith({
-      fields: ['displayName', 'attributions', 'rating'],
-    });
+    expect(fetchFieldsSpy).not.toHaveBeenCalled();
   });
 
-  it(`updates a consumer when the same place object is set again`, async () => {
-    const place = makeFakePlace({id: 'id8-D'});
+  // Issue #305: Prevents infinite error loops when a requesterror handler re-renders with the same Place instance.
+  it('does not enter an error loop when gmpx-requesterror listener re-assigns identical place', async () => {
+    const quotaError = new Error(
+        'PLACES_GET_PLACE: 429 RESOURCE_EXHAUSTED: Quota exceeded');
+    const fetchFieldsSpy =
+        jasmine.createSpy('fetchFields').and.rejectWith(quotaError);
+    const place = makeFakePlace({
+      id: 'test-data-provider-quota',
+      fetchFields: fetchFieldsSpy,
+    });
 
-    // Use auto-fetch-disabled so the fetch callback doesn't update the
-    // consumer. We're testing that setting the place property will trigger an
-    // update on its own.
-    const {provider} = await prepareState(html`
-      <gmpx-place-data-provider .place=${place} auto-fetch-disabled>
-        <gmpx-test-consumer field="displayName">
-        </gmpx-test-consumer>
+    const root = env.render(html`
+      <gmpx-place-data-provider .place=${place}>
+        <gmpx-test-consumer field="displayName"></gmpx-test-consumer>
       </gmpx-place-data-provider>
     `);
+    const provider =
+        root.querySelector<PlaceDataProvider>('gmpx-place-data-provider')!;
 
-    const consumer = new TestConsumer();
-    consumer.field = 'rating';
-    provider.appendChild(consumer);
-    await env.waitForStability();
-    consumer.resetUpdateCount();
-    provider.place = provider.place;
+    const listenerSpy = jasmine.createSpy('listener').and.callFake(() => {
+      provider.place = place;
+    });
+    provider.addEventListener('gmpx-requesterror', listenerSpy);
+
     await env.waitForStability();
 
-    expect(consumer.getUpdateCount()).toEqual(1);
+    expect(fetchFieldsSpy).toHaveBeenCalledTimes(1);
+    expect(listenerSpy).toHaveBeenCalledTimes(1);
   });
 
   it('fetches when the place is changed', async () => {
@@ -532,4 +515,106 @@ describe('PlaceDataProvider', () => {
        const consumer = provider.children[0] as TestConsumer;
        expect(consumer.contextPlace?.displayName).toBe('Foo Inc');
      });
+
+  describe('refresh', () => {
+    it(`fetches new child's field when refresh is called with place id`, async () => {
+      const {provider, fetchFieldsSpy} = await prepareState(html`
+        <gmpx-place-data-provider place="id8-B">
+          <gmpx-test-consumer field="displayName">
+          </gmpx-test-consumer>
+        </gmpx-place-data-provider>
+      `);
+
+      fetchFieldsSpy.calls.reset();
+      const consumer = new TestConsumer();
+      consumer.field = 'rating';
+      provider.appendChild(consumer);
+      await provider.refresh();
+      await env.waitForStability();
+
+      expect(fetchFieldsSpy).toHaveBeenCalledOnceWith({
+        fields: ['displayName', 'attributions', 'rating'],
+      });
+    });
+
+    it(`fetches new child's field when refresh is called with place obj`, async () => {
+      const fetchFieldsSpy = jasmine.createSpy('fetchFields');
+      const place = makeFakePlace({id: 'id8-C'});
+      attachFetchFieldsSpy(place, fetchFieldsSpy);
+
+      const {provider} = await prepareState(html`
+        <gmpx-place-data-provider .place=${place}>
+          <gmpx-test-consumer field="displayName">
+          </gmpx-test-consumer>
+        </gmpx-place-data-provider>
+      `);
+
+      fetchFieldsSpy.calls.reset();
+      const consumer = new TestConsumer();
+      consumer.field = 'rating';
+      provider.appendChild(consumer);
+      await provider.refresh();
+      await env.waitForStability();
+
+      expect(fetchFieldsSpy).toHaveBeenCalledOnceWith({
+        fields: ['displayName', 'attributions', 'rating'],
+      });
+    });
+
+    it('re-fetches fields on demand when refresh is called with Place object', async () => {
+      const fetchFieldsSpy = jasmine.createSpy('fetchFields').and.resolveTo({});
+      const place = makeFakePlace({
+        id: 'test-data-provider-refresh',
+        fetchFields: fetchFieldsSpy,
+      });
+
+      const root = env.render(html`
+        <gmpx-place-data-provider .place=${place}>
+          <gmpx-test-consumer field="displayName"></gmpx-test-consumer>
+        </gmpx-place-data-provider>
+      `);
+      await env.waitForStability();
+      fetchFieldsSpy.calls.reset();
+
+      const provider =
+          root.querySelector<PlaceDataProvider>('gmpx-place-data-provider')!;
+      await provider.refresh();
+      await env.waitForStability();
+
+      expect(fetchFieldsSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('sets error state, dispatches gmpx-requesterror event, and rejects when refresh fails', async () => {
+      const fetchFieldsSpy = jasmine.createSpy('fetchFields').and.rejectWith(
+          new Error('Quota exceeded'));
+      const place = makeFakePlace({
+        id: 'test-data-provider-refresh-error',
+        fetchFields: fetchFieldsSpy,
+      });
+
+      const requestErrorListener = jasmine.createSpy('requestErrorListener');
+      const root = env.render(html`
+        <gmpx-place-data-provider
+          .place=${place}
+          @gmpx-requesterror=${(e: Event) => requestErrorListener(e)}
+        >
+          <gmpx-test-consumer field="displayName"></gmpx-test-consumer>
+          <div slot="error">Custom Error Content</div>
+        </gmpx-place-data-provider>
+      `);
+      await env.waitForStability();
+      fetchFieldsSpy.calls.reset();
+      requestErrorListener.calls.reset();
+
+      const provider =
+          root.querySelector<PlaceDataProvider>('gmpx-place-data-provider')!;
+
+      await expectAsync(provider.refresh()).toBeRejectedWithError('Quota exceeded');
+      await env.waitForStability();
+
+      expect(fetchFieldsSpy).toHaveBeenCalledTimes(1);
+      expect(requestErrorListener).toHaveBeenCalledTimes(1);
+      expect(provider.renderRoot.querySelector('slot')?.name).toBe('error');
+    });
+  });
 });

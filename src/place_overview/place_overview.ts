@@ -320,7 +320,7 @@ export class PlaceOverview extends BaseComponent {
    * `place` property to render it directly (note that the attribute, on the
    * other hand, only accepts a Place ID string).
    */
-  @property({type: String, hasChanged: () => true})
+  @property({type: String})
   place?: string|Place|PlaceResult;
 
   /**
@@ -588,6 +588,16 @@ export class PlaceOverview extends BaseComponent {
       </div>
     </gmpx-optional-data-container-internal>
   `;
+
+  /**
+   * Re-queries the set of consumed fields and re-fetches place data.
+   *
+   * Rejects with an error from the underlying Google Maps JavaScript API call
+   * and dispatches a `gmpx-requesterror` event if the fetch fails.
+   */
+  async refresh(): Promise<void> {
+    await this.dataProviderElement?.refresh();
+  }
 
   private forwardRequestError(event: RequestErrorEvent) {
     if (event.target && event.target === this.dataProviderElement) {

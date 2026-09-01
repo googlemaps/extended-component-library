@@ -76,13 +76,13 @@ export class PlaceDataProvider extends BaseComponent {
    * as a string to have the component look up and display details from the
    * Place API. The component will not make further API requests if child
    * components are added at a later time. If required, explicitly request a
-   * data fetch by re-setting `place` to the same Place ID as before.
+   * data fetch by calling `refresh()`.
    *
    * Alternatively, assign a `Place` or `PlaceResult` object to the `place`
    * property to render it directly (note that the attribute, on the other hand,
    * only accepts a Place ID string).
    */
-  @property({type: String, hasChanged: () => true})
+  @property({type: String})
   place?: string|Place|PlaceResult;
 
   /**
@@ -117,13 +117,27 @@ export class PlaceDataProvider extends BaseComponent {
 
   private set contextPlace(place: Place|undefined) {
     // Force an update to the consumer even if the place is the same object.
-    // This allows developers to refresh the consumers by setting
-    // provider.place = provider.place, for example if they added/fetched new
-    // fields to the place object themselves.
+    // This ensures consumers are notified when contextPlace is refreshed
+    // via provider.refresh().
     this.placeContextProvider.setValue(place, /* force= */ true);
   }
 
   private static readonly placeLookup = new CachedPlaceLookup(CACHE_SIZE);
+
+  /**
+   * Re-queries the set of consumed fields and re-fetches place data.
+   *
+   * Rejects with an error from the underlying Google Maps JavaScript API call
+   * and dispatches a `gmpx-requesterror` event if the fetch fails.
+   */
+  async refresh(): Promise<void> {
+    try {
+      await this.updatePlace();
+    } catch (error: unknown) {
+      this.handleError(error);
+      throw error;
+    }
+  }
 
   protected override render() {
     return choose(this.loadingState, [

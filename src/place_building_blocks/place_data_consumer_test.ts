@@ -146,14 +146,14 @@ describe('Place Data Consumer base class', () => {
     expect(placeChangedSpy).toHaveBeenCalledWith(FAKE_CONTEXT_PLACE, undefined);
   });
 
-  it('invokes callback when place from context is updated', async () => {
+  it('invokes callback when place from context is refreshed', async () => {
     const consumer =
         await preparePlaceConsumer(/* place= */ undefined, FAKE_CONTEXT_PLACE);
     const provider = consumer.parentElement as PlaceDataProvider;
     const placeChangedSpy =
         spyOn(TestPlaceDataConsumerConcrete.prototype, 'placeChangedCallback');
 
-    provider.place = FAKE_CONTEXT_PLACE;
+    await provider.refresh();
     await env.waitForStability();
 
     expect(consumer.getPlace()).toBe(FAKE_CONTEXT_PLACE);
@@ -184,7 +184,7 @@ describe('Place Data Consumer base class', () => {
        const placeChangedSpy = spyOn(
            TestPlaceDataConsumerConcrete.prototype, 'placeChangedCallback');
 
-       provider.place = FAKE_CONTEXT_PLACE;
+       await provider.refresh();
        await env.waitForStability();
 
        expect(consumer.getPlace()).toBe(FAKE_PLACE);

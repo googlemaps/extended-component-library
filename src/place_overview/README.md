@@ -61,6 +61,17 @@ This component uses [named slots](https://developer.mozilla.org/en-US/docs/Web/A
 | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | action    | Optionally specify elements to be displayed as actions for this Place. We recommend using `<gmpx-icon-button>` elements for this purpose, which are styled consistently with Place Overview and designed to produce the best result. Note that smaller sizes of Place Overview may suppress the display of some or all action elements. |
 
+## Methods
+
+### `refresh()`
+
+Re-queries the set of consumed fields and re-fetches place data.
+
+Rejects with an error from the underlying Google Maps JavaScript API call
+and dispatches a `gmpx-requesterror` event if the fetch fails.
+
+**Returns:** `Promise<void>`
+
 ## Events
 
 | Name                | React Prop       | Type                | Description                                                                    |

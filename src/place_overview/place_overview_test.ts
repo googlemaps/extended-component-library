@@ -187,4 +187,164 @@ describe('PlaceOverview', () => {
           .not.toBeNull();
     }
   });
+
+  it('does not trigger redundant fetchFields calls when unchanged Place object is re-assigned on parent re-renders', async () => {
+    const fetchFieldsSpy = jasmine.createSpy('fetchFields').and.resolveTo({});
+    const place = makeFakePlace({
+      id: 'test-place-id-obj',
+      fetchFields: fetchFieldsSpy,
+    });
+
+    const root = env.render(html`
+      <gmpx-place-overview .place=${place}></gmpx-place-overview>
+    `);
+    await env.waitForStability();
+    fetchFieldsSpy.calls.reset();
+
+    const overview =
+        root.querySelector<PlaceOverview>('gmpx-place-overview')!;
+
+    // Multiple parent re-renders passing unchanged Place object reference:
+    overview.place = place;
+    await env.waitForStability();
+    overview.place = place;
+    await env.waitForStability();
+
+    expect(fetchFieldsSpy).not.toHaveBeenCalled();
+  });
+
+  // Issue #305: Prevents infinite error loops when a requesterror handler re-renders with the same Place instance.
+  it('does not enter an infinite loop when error listener re-assigns identical place object', async () => {
+    const quotaError = new Error(
+        'PLACES_GET_PLACE: 429 RESOURCE_EXHAUSTED: Quota exceeded');
+    const fetchFieldsSpy =
+        jasmine.createSpy('fetchFields').and.rejectWith(quotaError);
+    const place = makeFakePlace({
+      id: 'test-quota-place',
+      fetchFields: fetchFieldsSpy,
+    });
+
+    const root = env.render(html`
+      <gmpx-place-overview .place=${place}></gmpx-place-overview>
+    `);
+    const overview =
+        root.querySelector<PlaceOverview>('gmpx-place-overview')!;
+
+    // Simulates a reactive parent component updating state on error
+    // and re-assigning .place with the same Place object.
+    const listenerSpy = jasmine.createSpy('listener').and.callFake(() => {
+      overview.place = place;
+    });
+    overview.addEventListener('gmpx-requesterror', listenerSpy);
+
+    await env.waitForStability();
+
+    // Verifies that fetchFields was only called once for the initial attempt,
+    // and re-assigning .place did not trigger redundant fetch cycles.
+    expect(fetchFieldsSpy).toHaveBeenCalledTimes(1);
+    expect(listenerSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('fetches new data when Place reference actually changes', async () => {
+    const place1 = makeFakePlace({
+      id: 'test-place-1',
+      fetchFields: jasmine.createSpy('fetchFields1').and.resolveTo({}),
+    });
+
+    const fetchFieldsSpy2 = jasmine.createSpy('fetchFields2').and.resolveTo({});
+    const place2 = makeFakePlace({
+      id: 'test-place-2',
+      fetchFields: fetchFieldsSpy2,
+    });
+
+    const root = env.render(html`
+      <gmpx-place-overview .place=${place1}></gmpx-place-overview>
+    `);
+    await env.waitForStability();
+
+    const overview =
+        root.querySelector<PlaceOverview>('gmpx-place-overview')!;
+    overview.place = place2;
+    await env.waitForStability();
+
+    expect(fetchFieldsSpy2).toHaveBeenCalledOnceWith(jasmine.anything());
+  });
+
+  it('prevents redundant fetchFields calls when autoFetchDisabled is true', async () => {
+    const fetchFieldsSpy = jasmine.createSpy('fetchFields').and.resolveTo({});
+    const place = makeFakePlace({
+      id: 'test-place-id-autofetch',
+      fetchFields: fetchFieldsSpy,
+    });
+
+    const root = env.render(html`
+      <gmpx-place-overview .place=${place} auto-fetch-disabled>
+      </gmpx-place-overview>
+    `);
+    await env.waitForStability();
+
+    const overview =
+        root.querySelector<PlaceOverview>('gmpx-place-overview')!;
+    overview.place = place;
+    await env.waitForStability();
+
+    expect(fetchFieldsSpy).not.toHaveBeenCalled();
+  });
+
+  describe('refresh', () => {
+    it('re-fetches fields on demand when refresh is called with Place object', async () => {
+      const fetchFieldsSpy = jasmine.createSpy('fetchFields').and.resolveTo({});
+      const place = makeFakePlace({
+        id: 'test-place-refresh',
+        fetchFields: fetchFieldsSpy,
+      });
+
+      const root = env.render(html`
+        <gmpx-place-overview .place=${place}></gmpx-place-overview>
+      `);
+      await env.waitForStability();
+      fetchFieldsSpy.calls.reset();
+
+      const overview =
+          root.querySelector<PlaceOverview>('gmpx-place-overview')!;
+      await overview.refresh();
+      await env.waitForStability();
+
+      expect(fetchFieldsSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('sets error state, dispatches gmpx-requesterror event, and rejects when refresh fails', async () => {
+      const fetchFieldsSpy = jasmine.createSpy('fetchFields').and.rejectWith(
+          new Error('Quota exceeded'));
+      const place = makeFakePlace({
+        id: 'test-overview-refresh-error',
+        fetchFields: fetchFieldsSpy,
+      });
+
+      const requestErrorListener = jasmine.createSpy('requestErrorListener');
+      const root = env.render(html`
+        <gmpx-place-overview
+          .place=${place}
+          @gmpx-requesterror=${(e: Event) => requestErrorListener(e)}
+        >
+        </gmpx-place-overview>
+      `);
+      await env.waitForStability();
+      fetchFieldsSpy.calls.reset();
+      requestErrorListener.calls.reset();
+
+      const overview =
+          root.querySelector<PlaceOverview>('gmpx-place-overview')!;
+
+      await expectAsync(overview.refresh()).toBeRejectedWithError('Quota exceeded');
+      await env.waitForStability();
+
+      expect(fetchFieldsSpy).toHaveBeenCalledTimes(1);
+      expect(requestErrorListener).toHaveBeenCalledTimes(1);
+      const innerProvider = overview.renderRoot.querySelector<PlaceDataProvider>(
+          'gmpx-place-data-provider')!;
+      expect(innerProvider.shadowRoot?.querySelector('slot[name="error"]'))
+          .not.toBeNull();
+    });
+  });
 });
