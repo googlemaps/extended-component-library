@@ -9,7 +9,7 @@
 import {makeFakePlace} from '../testing/fake_place.js';
 import {mapsJsData} from './googlemaps_types.js';
 
-import {formatTimeWithWeekdayMaybe, getUpcomingCloseTime, getUpcomingOpenTime, isOpen, isSoon, NextCloseTimeStatus, NextOpenTimeStatus} from './opening_hours.js';
+import {formatTimeWithWeekdayMaybe, getUpcomingCloseTime, getUpcomingOpenTime, isOpen, isPlaceAlwaysOpen, isSoon, NextCloseTimeStatus, NextOpenTimeStatus} from './opening_hours.js';
 
 type OpeningHours = google.maps.places.OpeningHours;
 type OpeningHoursPeriod = google.maps.places.OpeningHoursPeriod;
@@ -352,6 +352,57 @@ describe('Opening hours utilities', () => {
         utcOffsetMinutes: 0,
       });
       expect(isOpen(place)).toBeTrue();
+      expect(isPlaceAlwaysOpen(place.regularOpeningHours!)).toBeTrue();
+    });
+
+    it('returns true if the place is always open with non-Sunday start day', () => {
+      const regularOpeningHours = mapsJsData({
+        periods: [makePeriod(MON, 0)],
+        weekdayDescriptions: [],
+        specialDays: [],
+      });
+      const place = makeFakePlace({
+        id: '123',
+        regularOpeningHours,
+        utcOffsetMinutes: 0,
+      });
+      expect(isOpen(place)).toBeTrue();
+      expect(isPlaceAlwaysOpen(regularOpeningHours)).toBeTrue();
+    });
+
+    it('returns true if the place is always open with non-midnight start time', () => {
+      const regularOpeningHours = mapsJsData({
+        periods: [makePeriod(MON, 8)],
+        weekdayDescriptions: [],
+        specialDays: [],
+      });
+      const place = makeFakePlace({
+        id: '123',
+        regularOpeningHours,
+        utcOffsetMinutes: 0,
+      });
+      expect(isOpen(place)).toBeTrue();
+      expect(isPlaceAlwaysOpen(regularOpeningHours)).toBeTrue();
+    });
+
+    it('prioritizes currentOpeningHours over regularOpeningHours for special hours', () => {
+      const regularOpeningHours: OpeningHours = mapsJsData({
+        periods: [makePeriod(SUN, 0)],
+        weekdayDescriptions: [],
+        specialDays: [],
+      });
+      const currentOpeningHours: OpeningHours = mapsJsData({
+        periods: [],
+        weekdayDescriptions: [],
+        specialDays: [],
+      });
+      const place = makeFakePlace({
+        id: '123',
+        currentOpeningHours,
+        regularOpeningHours,
+        utcOffsetMinutes: 0,
+      });
+      expect(isOpen(place)).toBeFalse();
     });
 
     it('returns true if the place is open now', () => {

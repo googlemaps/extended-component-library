@@ -10,6 +10,7 @@ import {choose} from 'lit/directives/choose.js';
 
 import {Deferred} from '../../utils/deferred.js';
 import type {Place} from '../../utils/googlemaps_types.js';
+import {isOpen} from '../../utils/opening_hours.js';
 import {hasDataForOpeningCalculations} from '../../utils/place_utils.js';
 import {Poll} from '../../utils/poll.js';
 import {PlaceDataConsumer} from '../place_data_consumer.js';
@@ -71,13 +72,19 @@ function toPlaceBooleanField(field: BooleanField): PlaceBooleanField {
 
 async function isOpenWithoutFetching(place: Place): Promise<boolean|undefined> {
   // On a `Place`, `isOpen()` will asynchronously fetch these three fields. If
-  // we don't have all three already, then we treat `isOpen` is missing data
+  // we don't have all three already, then we treat `isOpen` as missing data
   // instead of making an unintended API call.
   //
   // When using the Place Data Provider component, these fields will be
   // automatically fetched in advance.
   if (place && hasDataForOpeningCalculations(place)) {
-    return await place.isOpen();
+    try {
+      return await place.isOpen();
+    } catch {
+      // Fall back to the library's internal opening hours calculation in case
+      // isOpen() is not available.
+      return isOpen(place);
+    }
   } else {
     return undefined;
   }

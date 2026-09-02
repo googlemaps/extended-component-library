@@ -160,6 +160,55 @@ describe('PlaceOpeningHours', () => {
     expect(getOpenSlotText(el)).toHaveNormalizedText('Open 24 hours');
   });
 
+  it('labels place as open 24 hours when open day is not Sunday', async () => {
+    const place = makeFakePlace({
+      ...FAKE_PLACE_PROPS,
+      regularOpeningHours: mapsJsData({
+        periods: [
+          mapsJsData({
+            open: mapsJsData({day: 1, hour: 0, minute: 0}),
+            close: null,
+          }),
+        ],
+        weekdayDescriptions: [],
+        specialDays: [],
+      }),
+    });
+    const el = await prepareState({place});
+
+    expect(getOpenSlotText(el)).toHaveNormalizedText('Open 24 hours');
+  });
+
+  it('displays "Closed" without upcoming opening hours for a 24/7 location when isOpen() evaluates to false', async () => {
+    // If a 24/7 location is closed (e.g. special holiday hours or businessStatus),
+    // ensure it displays "Closed" rather than trying to calculate an upcoming opening time.
+    const place = makeFakePlace({
+      ...FAKE_PLACE_PROPS,
+      isOpen: async () => false,
+      regularOpeningHours: mapsJsData({
+        periods: [
+          mapsJsData({
+            open: mapsJsData({day: 0, hour: 0, minute: 0}),
+            close: null,
+          }),
+        ],
+        weekdayDescriptions: [
+          'Monday: Open 24 hours',
+          'Tuesday: Open 24 hours',
+          'Wednesday: Open 24 hours',
+          'Thursday: Open 24 hours',
+          'Friday: Open 24 hours',
+          'Saturday: Open 24 hours',
+          'Sunday: Open 24 hours',
+        ],
+        specialDays: [],
+      }),
+    });
+    const el = await prepareState({place});
+
+    expect(getClosedSlotText(el)).toHaveNormalizedText('Closed');
+  });
+
   it('omits closing time when data is insufficient', async () => {
     const place = makeFakePlace({
       ...FAKE_PLACE_PROPS,

@@ -216,8 +216,9 @@ export class PlaceOpeningHours extends PlaceDataConsumer {
               'PLACE_OPENS',
               formatTimeWithWeekdayMaybe(openPoint!, openDate!))}</span>`;
     } else if (status === NextOpenTimeStatus.ALREADY_OPEN) {
-      // In this case, the summary content isn't displayed by the Place Boolean
-      // Field component anyway. Return the default summary.
+      // If the location is already open according to regular hours, but
+      // isOpen() returned false (for example due to businessStatus or exceptional
+      // holiday hours), omit upcoming open time.
     }
 
     return html`

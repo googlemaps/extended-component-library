@@ -344,6 +344,33 @@ describe('place field boolean test', () => {
        expect(lifecycleSpy.hostUpdatedCount).toBe(1);
      });
 
+  it('falls back to library isOpen() when place.isOpen() throws', async () => {
+    const place = makeFakePlace({
+      id: '1234567890',
+      businessStatus: 'OPERATIONAL',
+      regularOpeningHours: mapsJsData({
+        periods: [
+          mapsJsData({
+            open: mapsJsData({day: 0, hour: 0, minute: 0}),
+            close: null,
+          }),
+        ],
+        weekdayDescriptions: [],
+        specialDays: [],
+      }),
+      utcOffsetMinutes: 0,
+      isOpen: async () => {
+        throw new Error('Place.prototype.isOpen() is not available');
+      },
+    });
+
+    const [booleanEl] = await prepareState(
+        html`<gmpx-place-field-boolean field="isOpen()" .place=${
+            place}></gmpx-place-field-boolean>`);
+
+    expectTrueSlot(booleanEl);
+  });
+
   it('performs two renders for an asynchronously accessed property',
      async () => {
        const place = makeFakePlace({

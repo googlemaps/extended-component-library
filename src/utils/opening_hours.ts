@@ -58,13 +58,17 @@ export function isSoon(
   return ((date >= now) && ((date.valueOf() - now.valueOf()) < intervalMs));
 }
 
-/** Detects if a Place is declared as always open. */
-function isPlaceAlwaysOpen(openingHours: OpeningHours): boolean {
+/**
+ * Detects if a Place is declared as always open (24/7).
+ *
+ * In the Places API, places that are open 24/7 have a single period with no
+ * close point.
+ */
+export function isPlaceAlwaysOpen(openingHours: OpeningHours): boolean {
   return (
-      (openingHours.periods?.length === 1) && !openingHours.periods[0].close &&
-      (openingHours.periods[0].open.day === 0) &&
-      (openingHours.periods[0].open.hour === 0) &&
-      (openingHours.periods[0].open.minute === 0));
+      (openingHours.periods?.length === 1) &&
+      !openingHours.periods[0].close &&
+      !!openingHours.periods[0].open);
 }
 
 /** Gets the date components of the most recent Sunday (relative to UTC). */
@@ -264,12 +268,13 @@ export function getUpcomingOpenTime(
  * Temporary (until Place is GA) replacement for the built-in isOpen() method.
  */
 export function isOpen(place: Place, now = new Date()): boolean|undefined {
-  if (!place.regularOpeningHours || place.utcOffsetMinutes == null) {
+  const openingHours = place.currentOpeningHours ?? place.regularOpeningHours;
+  if (!openingHours || place.utcOffsetMinutes == null) {
     return undefined;
-  } else if (isPlaceAlwaysOpen(place.regularOpeningHours)) {
+  } else if (isPlaceAlwaysOpen(openingHours)) {
     return true;
   }
   const {period} =
-      getCurrentPeriod(place.regularOpeningHours, place.utcOffsetMinutes, now);
+      getCurrentPeriod(openingHours, place.utcOffsetMinutes, now);
   return !!period;
 }
