@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.7.0](https://github.com/googlemaps/extended-component-library/compare/v0.6.15...v0.7.0) (2026-09-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* If you rely on setting `elem.place = elem.place` to force a refresh, you will need to switch to a new, explicit `.refresh()` method.
+
+### Bug Fixes
+
+* address bug where 24/7 locations could be displayed as closed ([ec2181e](https://github.com/googlemaps/extended-component-library/commit/ec2181ed31c37833022fa9c912054df75f88522a))
+* resolve issue [#305](https://github.com/googlemaps/extended-component-library/issues/305) where looping could happen in typical declarative implementations ([6a33f51](https://github.com/googlemaps/extended-component-library/commit/6a33f5147e66ffbfbb3b9c7eea8f98507581bbbb))
+* update self-closing SVG tag to avoid parse errors ([e01ed52](https://github.com/googlemaps/extended-component-library/commit/e01ed52fecc7f805ddafbde4ab62d5bed432961c))
+
 ## [0.6.15](https://github.com/googlemaps/extended-component-library/compare/v0.6.14...v0.6.15) (2026-06-03)
 
 
