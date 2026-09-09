@@ -62,14 +62,14 @@ describe('PlaceDataProvider', () => {
   function attachFetchFieldsSpy(place: Place, fetchFieldsSpy: jasmine.Spy) {
     fetchFieldsSpy.and.callFake(
         async ({fields}: google.maps.places.FetchFieldsRequest) => {
-          if (fields.includes('displayName')) {
+          if ([...fields].includes('displayName')) {
             // Properties of Place are getter-only in the typings
             Object.defineProperty(place, 'displayName', {
               get: () => 'Fake Place',
               configurable: true,
             });
           }
-          if (fields.includes('rating')) {
+          if ([...fields].includes('rating')) {
             Object.defineProperty(place, 'rating', {
               get: () => 5,
               configurable: true,
