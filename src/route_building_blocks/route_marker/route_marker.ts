@@ -10,6 +10,8 @@ import {customElement, property} from 'lit/decorators.js';
 import {APILoader} from '../../api_loader/api_loader.js';
 import {Deferred} from '../../utils/deferred.js';
 import {AdvancedMarkerElement} from '../../utils/googlemaps_types.js';
+import type {DirectionsRoute, LatLng, LatLngLiteral, Route} from '../../utils/googlemaps_types.js';
+import {isRoutesApiRoute} from '../../utils/route_utils.js';
 import {MapController} from '../map_controller.js';
 import {RouteDataConsumer} from '../route_data_consumer.js';
 
@@ -112,12 +114,10 @@ export class RouteMarker extends RouteDataConsumer {
       marker.position = null;
       return;
     }
-    const firstLeg = route.legs[0];
-    const lastLeg = route.legs[route.legs.length - 1];
     if (!this.waypoint || this.waypoint === 'origin') {
-      marker.position = firstLeg.start_location;
+      marker.position = getStartLocation(route);
     } else if (this.waypoint === 'destination') {
-      marker.position = lastLeg.end_location;
+      marker.position = getEndLocation(route);
     } else {
       this.logger.error(`Unsupported waypoint "${
           this.waypoint}". Waypoint must be "origin" or "destination".`);
@@ -143,6 +143,25 @@ export class RouteMarker extends RouteDataConsumer {
     }
   }
 }
+
+function getStartLocation(route: Route|DirectionsRoute): LatLng|LatLngLiteral|
+    null {
+  if (isRoutesApiRoute(route)) return route.legs?.[0]?.startLocation ?? null;
+  // route is DirectionsRoute
+  return route.legs?.[0]?.start_location ?? null;
+}
+
+function getEndLocation(route: Route|DirectionsRoute): LatLng|LatLngLiteral|
+    null {
+  if (!route.legs?.length) return null;
+  const lastIndex = route.legs.length - 1;
+  if (isRoutesApiRoute(route)) {
+    return route.legs?.[lastIndex]?.endLocation ?? null;
+  }
+  // route is DirectionsRoute
+  return route.legs?.[lastIndex]?.end_location ?? null;
+}
+
 
 declare global {
   interface HTMLElementTagNameMap {

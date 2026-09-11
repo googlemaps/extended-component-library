@@ -136,10 +136,10 @@ describe('PlaceOverview', () => {
     });
   });
 
-  it(`emits request error event when Directions request fails`, async () => {
+  it(`emits request error event when Routes request fails`, async () => {
     const consoleErrorSpy = spyOn(console, 'error');
     const error = new Error('no direction results');
-    spyOn(env.fakeGoogleMapsHarness!, 'routeHandler').and.rejectWith(error);
+    spyOn(env.fakeGoogleMapsHarness!, 'computeRoutesHandler').and.rejectWith(error);
     const overview = await prepareState({});
     const dispatchEventSpy = spyOn(overview, 'dispatchEvent');
     overview.place = SAMPLE_FAKE_PLACE;

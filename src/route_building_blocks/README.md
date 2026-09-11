@@ -8,7 +8,7 @@ The route data provider component, along with the route marker and polyline comp
 
 To build your own custom rendering of a route, you'll want to combine the following:
 
-* A [Route Data Provider](./route_data_provider/README.md) component to fetch data from the Directions API.
+* A [Route Data Provider](./route_data_provider/README.md) component to fetch data from the Routes API.
 * One or more [Route Marker](./route_marker/README.md) or [Route Polyline](./route_polyline/README.md) building block components.
 
 The building block components must be wrapped in both a data provider and a `<gmp-map>` component in your HTML. For example,
