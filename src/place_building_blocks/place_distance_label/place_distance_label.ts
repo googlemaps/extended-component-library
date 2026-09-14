@@ -8,11 +8,9 @@ import {css, html, PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 
 import {WebFont, WebFontController} from '../../base/web_font_controller.js';
-import type {LatLng, LatLngLiteral, Place} from '../../utils/googlemaps_types.js';
-import {makeWaypoint} from '../../utils/place_utils.js';
+import {RoutesController} from '../../route_building_blocks/routes_controller.js';
+import type {LatLng, LatLngLiteral, Place, RouteLeg} from '../../utils/googlemaps_types.js';
 import {PlaceDataConsumer} from '../place_data_consumer.js';
-
-import {DirectionsController} from './directions_controller.js';
 
 
 type TravelMode = google.maps.TravelMode;
@@ -29,23 +27,6 @@ function getIconNameFromTravelMode(travelMode: TravelModeAttribute): string {
     default:
       return 'directions_car';
   }
-}
-
-/**
- * Converts data into a format suitable for specifying a place in the
- * `DirectionsRequest`.
- *
- * @return A `google.maps.Place` object that is identified by exactly one of
- *     Place ID, location, or query, with preference in that order.
- */
-function makePlaceForDirectionsRequest(data: LatLng|LatLngLiteral|Place|null|
-                                       undefined): google.maps.Place|null {
-  if (!data) return null;
-  const {placeId, location, query} = makeWaypoint(data);
-  if (placeId) return {placeId};
-  if (location) return {location};
-  if (query) return {query};
-  return null;
 }
 
 /**
@@ -74,77 +55,77 @@ export class PlaceDistanceLabel extends PlaceDataConsumer {
   /** Starting location or Place. */
   @property({attribute: false}) origin?: LatLng|LatLngLiteral|Place;
 
-  @state() private directionsData?: google.maps.DirectionsLeg;
+  @state() private routesData?: RouteLeg;
 
   protected readonly fontLoader =
       new WebFontController(this, [WebFont.MATERIAL_SYMBOLS_OUTLINED]);
 
-  private readonly directionsController = new DirectionsController(this);
-  private isFetchingDirectionsData = false;
+  private readonly routesController = new RoutesController(this);
+  private isFetchingRoutesData = false;
 
   protected override willUpdate(changedProperties: PropertyValues) {
     super.willUpdate(changedProperties);
 
-    // Re-fetch directions data if either origin or travel mode changes.
+    // Re-fetch routes data if either origin or travel mode changes.
     if (changedProperties.has('origin') ||
         changedProperties.has('travelMode')) {
-      this.updateDirectionsData();
+      this.updateRoutesData();
     }
   }
 
   protected override placeChangedCallback(
       value?: Place|null, oldValue?: Place|null) {
-    // Re-fetch directions data if Place ID of the destination changes.
+    // Re-fetch routes data if Place ID of the destination changes.
     if (value?.id !== oldValue?.id) {
-      this.updateDirectionsData();
+      this.updateRoutesData();
     }
   }
 
   protected override render() {
-    const {distance, duration} = this.directionsData ?? {};
-    if (this.isFetchingDirectionsData || !distance) return html``;
+    const {distance, duration} = this.routesData?.localizedValues ?? {};
+    if (this.isFetchingRoutesData || !distance) return html``;
 
     if (!(this.travelMode && duration)) {
-      return html`<span>${distance.text}</span>`;
+      return html`<span>${distance}</span>`;
     }
 
     return html`
       <span class="icon material-symbols-outlined">
         ${getIconNameFromTravelMode(this.travelMode)}
       </span>
-      <span>${duration.text}</span>
+      <span>${duration}</span>
     `;
   }
 
   /** @ignore */
   getRequiredFields(): Array<keyof Place> {
-    return [];  // Place ID alone is sufficient for a Directions request.
+    return [];  // Place ID alone is sufficient for a Routes request.
   }
 
   protected override placeHasData(): boolean {
-    return this.directionsData != null;
+    return this.routesData != null;
   }
 
-  private async updateDirectionsData() {
-    if (this.isFetchingDirectionsData) return;
-    const place = this.getPlace();
-    const origin = makePlaceForDirectionsRequest(this.origin);
-    const destination = makePlaceForDirectionsRequest(place);
+  private async updateRoutesData() {
+    if (this.isFetchingRoutesData) return;
+    const origin = this.origin;
+    const destination = this.getPlace();
     if (origin && destination) {
-      this.isFetchingDirectionsData = true;
-      const result = await this.directionsController.route({
+      this.isFetchingRoutesData = true;
+      const result = await this.routesController.computeRoutes({
         origin,
         destination,
         travelMode: (this.travelMode?.toUpperCase() ?? 'DRIVING') as TravelMode,
+        fields: ['legs']
       });
-      this.directionsData = result?.routes[0]?.legs[0];
+      this.routesData = result?.routes?.[0]?.legs?.[0];
       // When switching the travel mode between driving and undefined,
-      // this.directionsData is unchanged but we still want an update.
+      // this.routesData is unchanged but we still want an update.
       this.requestUpdate();
     } else {
-      this.directionsData = undefined;
+      this.routesData = undefined;
     }
-    this.isFetchingDirectionsData = false;
+    this.isFetchingRoutesData = false;
   }
 }
 

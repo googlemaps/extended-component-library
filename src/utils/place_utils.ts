@@ -26,9 +26,7 @@ export function isPlaceResult(place: Place|PlaceResult): place is PlaceResult {
 }
 
 /**
- * Contains info that describes the origin or destination of a journey. This
- * interface is compatible with `google.maps.Place` and is suitable for use in
- * a request to the Directions or Distance Matrix services.
+ * Contains info that describes the origin or destination of a journey.
  */
 export interface WaypointInfo {
   location?: LatLngLiteral;

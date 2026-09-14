@@ -28,14 +28,20 @@ export type AdvancedMarkerElement = google.maps.marker.AdvancedMarkerElement;
 /** google.maps.LatLng */
 export type LatLng = google.maps.LatLng;
 
+/** google.maps.LatLngLiteral */
+export type LatLngLiteral = google.maps.LatLngLiteral;
+
+/** google.maps.LatLngAltitude */
+export type LatLngAltitude = google.maps.LatLngAltitude;
+
+/** google.maps.LatLngAltitudeLiteral */
+export type LatLngAltitudeLiteral = google.maps.LatLngAltitudeLiteral;
+
 /** google.maps.LatLngBounds */
 export type LatLngBounds = google.maps.LatLngBounds;
 
 /** google.maps.LatLngBoundsLiteral */
 export type LatLngBoundsLiteral = google.maps.LatLngBoundsLiteral;
-
-/** google.maps.LatLngLiteral */
-export type LatLngLiteral = google.maps.LatLngLiteral;
 
 /** google.maps.MapElement */
 export type MapElement = google.maps.MapElement;
@@ -71,3 +77,31 @@ export type AddressValidation = google.maps.addressValidation.AddressValidation;
 export function mapsJsData<T>(data: T): T&{toJSON(): T} {
   return {...data, toJSON: () => data};
 }
+
+/** google.maps.routes.Route */
+export type Route = google.maps.routes.Route;
+
+/** google.maps.routes.RouteLeg */
+export type RouteLeg = google.maps.routes.RouteLeg;
+
+/** google.maps.routes.RouteLegStep */
+export type RouteLegStep = google.maps.routes.RouteLegStep;
+
+/** google.maps.routes.ComputeRoutesRequest */
+export type ComputeRoutesRequest = google.maps.routes.ComputeRoutesRequest;
+
+/** Awaited return type of Routes.computeRoutes() */
+export type ComputeRoutesResponse =
+    Awaited<ReturnType<typeof google.maps.routes.Route.computeRoutes>>;
+
+/** typeof google.maps.routes.Route */
+export type RouteConstructor = typeof google.maps.routes.Route;
+
+/** google.maps.DirectionsRoute */
+export type DirectionsRoute = google.maps.DirectionsRoute;
+
+/** google.maps.DirectionsLeg */
+export type DirectionsLeg = google.maps.DirectionsLeg;
+
+/** google.maps.DirectionsStep */
+export type DirectionsStep = google.maps.DirectionsStep;

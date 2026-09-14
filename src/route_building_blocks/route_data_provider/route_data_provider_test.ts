@@ -12,30 +12,31 @@ import {html, LitElement, TemplateResult} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 
 import {LoggingController} from '../../base/logging_controller.js';
-import {DirectionsController} from '../../place_building_blocks/place_distance_label/directions_controller.js';
 import {Environment} from '../../testing/environment.js';
+import type {ComputeRoutesResponse, Route} from '../../utils/googlemaps_types.js';
 import {routeContext} from '../route_data_consumer.js';
+import {RoutesController} from '../routes_controller.js';
 
 import {RouteDataProvider} from './route_data_provider.js';
 
-const FAKE_ROUTE = {} as google.maps.DirectionsRoute;
-const FAKE_DIRECTIONS_RESULT = {
+const FAKE_ROUTE = {} as Route;
+const FAKE_COMPUTE_ROUTES_RESPONSE = {
   routes: [FAKE_ROUTE]
-} as google.maps.DirectionsResult;
+} as ComputeRoutesResponse;
 
 @customElement('gmpx-fake-route-data-consumer')
 class FakeRouteDataConsumer extends LitElement {
   @consume({context: routeContext, subscribe: true})
   @property({attribute: false})
-  contextRoute: google.maps.DirectionsRoute|undefined;
+  contextRoute: Route|google.maps.DirectionsRoute|undefined;
 }
 
 describe('RouteDataProvider', () => {
   const env = new Environment();
 
   async function prepareState(template?: TemplateResult) {
-    const routeSpy = spyOn(DirectionsController.prototype, 'route')
-                         .and.resolveTo(FAKE_DIRECTIONS_RESULT);
+    const routeSpy = spyOn(RoutesController.prototype, 'computeRoutes')
+                         .and.resolveTo(FAKE_COMPUTE_ROUTES_RESPONSE);
     const errorSpy = spyOn(LoggingController.prototype, 'error');
     const root = env.render(
         template ??
@@ -59,10 +60,8 @@ describe('RouteDataProvider', () => {
 
     expect(routeSpy).toHaveBeenCalledTimes(1);
     const arg = routeSpy.calls.mostRecent().args[0];
-    expect((arg.origin as google.maps.Place).location)
-        .toEqual({lat: 1, lng: 2});
-    expect((arg.destination as google.maps.Place).location)
-        .toEqual({lat: 3, lng: 4});
+    expect(arg.origin).toEqual({lat: 1, lng: 2});
+    expect(arg.destination).toEqual({lat: 3, lng: 4});
     expect(provider.contextRoute).toBe(FAKE_ROUTE);
   });
 
@@ -75,10 +74,8 @@ describe('RouteDataProvider', () => {
 
     expect(routeSpy).toHaveBeenCalledTimes(1);
     const arg = routeSpy.calls.mostRecent().args[0];
-    expect((arg.origin as google.maps.Place).location)
-        .toEqual({lat: 5, lng: 6});
-    expect((arg.destination as google.maps.Place).location)
-        .toEqual({lat: 7, lng: 8});
+    expect(arg.origin).toEqual({lat: 5, lng: 6});
+    expect(arg.destination).toEqual({lat: 7, lng: 8});
     expect(provider.contextRoute).toBe(FAKE_ROUTE);
   });
 
@@ -89,8 +86,8 @@ describe('RouteDataProvider', () => {
 
     expect(routeSpy).toHaveBeenCalledTimes(1);
     const arg = routeSpy.calls.mostRecent().args[0];
-    expect((arg.origin as google.maps.Place).placeId).toEqual('abc');
-    expect((arg.destination as google.maps.Place).placeId).toEqual('123');
+    expect(arg.origin).toEqual('places/abc');
+    expect(arg.destination).toEqual('places/123');
     expect(provider.contextRoute).toBe(FAKE_ROUTE);
   });
 
@@ -103,8 +100,8 @@ describe('RouteDataProvider', () => {
 
     expect(routeSpy).toHaveBeenCalledTimes(1);
     const arg = routeSpy.calls.mostRecent().args[0];
-    expect((arg.origin as google.maps.Place).placeId).toEqual('def');
-    expect((arg.destination as google.maps.Place).placeId).toEqual('456');
+    expect(arg.origin).toEqual('places/def');
+    expect(arg.destination).toEqual('places/456');
     expect(provider.contextRoute).toBe(FAKE_ROUTE);
   });
 
@@ -115,8 +112,8 @@ describe('RouteDataProvider', () => {
 
     expect(routeSpy).toHaveBeenCalledTimes(1);
     const arg = routeSpy.calls.mostRecent().args[0];
-    expect((arg.origin as google.maps.Place).query).toEqual('abc');
-    expect((arg.destination as google.maps.Place).query).toEqual('123');
+    expect(arg.origin).toEqual('abc');
+    expect(arg.destination).toEqual('123');
     expect(provider.contextRoute).toBe(FAKE_ROUTE);
   });
 
@@ -129,25 +126,9 @@ describe('RouteDataProvider', () => {
 
     expect(routeSpy).toHaveBeenCalledTimes(1);
     const arg = routeSpy.calls.mostRecent().args[0];
-    expect((arg.origin as google.maps.Place).query).toEqual('def');
-    expect((arg.destination as google.maps.Place).query).toEqual('456');
+    expect(arg.origin).toEqual('def');
+    expect(arg.destination).toEqual('456');
     expect(provider.contextRoute).toBe(FAKE_ROUTE);
-  });
-
-  it('sets only one property on the origin/destination objects', async () => {
-    const {provider, routeSpy} = await prepareState();
-
-    provider.originPlaceId = 'def';
-    provider.destinationAddress = '456';
-    await env.waitForStability();
-
-    const arg = routeSpy.calls.mostRecent().args[0];
-    const origin = arg.origin as google.maps.Place;
-    const destination = arg.destination as google.maps.Place;
-    expect(origin.hasOwnProperty('location')).toBeFalse();
-    expect(origin.hasOwnProperty('query')).toBeFalse();
-    expect(destination.hasOwnProperty('location')).toBeFalse();
-    expect(destination.hasOwnProperty('placeId')).toBeFalse();
   });
 
   it('does nothing if only origin is provided', async () => {

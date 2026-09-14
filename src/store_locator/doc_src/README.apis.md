@@ -38,17 +38,17 @@ Please be sure to check this documentation for additional requirements and recom
 - [SKU: Atmosphere Data](https://developers.google.com/maps/billing-and-pricing/pricing#atmosphere-data) 
 - [SKU: Place Photo](https://developers.google.com/maps/billing-and-pricing/pricing#places-photo)
 
-### Directions API
+### Routes API
 
 Used to display a route from the end user's location to the selected listing, advanced feature set only.
 
 #### Documentation
 
-[Directions API documentation](https://developers.google.com/maps/documentation/javascript/directions). Please be sure to check this documentation for additional requirements and recommendations regarding your use.
+[Routes API documentation](https://developers.google.com/maps/documentation/javascript/routes). Please be sure to check this documentation for additional requirements and recommendations regarding your use.
 
 #### Pricing
 
-- [SKU: Directions](https://developers.google.com/maps/billing-and-pricing/pricing#directions)
+- [SKU: Routes: Compute Routes Essentials](https://developers.google.com/maps/billing-and-pricing/pricing#routes-pricing)
 
 ### Distance Matrix API
 
@@ -61,4 +61,3 @@ Used to sort and display travel times from the end user's location. Intermediate
 #### Pricing
 
 - [SKU: Distance Matrix](https://developers.google.com/maps/documentation/distance-matrix/usage-and-billing)
-

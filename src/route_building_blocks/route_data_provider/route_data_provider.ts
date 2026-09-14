@@ -8,20 +8,17 @@ import {provide} from '@lit/context';
 import {customElement, property} from 'lit/decorators.js';
 
 import {BaseComponent} from '../../base/base_component.js';
-import {DirectionsController} from '../../place_building_blocks/place_distance_label/directions_controller.js';
 import {LAT_LNG_LITERAL_ATTRIBUTE_CONVERTER} from '../../utils/attribute_converters.js';
+import type {DirectionsRoute, LatLng, LatLngLiteral, Route} from '../../utils/googlemaps_types.js';
 import {routeContext} from '../route_data_consumer.js';
-
-type DirectionsRoute = google.maps.DirectionsRoute;
-type LatLng = google.maps.LatLng;
-type LatLngLiteral = google.maps.LatLngLiteral;
+import {RoutesController} from '../routes_controller.js';
 
 /**
  * Provides route data to child components as context.
  *
- * This component can fetch route data from the Directions API, or forward a
- * `DirectionsRoute` object provided from elsewhere in code. The component will
- * locally cache route data to avoid redundant API requests.
+ * This component can fetch route data from the Routes API, or forward a
+ * `Route` or `DirectionsRoute` object provided from elsewhere in code. The
+ * component will locally cache route data to avoid redundant API requests.
  *
  * @slot - Elements to receive route data.
  *
@@ -41,7 +38,7 @@ export class RouteDataProvider extends BaseComponent {
     // update cycle. Don't trigger a second update when this happens.
     hasChanged: () => false,
   })
-  contextRoute: DirectionsRoute|undefined;
+  contextRoute: Route|DirectionsRoute|undefined;
 
   /**
    * The destination of the directions request as a lat/lng. When setting the
@@ -98,7 +95,7 @@ export class RouteDataProvider extends BaseComponent {
    * Route data to be provided to consumers directly, instead of making an API
    * call.
    */
-  @property({attribute: false}) route?: DirectionsRoute;
+  @property({attribute: false}) route?: Route|DirectionsRoute;
 
   /**
    * The travel mode of the directions request.
@@ -106,7 +103,7 @@ export class RouteDataProvider extends BaseComponent {
   @property({type: String, attribute: 'travel-mode', reflect: true})
   travelMode: Lowercase<google.maps.TravelMode> = 'driving';
 
-  private readonly directionsController = new DirectionsController(this);
+  private readonly routesController = new RoutesController(this);
 
   protected override updated() {
     this.updateContextRoute();
@@ -141,34 +138,36 @@ export class RouteDataProvider extends BaseComponent {
     }
   }
 
-  private async fetchRoute(): Promise<DirectionsRoute|undefined> {
-    // If the request fails, directionsController.route will dispatch a
+  private async fetchRoute(): Promise<Route|undefined> {
+    // If the request fails, routesController.computeRoutes() will dispatch a
     // RequestErrorEvent and return null.
-    const result = await this.directionsController.route({
+    const result = await this.routesController.computeRoutes({
       origin: this.getOriginRequestObject(),
       destination: this.getDestinationRequestObject(),
+      fields: ['legs', 'path', 'viewport'],
       travelMode: this.travelMode?.toUpperCase() as google.maps.TravelMode,
+      polylineQuality: 'HIGH_QUALITY',
     });
     return result?.routes ? result.routes[0] : undefined;
   }
 
-  private getOriginRequestObject(): google.maps.Place {
+  private getOriginRequestObject(): LatLng|LatLngLiteral|string {
     if (this.originLatLng) {
-      return {location: this.originLatLng};
+      return this.originLatLng;
     } else if (this.originPlaceId) {
-      return {placeId: this.originPlaceId};
+      return `places/${this.originPlaceId}`
     } else {
-      return {query: this.originAddress};
+      return this.originAddress ?? '';
     }
   }
 
-  private getDestinationRequestObject(): google.maps.Place {
+  private getDestinationRequestObject(): LatLng|LatLngLiteral|string {
     if (this.destinationLatLng) {
-      return {location: this.destinationLatLng};
+      return this.destinationLatLng;
     } else if (this.destinationPlaceId) {
-      return {placeId: this.destinationPlaceId};
+      return `places/${this.destinationPlaceId}`;
     } else {
-      return {query: this.destinationAddress};
+      return this.destinationAddress ?? '';
     }
   }
 }

@@ -14,10 +14,7 @@ import {when} from 'lit/directives/when.js';
 
 import {BaseComponent} from '../base/base_component.js';
 import {LAT_LNG_LITERAL_ATTRIBUTE_CONVERTER} from '../utils/attribute_converters.js';
-
-type DirectionsRoute = google.maps.DirectionsRoute;
-type LatLng = google.maps.LatLng;
-type LatLngLiteral = google.maps.LatLngLiteral;
+import type {DirectionsRoute, LatLng, LatLngLiteral, Route} from '../utils/googlemaps_types.js';
 
 const INNER_POLYLINE_BLUE = '#1faefb';
 const OUTER_POLYLINE_BLUE = '#2565cd';
@@ -27,7 +24,7 @@ const OUTER_POLYLINE_BLUE = '#2565cd';
  * including origin and destination markers, an outlined polyline, and viewport
  * management.
  *
- * This component can fetch route data from the Directions API, or use a
+ * This component can fetch route data from the Routes API, or use a `Route` or
  * `DirectionsRoute` object provided from elsewhere in code. The component will
  * locally cache route data to avoid redundant API requests.
  *
@@ -90,7 +87,7 @@ export class RouteOverview extends BaseComponent {
   /**
    * Route data to render directly, instead of making an API call.
    */
-  @property({attribute: false}) route?: DirectionsRoute;
+  @property({attribute: false}) route?: Route|DirectionsRoute;
 
   /**
    * The travel mode of the directions request.

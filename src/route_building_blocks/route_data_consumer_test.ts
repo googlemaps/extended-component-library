@@ -14,11 +14,12 @@ import {customElement, property} from 'lit/decorators.js';
 import {Environment} from '../testing/environment.js';
 import {makeFakeRoute} from '../testing/fake_route.js';
 
+import type {Route} from '../utils/googlemaps_types.js';
 import {routeContext, RouteDataConsumer} from './route_data_consumer.js';
 
 @customElement('gmpx-test-route-data-consumer')
 class TestRouteDataConsumer extends RouteDataConsumer {
-  getRoutePublic(): google.maps.DirectionsRoute|undefined {
+  getRoutePublic(): Route|google.maps.DirectionsRoute|undefined {
     return this.getRoute();
   }
 }
@@ -27,7 +28,7 @@ class TestRouteDataConsumer extends RouteDataConsumer {
 class FakeRouteDataProvider extends LitElement {
   @provide({context: routeContext})
   @property({attribute: false})
-  contextRoute: google.maps.DirectionsRoute|undefined;
+  contextRoute: Route|google.maps.DirectionsRoute|undefined;
 }
 
 describe('RouteDataConsumer', () => {

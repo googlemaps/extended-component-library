@@ -187,18 +187,18 @@ Note that the SKUs below (except Place Photo) are not triggered if you provide a
 - [SKU: Atmosphere Data](https://developers.google.com/maps/billing-and-pricing/pricing?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#atmosphere-data) (all sizes)
 - [SKU: Place Photo](https://developers.google.com/maps/billing-and-pricing/pricing?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#places-photo) (all sizes except `x-small` and `small`)
 
-### Directions API
+### Routes API
 
 Used when computing travel distance/duration from an origin.
 
 #### Documentation
 
-[Directions API documentation](https://developers.google.com/maps/documentation/javascript/directions?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components). Please be sure to check this documentation for additional requirements and recommendations regarding your use.
+[Routes API documentation](https://developers.google.com/maps/documentation/javascript/routes?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components). Please be sure to check this documentation for additional requirements and recommendations regarding your use.
 
 #### Pricing
 
 Note that the SKU below is only triggered if you specify a travel origin, and whenever the origin or travel mode changes.
 
-- [SKU: Directions](https://developers.google.com/maps/billing-and-pricing/pricing?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#directions) (all sizes)
+- [SKU: Routes: Compute Routes Essentials](https://developers.google.com/maps/billing-and-pricing/pricing?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components#routes-pricing) (all sizes)
 
 

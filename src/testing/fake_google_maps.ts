@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {LatLng, LatLngLiteral, Place, PlaceResult, SearchByTextRequest} from '../utils/googlemaps_types.js';
+import {ComputeRoutesRequest, ComputeRoutesResponse, LatLng, LatLngLiteral, Place, PlaceResult, SearchByTextRequest} from '../utils/googlemaps_types.js';
 
 import {makeFakeAutocomplete} from './fake_autocomplete.js';
 import {makeFakeDistanceMatrixResponse} from './fake_distance_matrix.js';
@@ -36,11 +36,12 @@ export class FakeGoogleMapsHarness {
 
   /**
    * Override this function to control the response of a
-   * `google.maps.DirectionsService.route()` request.
+   * `google.maps.routes.Route.computeRoutes()` request.
    */
-  routeHandler = (request: google.maps.DirectionsRequest) => Promise.resolve({
+  computeRoutesHandler = (request: ComputeRoutesRequest) => Promise.resolve({
     routes: [makeFakeRoute()],
-  } as google.maps.DirectionsResult);
+  } as unknown as ComputeRoutesResponse);
+
 
   /**
    * Override this function to control the response of a
@@ -149,9 +150,9 @@ export class FakeGoogleMapsHarness {
         }
       },
       'routes': {
-        DirectionsService: class {
-          route(request: google.maps.DirectionsRequest) {
-            return harness.routeHandler(request);
+        Route: class {
+          static computeRoutes(request: ComputeRoutesRequest) {
+            return harness.computeRoutesHandler(request);
           }
         },
 

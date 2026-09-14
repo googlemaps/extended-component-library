@@ -11,21 +11,49 @@ import {html, TemplateResult} from 'lit';
 import {LoggingController} from '../../base/logging_controller.js';
 import {Environment} from '../../testing/environment.js';
 import {FakeMapElement} from '../../testing/fake_gmp_components.js';
-import {FakeLatLng} from '../../testing/fake_lat_lng.js';
-import {makeFakeLeg, makeFakeRoute} from '../../testing/fake_route.js';
+import {FakeLatLng, FakeLatLngAltitude} from '../../testing/fake_lat_lng.js';
+import {makeFakeDirectionsLeg, makeFakeDirectionsRoute, makeFakeLeg, makeFakeRoute} from '../../testing/fake_route.js';
 
 import {RouteMarker} from './route_marker.js';
 
 type LatLng = google.maps.LatLng;
+type LatLngAltitude = google.maps.LatLngAltitude;
 
 function fakeRouteBetween(
     [startLat, startLng]: [number, number],
-    [endLat, endLng]: [number, number]): google.maps.DirectionsRoute {
+    [endLat, endLng]: [number, number]): google.maps.routes.Route {
   return makeFakeRoute({
-    legs: [makeFakeLeg({
-      start_location: new FakeLatLng(startLat, startLng),
-      end_location: new FakeLatLng(endLat, endLng),
-    })]
+    legs: [
+      makeFakeLeg({
+        startLocation: new FakeLatLngAltitude(startLat, startLng) as
+            google.maps.routes.DirectionalLocation,
+        endLocation: new FakeLatLngAltitude(0, 0) as
+            google.maps.routes.DirectionalLocation,
+      }),
+      makeFakeLeg({
+        startLocation: new FakeLatLngAltitude(0, 0) as
+            google.maps.routes.DirectionalLocation,
+        endLocation: new FakeLatLngAltitude(endLat, endLng) as
+            google.maps.routes.DirectionalLocation,
+      }),
+    ]
+  });
+}
+
+function fakeDirectionsRouteBetween(
+    [startLat, startLng]: [number, number],
+    [endLat, endLng]: [number, number]): google.maps.DirectionsRoute {
+  return makeFakeDirectionsRoute({
+    legs: [
+      makeFakeDirectionsLeg({
+        start_location: new FakeLatLng(startLat, startLng),
+        end_location: new FakeLatLng(0, 0),
+      }),
+      makeFakeDirectionsLeg({
+        start_location: new FakeLatLng(0, 0),
+        end_location: new FakeLatLng(endLat, endLng),
+      }),
+    ]
   });
 }
 
@@ -80,8 +108,8 @@ describe('RouteMarker', () => {
       </gmpx-route-marker>`);
     // clang-format on
 
-    expect((innerMarker.position as LatLng).lat()).toEqual(1);
-    expect((innerMarker.position as LatLng).lng()).toEqual(2);
+    expect((innerMarker.position as LatLngAltitude).lat).toEqual(1);
+    expect((innerMarker.position as LatLngAltitude).lng).toEqual(2);
   });
 
   it('sets position to destination via attribute', async () => {
@@ -92,9 +120,34 @@ describe('RouteMarker', () => {
       </gmpx-route-marker>`);
     // clang-format on
 
-    expect((innerMarker.position as LatLng).lat()).toEqual(3);
-    expect((innerMarker.position as LatLng).lng()).toEqual(4);
+    expect((innerMarker.position as LatLngAltitude).lat).toEqual(3);
+    expect((innerMarker.position as LatLngAltitude).lng).toEqual(4);
   });
+
+  it('sets position to origin via attribute (DirectionsRoute)', async () => {
+    // clang-format off
+    const {innerMarker} = await prepareState(html`
+      <gmpx-route-marker waypoint="origin"
+        .route=${fakeDirectionsRouteBetween([1, 2], [3, 4])}>
+      </gmpx-route-marker>`);
+    // clang-format on
+
+    expect((innerMarker.position as LatLng).lat()).toEqual(1);
+    expect((innerMarker.position as LatLng).lng()).toEqual(2);
+  });
+
+  it('sets position to destination via attribute (DirectionsRoute)',
+     async () => {
+       // clang-format off
+    const {innerMarker} = await prepareState(html`
+      <gmpx-route-marker waypoint="destination"
+        .route=${fakeDirectionsRouteBetween([1, 2], [3, 4])}>
+      </gmpx-route-marker>`);
+       // clang-format on
+
+       expect((innerMarker.position as LatLng).lat()).toEqual(3);
+       expect((innerMarker.position as LatLng).lng()).toEqual(4);
+     });
 
   it('defaults position to origin', async () => {
     // clang-format off
@@ -104,8 +157,8 @@ describe('RouteMarker', () => {
       </gmpx-route-marker>`);
     // clang-format on
 
-    expect((innerMarker.position as LatLng).lat()).toEqual(1);
-    expect((innerMarker.position as LatLng).lng()).toEqual(2);
+    expect((innerMarker.position as LatLngAltitude).lat).toEqual(1);
+    expect((innerMarker.position as LatLngAltitude).lng).toEqual(2);
   });
 
   it('updates position on route change', async () => {
@@ -119,8 +172,8 @@ describe('RouteMarker', () => {
     marker.route = fakeRouteBetween([5, 6], [7, 8]);
     await env.waitForStability();
 
-    expect((innerMarker.position as LatLng).lat()).toEqual(5);
-    expect((innerMarker.position as LatLng).lng()).toEqual(6);
+    expect((innerMarker.position as LatLngAltitude).lat).toEqual(5);
+    expect((innerMarker.position as LatLngAltitude).lng).toEqual(6);
   });
 
   it('updates position on waypoint change', async () => {
@@ -134,8 +187,8 @@ describe('RouteMarker', () => {
     marker.waypoint = 'destination';
     await env.waitForStability();
 
-    expect((innerMarker.position as LatLng).lat()).toEqual(3);
-    expect((innerMarker.position as LatLng).lng()).toEqual(4);
+    expect((innerMarker.position as LatLngAltitude).lat).toEqual(3);
+    expect((innerMarker.position as LatLngAltitude).lng).toEqual(4);
   });
 
   it('logs an error on invalid waypoint value', async () => {

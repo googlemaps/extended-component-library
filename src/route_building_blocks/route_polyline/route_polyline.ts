@@ -9,6 +9,8 @@ import {customElement, property} from 'lit/decorators.js';
 
 import {APILoader} from '../../api_loader/api_loader.js';
 import {Deferred} from '../../utils/deferred.js';
+import type {DirectionsRoute, LatLng, LatLngAltitude, LatLngBounds, Route} from '../../utils/googlemaps_types.js';
+import {isDirectionsRoute, isRoutesApiRoute} from '../../utils/route_utils.js';
 import {MapController} from '../map_controller.js';
 import {RouteDataConsumer} from '../route_data_consumer.js';
 import {LatLngBounded} from '../viewport_manager.js';
@@ -135,9 +137,13 @@ export class RoutePolyline extends RouteDataConsumer implements LatLngBounded {
    * map's viewport, for use by the `ViewportManager`.
    * @ignore
    */
-  getBounds(): google.maps.LatLngBounds|null {
+  getBounds(): LatLngBounds|null {
     if (!this.fitInViewport) return null;
-    return this.getRoute()?.bounds ?? null;
+
+    const route = this.getRoute();
+    if (isDirectionsRoute(route)) return route.bounds ?? null;
+    if (isRoutesApiRoute(route)) return route.viewport ?? null;
+    return null;
   }
 
   private async setInnerPolylineOptions() {
@@ -153,18 +159,30 @@ export class RoutePolyline extends RouteDataConsumer implements LatLngBounded {
   }
 
   private async updatePath() {
-    let path: google.maps.LatLng[] = [];
-    const route = this.getRoute();
-    if (route) {
-      for (const leg of route.legs) {
-        for (const step of leg.steps) {
-          path = path.concat(step.path);
-        }
+    const polyline = await this.innerPolylinePromise;
+    polyline.setPath(getPath(this.getRoute()));
+  }
+}
+
+function getPath(route: Route|DirectionsRoute|null|undefined): LatLng[]|
+    LatLngAltitude[] {
+  // For Routes, the polyline quality is specified in the routes request.
+  // Our requests specify high quality.
+  if (isRoutesApiRoute(route)) {
+    return route.path ?? [];
+  }
+  // For DirectionsRoutes, the top-level path is a low-quality overview, so
+  // get a higher-resolution polyline by concatenating step polylines.
+  if (isDirectionsRoute(route)) {
+    let path: LatLng[] = [];
+    for (const leg of route.legs) {
+      for (const step of leg.steps) {
+        path = path.concat(step.path);
       }
     }
-    const polyline = await this.innerPolylinePromise;
-    polyline.setPath(path);
+    return path;
   }
+  return [];
 }
 
 declare global {
