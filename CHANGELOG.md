@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.8.0](https://github.com/googlemaps/extended-component-library/compare/v0.7.0...v0.8.0) (2026-09-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* Route Matrix requests have a default quota of 3,000 elements per minute, compared to 60,000 EPM for legacy Distance Matrix. If you have very heavy usage of the Store Locator component, you may need to request a quota increase to maintain your current QPS. View your current usage and edit quotas at: https://console.cloud.google.com/google/maps-apis/quotas
+* you must enable the Routes API for your Google Cloud project if it is not yet enabled: https://developers.google.com/maps/documentation/javascript/routes/start
+
+### Features
+
+* use Routes API for distance matrix requests in the Store Locator ([8ae41a8](https://github.com/googlemaps/extended-component-library/commit/8ae41a820f8dbde37d772d926bcba407d27a5c1d))
+* use Routes API for route components and distance labels ([79d2269](https://github.com/googlemaps/extended-component-library/commit/79d226917fb060e8be5444a81048296d12b732df))
+
+
+### Bug Fixes
+
+* retry UNAVAILABLE errors from the Routes API ([7c8bc05](https://github.com/googlemaps/extended-component-library/commit/7c8bc05cce9b225467414f081504d78f307b9195))
+
 ## [0.7.0](https://github.com/googlemaps/extended-component-library/compare/v0.6.15...v0.7.0) (2026-09-02)
 
 
