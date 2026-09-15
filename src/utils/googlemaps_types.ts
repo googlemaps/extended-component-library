@@ -97,6 +97,20 @@ export type ComputeRoutesResponse =
 /** typeof google.maps.routes.Route */
 export type RouteConstructor = typeof google.maps.routes.Route;
 
+/** google.maps.routes.RouteMatrixItem */
+export type RouteMatrixItem = google.maps.routes.RouteMatrixItem;
+
+/** google.maps.routes.ComputeRouteMatrixRequest */
+export type ComputeRouteMatrixRequest =
+    google.maps.routes.ComputeRouteMatrixRequest;
+
+/** Awaited return type of RouteMatrix.computeRouteMatrix() */
+export type ComputeRouteMatrixResponse =
+    Awaited<ReturnType<typeof google.maps.routes.RouteMatrix.computeRouteMatrix>>;
+
+/** typeof google.maps.routes.RouteMatrix */
+export type RouteMatrixConstructor = typeof google.maps.routes.RouteMatrix;
+
 /** google.maps.DirectionsRoute */
 export type DirectionsRoute = google.maps.DirectionsRoute;
 

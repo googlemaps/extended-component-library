@@ -6,15 +6,15 @@
 // import 'jasmine'; (google3-only)
 
 import {Environment} from '../testing/environment.js';
-import {FAKE_DM_VALUE, makeFakeDistanceMatrixResponse} from '../testing/fake_distance_matrix.js';
+import {FAKE_RM_VALUE, makeFakeRouteMatrixResponse} from '../testing/fake_route_matrix.js';
 import type {LatLngLiteral} from '../utils/googlemaps_types.js';
 
 import {DistanceInfo, DistanceMeasurer, DistanceSource} from './distances.js';
 
 const DEFAULT_FAKE_DISTANCE: DistanceInfo = {
-  source: DistanceSource.DISTANCE_MATRIX,
-  value: FAKE_DM_VALUE,
-  text: `${FAKE_DM_VALUE} 0`
+  source: DistanceSource.ROUTE_MATRIX,
+  value: FAKE_RM_VALUE,
+  text: `${FAKE_RM_VALUE} 0`
 };
 
 describe('DistanceMeasurer', () => {
@@ -24,9 +24,9 @@ describe('DistanceMeasurer', () => {
     DistanceMeasurer.reset();
   });
 
-  it('locally caches Distance Matrix requests', async () => {
-    const distanceMatrixSpy =
-        spyOn(env.fakeGoogleMapsHarness!, 'distanceMatrixHandler')
+  it('locally caches Route Matrix requests', async () => {
+    const routeMatrixSpy =
+        spyOn(env.fakeGoogleMapsHarness!, 'computeRouteMatrixHandler')
             .and.callThrough();
 
     const origin = {lat: 0, lng: 0};
@@ -38,15 +38,15 @@ describe('DistanceMeasurer', () => {
         await measurer.computeDistances(origin, destinations, units);
     await measurer.computeDistances(origin, destinations, units);
 
-    expect(distanceMatrixSpy).toHaveBeenCalledTimes(1);
+    expect(routeMatrixSpy).toHaveBeenCalledTimes(1);
     expect(distances).toEqual([DEFAULT_FAKE_DISTANCE, DEFAULT_FAKE_DISTANCE]);
   });
 
-  it('does not cache a transient error, OVER_QUERY_LIMIT', async () => {
-    const distanceMatrixSpy =
-        spyOn(env.fakeGoogleMapsHarness!, 'distanceMatrixHandler')
+  it('does not cache a transient error, RESOURCE_EXHAUSTED', async () => {
+    const routeMatrixSpy =
+        spyOn(env.fakeGoogleMapsHarness!, 'computeRouteMatrixHandler')
             .and.throwError(
-                {code: 'OVER_QUERY_LIMIT', name: 'MapsRequestError'} as
+                {code: 'RESOURCE_EXHAUSTED', name: 'MapsRequestError'} as
                 google.maps.MapsRequestError);
     const origin = {lat: 0, lng: 0};
     const destinations = [{lat: 1, lng: 1}, {lat: 2, lng: 2}];
@@ -55,19 +55,19 @@ describe('DistanceMeasurer', () => {
 
     await expectAsync(measurer.computeDistances(origin, destinations, units))
         .toBeRejected();
-    distanceMatrixSpy.and.callThrough();
+    routeMatrixSpy.and.callThrough();
     const distances =
         await measurer.computeDistances(origin, destinations, units);
 
-    expect(distanceMatrixSpy).toHaveBeenCalledTimes(2);
+    expect(routeMatrixSpy).toHaveBeenCalledTimes(2);
     expect(distances).toEqual([DEFAULT_FAKE_DISTANCE, DEFAULT_FAKE_DISTANCE]);
   });
 
-  it('caches a hard error, INVALID_REQUEST', async () => {
-    const distanceMatrixSpy =
-        spyOn(env.fakeGoogleMapsHarness!, 'distanceMatrixHandler')
+  it('caches a hard error, INVALID_ARGUMENT', async () => {
+    const routeMatrixSpy =
+        spyOn(env.fakeGoogleMapsHarness!, 'computeRouteMatrixHandler')
             .and.throwError(
-                {code: 'INVALID_REQUEST', name: 'MapsRequestError'} as
+                {code: 'INVALID_ARGUMENT', name: 'MapsRequestError'} as
                 google.maps.MapsRequestError);
     const origin = {lat: 0, lng: 0};
     const destinations = [{lat: 1, lng: 1}, {lat: 2, lng: 2}];
@@ -80,10 +80,10 @@ describe('DistanceMeasurer', () => {
         .toBeRejected();
 
 
-    expect(distanceMatrixSpy).toHaveBeenCalledTimes(1);
+    expect(routeMatrixSpy).toHaveBeenCalledTimes(1);
   });
 
-  it('only uses Distance Matrix for the closest 25 destinations', async () => {
+  it('only uses the Route Matrix for the closest 25 destinations', async () => {
     const origin = {lat: 0, lng: 0};
     const destinations: LatLngLiteral[] = [];
     const farPoint = {lat: 100, lng: 100};
@@ -100,11 +100,11 @@ describe('DistanceMeasurer', () => {
       destinations.push(nearPoint);
     }
 
-    // Distance Matrix will return distance = 4 for near points.
+    // The Route Matrix will return distance = 4 for near points.
     const distanceMap = new Map<LatLngLiteral, number>();
     distanceMap.set(nearPoint, 4);
-    env.fakeGoogleMapsHarness!.distanceMatrixHandler = (request) =>
-        makeFakeDistanceMatrixResponse(request, distanceMap);
+    env.fakeGoogleMapsHarness!.computeRouteMatrixHandler = (request) =>
+        makeFakeRouteMatrixResponse(request, distanceMap);
 
     const measurer = new DistanceMeasurer();
     const distances =
@@ -113,7 +113,6 @@ describe('DistanceMeasurer', () => {
     expect(distances[0])
         .toEqual({source: DistanceSource.GEOMETRIC, value: 100});
     expect(distances[5])
-        .toEqual(
-            {source: DistanceSource.DISTANCE_MATRIX, value: 4, text: '4 0'});
+        .toEqual({source: DistanceSource.ROUTE_MATRIX, value: 4, text: '4 0'});
   });
 });

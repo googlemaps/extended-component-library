@@ -365,7 +365,7 @@ export class StoreLocator extends BaseComponent {
     // UI display for travel distance.
     const distanceInfo = this.listingDistances.get(listing);
     const showDistance = distanceInfo?.text &&
-        distanceInfo.source === DistanceSource.DISTANCE_MATRIX;
+        distanceInfo.source === DistanceSource.ROUTE_MATRIX;
     const distanceHtml = showDistance ? distanceInfo.text : nothing;
 
     // Action buttons.
@@ -442,21 +442,21 @@ export class StoreLocator extends BaseComponent {
     if (this.listingDistances.size > 0) {
       headerText = this.getMsg('LOCATOR_LIST_SUBHEADING_WITH_SEARCH');
 
-      // Sort the listings with all Distance Matrix distances first, in order,
+      // Sort the listings with all Route Matrix distances first, in order,
       // then all geodesic distances, in order.
-      const distanceMatrixListings = this.internalListings.filter(
+      const routeMatrixListings = this.internalListings.filter(
           listing => this.listingDistances.get(listing)?.source ===
-              DistanceSource.DISTANCE_MATRIX);
+              DistanceSource.ROUTE_MATRIX);
       const otherDistanceListings = this.internalListings.filter(
           listing => this.listingDistances.get(listing)?.source !==
-              DistanceSource.DISTANCE_MATRIX);
+              DistanceSource.ROUTE_MATRIX);
 
       const getDistance = (listing: InternalListing) =>
           this.listingDistances.get(listing)?.value ?? Infinity;
       const distanceSorter = (a: InternalListing, b: InternalListing) =>
           getDistance(a) - getDistance(b);
       sortedListings = [
-        ...distanceMatrixListings.sort(distanceSorter),
+        ...routeMatrixListings.sort(distanceSorter),
         ...otherDistanceListings.sort(distanceSorter)
       ];
     }

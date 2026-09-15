@@ -4,14 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {ComputeRoutesRequest, ComputeRoutesResponse, LatLng, LatLngLiteral, Place, PlaceResult, SearchByTextRequest} from '../utils/googlemaps_types.js';
+import {ComputeRouteMatrixRequest, ComputeRoutesRequest, ComputeRoutesResponse, LatLng, LatLngLiteral, Place, PlaceResult, SearchByTextRequest} from '../utils/googlemaps_types.js';
 
 import {makeFakeAutocomplete} from './fake_autocomplete.js';
-import {makeFakeDistanceMatrixResponse} from './fake_distance_matrix.js';
 import {FakeAdvancedMarkerElement, FakeMapElement} from './fake_gmp_components.js';
 import {FakeLatLng, FakeLatLngBounds} from './fake_lat_lng.js';
 import {makeFakePlace} from './fake_place.js';
 import {makeFakeRoute} from './fake_route.js';
+import {makeFakeRouteMatrixResponse} from './fake_route_matrix.js';
 
 /**
  * Sets up a fake instance of the Google Maps SDK which can be used as-is or
@@ -45,10 +45,10 @@ export class FakeGoogleMapsHarness {
 
   /**
    * Override this function to control the response of a
-   * `google.maps.DistanceMatrixService.getDistanceMatrix()` request.
+   * `google.maps.routes.RouteMatrix.computeRouteMatrix()` request.
    */
-  distanceMatrixHandler = (request: google.maps.DistanceMatrixRequest) =>
-      makeFakeDistanceMatrixResponse(request);
+  computeRouteMatrixHandler = (request: ComputeRouteMatrixRequest) =>
+      makeFakeRouteMatrixResponse(request);
 
   /**
    * Override this function to control the response of a
@@ -156,9 +156,9 @@ export class FakeGoogleMapsHarness {
           }
         },
 
-        DistanceMatrixService: class {
-          getDistanceMatrix(request: google.maps.DistanceMatrixRequest) {
-            return Promise.resolve(harness.distanceMatrixHandler(request));
+        RouteMatrix: class {
+          static computeRouteMatrix(request: ComputeRouteMatrixRequest) {
+            return Promise.resolve(harness.computeRouteMatrixHandler(request));
           }
         }
       },

@@ -40,7 +40,10 @@ Please be sure to check this documentation for additional requirements and recom
 
 ### Routes API
 
-Used to display a route from the end user's location to the selected listing, advanced feature set only.
+This component uses the Routes API in two ways:
+
+1. Route Matrix to sort and display travel distances from the end user's location (intermediate and advanced feature sets only).
+2. Compute Routes to display a route from the end user's location to the selected listing (advanced feature set only).
 
 #### Documentation
 
@@ -48,16 +51,5 @@ Used to display a route from the end user's location to the selected listing, ad
 
 #### Pricing
 
+- [SKU: Routes: Compute Route Matrix Essentials](https://developers.google.com/maps/billing-and-pricing/pricing#routes-pricing)
 - [SKU: Routes: Compute Routes Essentials](https://developers.google.com/maps/billing-and-pricing/pricing#routes-pricing)
-
-### Distance Matrix API
-
-Used to sort and display travel times from the end user's location. Intermediate and advanced feature sets only.
-
-#### Documentation
-
-[Distance Matrix API documentation](https://developers.google.com/maps/documentation/javascript/distancematrix)
-
-#### Pricing
-
-- [SKU: Distance Matrix](https://developers.google.com/maps/documentation/distance-matrix/usage-and-billing)

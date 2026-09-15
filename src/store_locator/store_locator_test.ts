@@ -12,9 +12,9 @@ import type {OverlayLayout} from '../overlay_layout/overlay_layout.js';
 import type {PlaceOverview} from '../place_overview/place_overview.js';
 import type {PlacePicker} from '../place_picker/place_picker.js';
 import {Environment} from '../testing/environment.js';
-import {makeFakeDistanceMatrixResponse} from '../testing/fake_distance_matrix.js';
 import type {FakeMapElement} from '../testing/fake_gmp_components.js';
 import {FakeLatLng, FakeLatLngBounds} from '../testing/fake_lat_lng.js';
+import {makeFakeRouteMatrixResponse} from '../testing/fake_route_matrix.js';
 import {Deferred} from '../utils/deferred.js';
 import {mapsJsData, type LatLngLiteral, type Place} from '../utils/googlemaps_types.js';
 
@@ -186,24 +186,25 @@ describe('StoreLocator', () => {
          })],
        } as Partial<Place>as Place);
 
-       // Distance Matrix will set Location B as closer
+       // The Route Matrix will set Location B as closer
        const distanceMap = new Map<LatLngLiteral, number>();
        distanceMap.set(LISTING_A.position as LatLngLiteral, 20.8);
        distanceMap.set(LISTING_B.position as LatLngLiteral, 20.7);
-       env.fakeGoogleMapsHarness!.distanceMatrixHandler = (request) =>
-           makeFakeDistanceMatrixResponse(request, distanceMap);
-       const distanceMatrixSpy =
-           spyOn(env.fakeGoogleMapsHarness!, 'distanceMatrixHandler')
+       env.fakeGoogleMapsHarness!.computeRouteMatrixHandler = (request) =>
+           makeFakeRouteMatrixResponse(request, distanceMap);
+       const routeMatrixSpy =
+           spyOn(env.fakeGoogleMapsHarness!, 'computeRouteMatrixHandler')
                .and.callThrough();
 
        placePicker?.dispatchEvent(new Event('gmpx-placechange'));
        await env.waitForStability();
 
-       expect(distanceMatrixSpy).toHaveBeenCalledOnceWith({
+       expect(routeMatrixSpy).toHaveBeenCalledOnceWith({
          origins: [origin],
          destinations: [LISTING_A.position, LISTING_B.position],
-         unitSystem: 0 as google.maps.UnitSystem.IMPERIAL,
+         units: 0 as google.maps.UnitSystem.IMPERIAL,
          travelMode: 'DRIVING' as google.maps.TravelMode,
+         fields: ['condition', 'distanceMeters', 'localizedValues'],
        });
        expect(map?.innerMap?.fitBounds)
            .toHaveBeenCalledOnceWith(
@@ -226,19 +227,19 @@ describe('StoreLocator', () => {
           {types: ['foo', 'country'], shortText: 'CA', longText: 'Canada'})],
     } as Partial<Place>as Place);
 
-    // Distance Matrix will set Location B as closer
+    // The Route Matrix will set Location B as closer
     const distanceMap = new Map<LatLngLiteral, number>();
     distanceMap.set(LISTING_A.position as LatLngLiteral, 20.8);
     distanceMap.set(LISTING_B.position as LatLngLiteral, 20.7);
-    env.fakeGoogleMapsHarness!.distanceMatrixHandler = (request) =>
-        makeFakeDistanceMatrixResponse(request, distanceMap);
-    spyOn(env.fakeGoogleMapsHarness!, 'distanceMatrixHandler')
+    env.fakeGoogleMapsHarness!.computeRouteMatrixHandler = (request) =>
+        makeFakeRouteMatrixResponse(request, distanceMap);
+    spyOn(env.fakeGoogleMapsHarness!, 'computeRouteMatrixHandler')
         .and.callThrough();
 
     placePicker?.dispatchEvent(new Event('gmpx-placechange'));
     await env.waitForStability();
 
-    // Fake Distance Matrix returns "{distance} {units}", with units indicating
+    // The fake Route Matrix returns "{distance} {units}", with units indicating
     // the requested value. 0 = imperial, 1 = metric per the Maps JS enum.
     expect(resultsList!.children[0].querySelector('.distance')?.textContent)
         .toContain('20.7 1');

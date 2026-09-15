@@ -89,6 +89,8 @@ export declare interface QuickBuilderCapabilities {
   input?: boolean;
   autocomplete?: boolean;
   directions?: boolean;
+  // Named for the legacy Distance Matrix API to match the schema emitted by
+  // Quick Builder. Travel distances are now computed with the Route Matrix API.
   distanceMatrix?: boolean;
   details?: boolean;
   actions?: boolean;
