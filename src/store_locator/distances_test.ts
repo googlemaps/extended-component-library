@@ -42,26 +42,31 @@ describe('DistanceMeasurer', () => {
     expect(distances).toEqual([DEFAULT_FAKE_DISTANCE, DEFAULT_FAKE_DISTANCE]);
   });
 
-  it('does not cache a transient error, RESOURCE_EXHAUSTED', async () => {
-    const routeMatrixSpy =
-        spyOn(env.fakeGoogleMapsHarness!, 'computeRouteMatrixHandler')
-            .and.throwError(
-                {code: 'RESOURCE_EXHAUSTED', name: 'MapsRequestError'} as
-                google.maps.MapsRequestError);
-    const origin = {lat: 0, lng: 0};
-    const destinations = [{lat: 1, lng: 1}, {lat: 2, lng: 2}];
-    const units = 0 as google.maps.UnitSystem.IMPERIAL;
-    const measurer = new DistanceMeasurer();
+  const TRANSIENT_ERROR_CODES =
+      ['RESOURCE_EXHAUSTED', 'UNAVAILABLE', 'UNKNOWN'];
 
-    await expectAsync(measurer.computeDistances(origin, destinations, units))
-        .toBeRejected();
-    routeMatrixSpy.and.callThrough();
-    const distances =
-        await measurer.computeDistances(origin, destinations, units);
+  for (const code of TRANSIENT_ERROR_CODES) {
+    it(`does not cache a transient error, ${code}`, async () => {
+      const routeMatrixSpy =
+          spyOn(env.fakeGoogleMapsHarness!, 'computeRouteMatrixHandler')
+              .and.throwError(
+                  {code, name: 'MapsRequestError'} as
+                  google.maps.MapsRequestError);
+      const origin = {lat: 0, lng: 0};
+      const destinations = [{lat: 1, lng: 1}, {lat: 2, lng: 2}];
+      const units = 0 as google.maps.UnitSystem.IMPERIAL;
+      const measurer = new DistanceMeasurer();
 
-    expect(routeMatrixSpy).toHaveBeenCalledTimes(2);
-    expect(distances).toEqual([DEFAULT_FAKE_DISTANCE, DEFAULT_FAKE_DISTANCE]);
-  });
+      await expectAsync(measurer.computeDistances(origin, destinations, units))
+          .toBeRejected();
+      routeMatrixSpy.and.callThrough();
+      const distances =
+          await measurer.computeDistances(origin, destinations, units);
+
+      expect(routeMatrixSpy).toHaveBeenCalledTimes(2);
+      expect(distances).toEqual([DEFAULT_FAKE_DISTANCE, DEFAULT_FAKE_DISTANCE]);
+    });
+  }
 
   it('caches a hard error, INVALID_ARGUMENT', async () => {
     const routeMatrixSpy =

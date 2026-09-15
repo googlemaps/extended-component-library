@@ -72,10 +72,18 @@ describe('RoutesController', () => {
         name: 'MapsRequestError',
         message: 'The webpage is not allowed to use the Routes API.',
       }
+    },
+    {
+      error: {
+        code: 'UNAVAILABLE',
+        endpoint: 'ROUTES_COMPUTE_ROUTES',
+        name: 'MapsRequestError',
+        message: 'The Routes API is temporarily unavailable.',
+      }
     }
   ];
 
-  parameters.forEach(({error}) => {
+  for (const {error} of parameters) {
     it(`retries failed request due to transient error: ${error.code}`,
        async () => {
          const host = await prepareControllerHostElement();
@@ -88,7 +96,7 @@ describe('RoutesController', () => {
          await env.waitForStability();
          expect(routesSpy).toHaveBeenCalledTimes(2);
        });
-  });
+  }
 
   it('does not retry failed request due to non transient error', async () => {
     const host = await prepareControllerHostElement();

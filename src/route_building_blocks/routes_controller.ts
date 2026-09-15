@@ -10,6 +10,7 @@ import {APILoader} from '../api_loader/api_loader.js';
 import {RequestErrorEvent} from '../base/events.js';
 import {ComputeRoutesRequest, ComputeRoutesResponse, RouteConstructor} from '../utils/googlemaps_types.js';
 import {RequestCache} from '../utils/request_cache.js';
+import {isRetriableRpcError} from '../utils/rpc_status.js';
 
 const CACHE_SIZE = 100;
 
@@ -17,15 +18,7 @@ const CACHE_SIZE = 100;
 function makeRoutesRequestCache() {
   return new RequestCache<
       ComputeRoutesRequest, ComputeRoutesResponse,
-      google.maps.MapsRequestError>(
-      CACHE_SIZE, (error: google.maps.MapsRequestError) => {
-        // The Routes API uses the RPCStatus enum for errors. Requests with a
-        // transient error status of RESOURCE_EXHAUSTED and UNKNOWN should be
-        // retried. See full list of statuses:
-        // https://developers.google.com/maps/documentation/javascript/reference/errors#RPCStatus
-        return error.code === 'RESOURCE_EXHAUSTED' ||
-            error.code === 'UNKNOWN';
-      });
+      google.maps.MapsRequestError>(CACHE_SIZE, isRetriableRpcError);
 }
 
 /**

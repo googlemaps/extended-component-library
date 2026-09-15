@@ -7,6 +7,7 @@
 import {APILoader} from '../api_loader/api_loader.js';
 import {ComputeRouteMatrixRequest, ComputeRouteMatrixResponse, LatLng, LatLngLiteral, RouteMatrixConstructor} from '../utils/googlemaps_types.js';
 import {RequestCache} from '../utils/request_cache.js';
+import {isRetriableRpcError} from '../utils/rpc_status.js';
 
 const CACHE_SIZE = 10;
 // Self-imposed cap on how many destinations are sent to the Route Matrix API in
@@ -18,13 +19,7 @@ const MAX_ROUTE_MATRIX_DESTINATIONS = 25;
 function makeRouteMatrixRequestCache() {
   return new RequestCache<
       ComputeRouteMatrixRequest, ComputeRouteMatrixResponse,
-      google.maps.MapsRequestError>(
-      CACHE_SIZE, (error: google.maps.MapsRequestError) => {
-        // Requests with a transient error status of RESOURCE_EXHAUSTED
-        // and UNKNOWN should be retried. See full list of statuses
-        // https://developers.google.com/maps/documentation/javascript/reference/errors#RPCStatus
-        return error.code === 'RESOURCE_EXHAUSTED' || error.code === 'UNKNOWN';
-      });
+      google.maps.MapsRequestError>(CACHE_SIZE, isRetriableRpcError);
 }
 
 /** How a distance was calculated. */
