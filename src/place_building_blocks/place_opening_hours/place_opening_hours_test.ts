@@ -75,6 +75,17 @@ describe('PlaceOpeningHours', () => {
     expect(el).toBeInstanceOf(PlaceOpeningHours);
   });
 
+  it('requests the fields needed by its nested isOpen() boolean', () => {
+    const el = document.createElement('gmpx-place-opening-hours');
+
+    expect(el.getRequiredFields()).toEqual([
+      'businessStatus',
+      'currentOpeningHours',
+      'regularOpeningHours',
+      'utcOffsetMinutes',
+    ]);
+  });
+
   it('renders nothing when place data is missing', async () => {
     const el = await prepareState({place: null});
 
@@ -179,9 +190,9 @@ describe('PlaceOpeningHours', () => {
     expect(getOpenSlotText(el)).toHaveNormalizedText('Open 24 hours');
   });
 
-  it('displays "Closed" without upcoming opening hours for a 24/7 location when isOpen() evaluates to false', async () => {
-    // If a 24/7 location is closed (e.g. special holiday hours or businessStatus),
-    // ensure it displays "Closed" rather than trying to calculate an upcoming opening time.
+  it('displays "Closed" without upcoming opening hours for a 24/7 location closed by exceptional hours', async () => {
+    // Saturday, 4/15, 8am UTC
+    jasmine.clock().mockDate(new Date(Date.UTC(2023, 3, 15, 8)));
     const place = makeFakePlace({
       ...FAKE_PLACE_PROPS,
       isOpen: async () => false,
@@ -201,6 +212,19 @@ describe('PlaceOpeningHours', () => {
           'Saturday: Open 24 hours',
           'Sunday: Open 24 hours',
         ],
+        specialDays: [],
+      }),
+      // Open continuously from Sunday until Saturday, i.e. closed all day
+      // Saturday. Because regular hours are 24/7 there is no upcoming opening
+      // time to display.
+      currentOpeningHours: mapsJsData({
+        periods: [
+          mapsJsData({
+            open: mapsJsData({day: 0, hour: 0, minute: 0}),
+            close: mapsJsData({day: 6, hour: 0, minute: 0}),
+          }),
+        ],
+        weekdayDescriptions: [],
         specialDays: [],
       }),
     });

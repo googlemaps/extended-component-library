@@ -49,6 +49,18 @@ describe('place field boolean test', () => {
     expect(el).toBeInstanceOf(PlaceFieldBoolean);
   });
 
+  it('requests the fields that Place.isOpen() fetches internally', () => {
+    const el = document.createElement('gmpx-place-field-boolean');
+    el.field = 'isOpen()';
+
+    expect(el.getRequiredFields()).toEqual([
+      'businessStatus',
+      'currentOpeningHours',
+      'regularOpeningHours',
+      'utcOffsetMinutes',
+    ]);
+  });
+
   it('renders the true slot for all fields using a fake Place', async () => {
     const truePlace = makeFakePlace({
       id: '1234567890',
@@ -369,6 +381,95 @@ describe('place field boolean test', () => {
             place}></gmpx-place-field-boolean>`);
 
     expectTrueSlot(booleanEl);
+  });
+
+  it('reports an operational 24/7 place as open', async () => {
+    const place = makeFakePlace({
+      id: '1234567890',
+      businessStatus: 'OPERATIONAL',
+      regularOpeningHours: mapsJsData({
+        periods: [
+          mapsJsData({
+            open: mapsJsData({day: 0, hour: 0, minute: 0}),
+            close: null,
+          }),
+        ],
+        weekdayDescriptions: [],
+        specialDays: [],
+      }),
+      utcOffsetMinutes: 0,
+      isOpen: async () => false,
+    });
+
+    const [booleanEl] = await prepareState(
+        html`<gmpx-place-field-boolean field="isOpen()" .place=${
+            place}></gmpx-place-field-boolean>`);
+
+    expectTrueSlot(booleanEl);
+  });
+
+  it('reports a temporarily closed 24/7 place as closed', async () => {
+    const place = makeFakePlace({
+      id: '1234567890',
+      businessStatus: 'CLOSED_TEMPORARILY',
+      regularOpeningHours: mapsJsData({
+        periods: [
+          mapsJsData({
+            open: mapsJsData({day: 0, hour: 0, minute: 0}),
+            close: null,
+          }),
+        ],
+        weekdayDescriptions: [],
+        specialDays: [],
+      }),
+      utcOffsetMinutes: 0,
+      isOpen: async () => false,
+    });
+
+    const [booleanEl] = await prepareState(
+        html`<gmpx-place-field-boolean field="isOpen()" .place=${
+            place}></gmpx-place-field-boolean>`);
+
+    expectFalseSlot(booleanEl);
+  });
+
+  it('honors exceptional hours for a 24/7 place', async () => {
+    // Saturday, 4/15, 8am UTC
+    jasmine.clock().mockDate(new Date(Date.UTC(2023, 3, 15, 8)));
+    const place = makeFakePlace({
+      id: '1234567890',
+      businessStatus: 'OPERATIONAL',
+      regularOpeningHours: mapsJsData({
+        periods: [
+          mapsJsData({
+            open: mapsJsData({day: 0, hour: 0, minute: 0}),
+            close: null,
+          }),
+        ],
+        weekdayDescriptions: [],
+        specialDays: [],
+      }),
+      // Open continuously from Sunday until Saturday, i.e. closed all day
+      // Saturday.
+      currentOpeningHours: mapsJsData({
+        periods: [
+          mapsJsData({
+            open: mapsJsData({day: 0, hour: 0, minute: 0}),
+            close: mapsJsData({day: 6, hour: 0, minute: 0}),
+          }),
+        ],
+        weekdayDescriptions: [],
+        specialDays: [],
+      }),
+      utcOffsetMinutes: 0,
+      isOpen: async () => false,
+    });
+
+    const [booleanEl] = await prepareState(
+        html`<gmpx-place-field-boolean field="isOpen()" .place=${
+            place}></gmpx-place-field-boolean>`);
+
+    expectFalseSlot(booleanEl);
   });
 
   it('performs two renders for an asynchronously accessed property',
