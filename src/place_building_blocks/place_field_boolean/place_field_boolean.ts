@@ -10,7 +10,7 @@ import {choose} from 'lit/directives/choose.js';
 
 import {Deferred} from '../../utils/deferred.js';
 import type {Place} from '../../utils/googlemaps_types.js';
-import {isOpen} from '../../utils/opening_hours.js';
+import {isOpen, isPlaceAlwaysOpen} from '../../utils/opening_hours.js';
 import {hasDataForOpeningCalculations} from '../../utils/place_utils.js';
 import {Poll} from '../../utils/poll.js';
 import {PlaceDataConsumer} from '../place_data_consumer.js';
@@ -71,20 +71,33 @@ function toPlaceBooleanField(field: BooleanField): PlaceBooleanField {
 }
 
 async function isOpenWithoutFetching(place: Place): Promise<boolean|undefined> {
-  // On a `Place`, `isOpen()` will asynchronously fetch these three fields. If
-  // we don't have all three already, then we treat `isOpen` as missing data
+  // On a `Place`, `isOpen()` will asynchronously fetch these four fields. If
+  // we don't have all four already, then we treat `isOpen` as missing data
   // instead of making an unintended API call.
   //
   // When using the Place Data Provider component, these fields will be
   // automatically fetched in advance.
   if (place && hasDataForOpeningCalculations(place)) {
+    let result: boolean|undefined;
     try {
-      return await place.isOpen();
+      result = await place.isOpen();
     } catch {
       // Fall back to the library's internal opening hours calculation in case
       // isOpen() is not available.
       return isOpen(place);
     }
+
+    // A place whose regular hours are 24/7 should report as open whenever its
+    // business status is operational. Recompute with the library's own
+    // opening-hours logic, which still honors any exceptional hours present in
+    // `currentOpeningHours`.
+    // See https://github.com/googlemaps/extended-component-library/issues/302
+    if (result === false && place.businessStatus === 'OPERATIONAL' &&
+        place.regularOpeningHours &&
+        isPlaceAlwaysOpen(place.regularOpeningHours)) {
+      return isOpen(place) ?? result;
+    }
+    return result;
   } else {
     return undefined;
   }
@@ -202,6 +215,7 @@ export class PlaceFieldBoolean extends PlaceDataConsumer {
       case 'isOpen()':
         return [
           'businessStatus',
+          'currentOpeningHours',
           'regularOpeningHours',
           'utcOffsetMinutes',
         ];

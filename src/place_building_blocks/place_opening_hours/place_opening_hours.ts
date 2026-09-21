@@ -172,7 +172,12 @@ export class PlaceOpeningHours extends PlaceDataConsumer {
 
   /** @ignore */
   getRequiredFields(): Array<keyof Place> {
-    return ['businessStatus', 'regularOpeningHours', 'utcOffsetMinutes'];
+    return [
+      'businessStatus',
+      'currentOpeningHours',
+      'regularOpeningHours',
+      'utcOffsetMinutes',
+    ];
   }
 
   protected override placeHasData(place: Place): boolean {
