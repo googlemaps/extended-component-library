@@ -33,6 +33,8 @@ export function makeFakePlace(fields: Partial<Place>): Place {
       return {place: makeFakePlace(fields)};
     },
     toJSON: () => ({}),
+    ...(fields.regularOpeningHours !== undefined &&
+        {currentOpeningHours: null}),
     ...fields,
   } as Place;
 }

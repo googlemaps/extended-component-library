@@ -14,7 +14,7 @@ import {map} from 'lit/directives/map.js';
 import {LocalizationController} from '../../base/localization_controller.js';
 import {WebFont, WebFontController} from '../../base/web_font_controller.js';
 import type {Place} from '../../utils/googlemaps_types.js';
-import {formatTimeWithWeekdayMaybe, getUpcomingCloseTime, getUpcomingOpenTime, isSoon, NextCloseTimeStatus, NextOpenTimeStatus} from '../../utils/opening_hours.js';
+import {formatTimeWithWeekdayMaybe, getUpcomingCloseTime, getUpcomingOpenTime, isSoon, NextCloseTimeStatus, NextOpenTimeStatus, OPENING_HOURS_FIELDS} from '../../utils/opening_hours.js';
 import {Poll} from '../../utils/poll.js';
 import {PlaceDataConsumer} from '../place_data_consumer.js';
 
@@ -172,7 +172,10 @@ export class PlaceOpeningHours extends PlaceDataConsumer {
 
   /** @ignore */
   getRequiredFields(): Array<keyof Place> {
-    return ['businessStatus', 'regularOpeningHours', 'utcOffsetMinutes'];
+    // `currentOpeningHours` is needed by the nested `gmpx-place-field-boolean`
+    // that renders `isOpen()`. That element is given its place directly, so it
+    // cannot register its own required fields with the data provider.
+    return [...OPENING_HOURS_FIELDS];
   }
 
   protected override placeHasData(place: Place): boolean {

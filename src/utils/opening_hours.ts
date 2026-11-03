@@ -14,6 +14,17 @@ type OpeningHoursPeriod = google.maps.places.OpeningHoursPeriod;
 type OpeningHoursPoint = google.maps.places.OpeningHoursPoint;
 
 /**
+ * Place fields fetched internally by `Place.isOpen()` and
+ * `Place.getNextOpeningTime()`.
+ */
+export const OPENING_HOURS_FIELDS: ReadonlyArray<keyof Place> = [
+  'businessStatus',
+  'currentOpeningHours',
+  'regularOpeningHours',
+  'utcOffsetMinutes',
+];
+
+/**
  * Formats a relative point in time according to the browser's locale format.
  */
 function formatPointTime(
@@ -268,6 +279,9 @@ export function getUpcomingOpenTime(
  * Temporary (until Place is GA) replacement for the built-in isOpen() method.
  */
 export function isOpen(place: Place, now = new Date()): boolean|undefined {
+  if (place.businessStatus && place.businessStatus !== 'OPERATIONAL') {
+    return false;
+  }
   const openingHours = place.currentOpeningHours ?? place.regularOpeningHours;
   if (!openingHours || place.utcOffsetMinutes == null) {
     return undefined;

@@ -13,7 +13,7 @@ import {FakeLatLng} from '../testing/fake_lat_lng.js';
 import {makeFakePlace, SAMPLE_FAKE_PLACE, SAMPLE_FAKE_PLACE_RESULT} from '../testing/fake_place.js';
 
 import type {Place, PlaceResult} from './googlemaps_types.js';
-import {isPlaceResult, makePlaceFromPlaceResult, makeWaypoint, numericToPriceLevel, priceLevelToNumeric, renderAttribution} from './place_utils.js';
+import {hasDataForOpeningCalculations, hasFetchedOpeningHoursFields, isPlaceResult, makePlaceFromPlaceResult, makeWaypoint, numericToPriceLevel, priceLevelToNumeric, renderAttribution} from './place_utils.js';
 
 
 /**
@@ -344,3 +344,66 @@ describe('makePlaceFromPlaceResult', () => {
        expect(await place.isOpen()).toBe(undefined);
      });
 });
+
+describe('hasDataForOpeningCalculations', () => {
+  it('returns true when regularOpeningHours, businessStatus, and utcOffsetMinutes are present',
+     () => {
+       const place = makeFakePlace({
+         id: '123',
+         businessStatus: 'OPERATIONAL',
+         regularOpeningHours: SAMPLE_FAKE_PLACE.regularOpeningHours,
+         currentOpeningHours: null,
+         utcOffsetMinutes: 0,
+       });
+       expect(hasDataForOpeningCalculations(place)).toBe(true);
+     });
+
+  it('returns true when currentOpeningHours is present without regularOpeningHours',
+     () => {
+       const place = makeFakePlace({
+         id: '123',
+         businessStatus: 'OPERATIONAL',
+         regularOpeningHours: null,
+         currentOpeningHours: SAMPLE_FAKE_PLACE.regularOpeningHours,
+         utcOffsetMinutes: 0,
+       });
+       expect(hasDataForOpeningCalculations(place)).toBe(true);
+     });
+
+  it('returns false when both opening hours fields are missing', () => {
+    const place = makeFakePlace({
+      id: '123',
+      businessStatus: 'OPERATIONAL',
+      regularOpeningHours: null,
+      currentOpeningHours: null,
+      utcOffsetMinutes: 0,
+    });
+    expect(hasDataForOpeningCalculations(place)).toBe(false);
+  });
+});
+
+describe('hasFetchedOpeningHoursFields', () => {
+  it('returns true when all opening hours fields are defined (including null)',
+     () => {
+       const place = makeFakePlace({
+         id: '123',
+         businessStatus: 'OPERATIONAL',
+         regularOpeningHours: SAMPLE_FAKE_PLACE.regularOpeningHours,
+         currentOpeningHours: null,
+         utcOffsetMinutes: 0,
+       });
+       expect(hasFetchedOpeningHoursFields(place)).toBe(true);
+     });
+
+  it('returns false when currentOpeningHours is undefined', () => {
+    const place = makeFakePlace({
+      id: '123',
+      businessStatus: 'OPERATIONAL',
+      regularOpeningHours: SAMPLE_FAKE_PLACE.regularOpeningHours,
+      currentOpeningHours: undefined,
+      utcOffsetMinutes: 0,
+    });
+    expect(hasFetchedOpeningHoursFields(place)).toBe(false);
+  });
+});
+

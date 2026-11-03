@@ -430,5 +430,16 @@ describe('Opening hours utilities', () => {
 
       expect(isOpen(place, mondayEarlySf)).toBeFalse();
     });
+
+    it('returns false if businessStatus is CLOSED_TEMPORARILY', () => {
+      const place = makeFakePlace({
+        id: '123',
+        businessStatus: 'CLOSED_TEMPORARILY',
+        regularOpeningHours: ALWAYS_OPEN_HOURS,
+        utcOffsetMinutes: 0,
+      });
+
+      expect(isOpen(place)).toBeFalse();
+    });
   });
 });

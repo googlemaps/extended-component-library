@@ -10,8 +10,8 @@ import {choose} from 'lit/directives/choose.js';
 
 import {Deferred} from '../../utils/deferred.js';
 import type {Place} from '../../utils/googlemaps_types.js';
-import {isOpen} from '../../utils/opening_hours.js';
-import {hasDataForOpeningCalculations} from '../../utils/place_utils.js';
+import {isOpen, isPlaceAlwaysOpen, OPENING_HOURS_FIELDS} from '../../utils/opening_hours.js';
+import {hasDataForOpeningCalculations, hasFetchedOpeningHoursFields} from '../../utils/place_utils.js';
 import {Poll} from '../../utils/poll.js';
 import {PlaceDataConsumer} from '../place_data_consumer.js';
 
@@ -71,23 +71,45 @@ function toPlaceBooleanField(field: BooleanField): PlaceBooleanField {
 }
 
 async function isOpenWithoutFetching(place: Place): Promise<boolean|undefined> {
-  // On a `Place`, `isOpen()` will asynchronously fetch these three fields. If
-  // we don't have all three already, then we treat `isOpen` as missing data
-  // instead of making an unintended API call.
-  //
-  // When using the Place Data Provider component, these fields will be
-  // automatically fetched in advance.
-  if (place && hasDataForOpeningCalculations(place)) {
-    try {
-      return await place.isOpen();
-    } catch {
-      // Fall back to the library's internal opening hours calculation in case
-      // isOpen() is not available.
-      return isOpen(place);
-    }
-  } else {
+  // On a `Place`, `isOpen()` will asynchronously fetch `OPENING_HOURS_FIELDS`.
+  // If we don't already have the minimum data needed for opening-hours
+  // calculations, treat `isOpen` as missing data instead of making an
+  // unintended API call.
+  if (!place || !hasDataForOpeningCalculations(place)) {
     return undefined;
   }
+
+  // When using the Place Data Provider component, all `OPENING_HOURS_FIELDS`
+  // are requested in advance (see `getRequiredFields()`) so that
+  // `place.isOpen()` can resolve without a second fetch. If a standalone
+  // `Place` was provided without fetching all of those fields (e.g.
+  // `currentOpeningHours` is still `undefined`), fall back to the library's
+  // local calculation rather than letting `place.isOpen()` trigger a network
+  // request.
+  if (!hasFetchedOpeningHoursFields(place)) {
+    return isOpen(place);
+  }
+
+  let result: boolean|undefined;
+  try {
+    result = await place.isOpen();
+  } catch {
+    // Fall back to the library's internal opening hours calculation in case
+    // isOpen() is not available.
+    return isOpen(place);
+  }
+
+  // A place whose regular hours are 24/7 should report as open whenever its
+  // business status is operational. Recompute with the library's own
+  // opening-hours logic, which still honors any exceptional hours present in
+  // `currentOpeningHours`.
+  // See https://github.com/googlemaps/extended-component-library/issues/302
+  if (result === false && place.businessStatus === 'OPERATIONAL' &&
+      place.regularOpeningHours &&
+      isPlaceAlwaysOpen(place.regularOpeningHours)) {
+    return isOpen(place) ?? result;
+  }
+  return result;
 }
 
 /**
@@ -200,11 +222,10 @@ export class PlaceFieldBoolean extends PlaceDataConsumer {
     const placeField = toPlaceBooleanField(this.field);
     switch (placeField) {
       case 'isOpen()':
-        return [
-          'businessStatus',
-          'regularOpeningHours',
-          'utcOffsetMinutes',
-        ];
+        // `Place.isOpen()` internally fetches all of these fields. Requesting
+        // them up front lets the data provider batch them into a single
+        // request, instead of `isOpen()` triggering a second one.
+        return [...OPENING_HOURS_FIELDS];
       case 'hasWheelchairAccessibleEntrance':
         return ['accessibilityOptions'];
       default:

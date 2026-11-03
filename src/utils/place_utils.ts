@@ -11,7 +11,7 @@ import {APILoader} from '../api_loader/api_loader.js';
 import {extractTextAndURL} from './dom_utils.js';
 import {mapsJsData} from './googlemaps_types.js';
 import type {LatLng, LatLngLiteral, Place, PlaceResult, PriceLevelString} from './googlemaps_types.js';
-import {isOpen} from './opening_hours.js';
+import {isOpen, OPENING_HOURS_FIELDS} from './opening_hours.js';
 
 /**
  * Returns true if `place` is a `PlaceResult`, and false if it's a `Place`.
@@ -166,14 +166,26 @@ export async function makePlaceFromPlaceResult(
   });
 }
 
+
 /**
- * Determines whether the current Place object has enough data to evaluate
- * `isOpen()` or `getNextOpeningTime()` without making additional fetches.
+ * Determines whether the current Place object has the minimum data required to
+ * evaluate opening hours (`businessStatus`, `utcOffsetMinutes`, and either
+ * `currentOpeningHours` or `regularOpeningHours`).
  */
 export function hasDataForOpeningCalculations(place: Place): boolean {
   return !!(
-      place.businessStatus && place.regularOpeningHours &&
+      place.businessStatus &&
+      (place.currentOpeningHours || place.regularOpeningHours) &&
       (place.utcOffsetMinutes != null));
+}
+
+/**
+ * Determines whether all fields that `Place.isOpen()` fetches internally have
+ * been requested on the Place object (`!== undefined`), so that calling
+ * `place.isOpen()` will not trigger an additional network request.
+ */
+export function hasFetchedOpeningHoursFields(place: Place): boolean {
+  return OPENING_HOURS_FIELDS.every((field) => place[field] !== undefined);
 }
 
 /** Converts `PlaceResult` data to `Place`-compatible field values. */
@@ -216,6 +228,7 @@ function convertToPlaceFields(placeResult: PlaceResult): Partial<Place> {
         {internationalPhoneNumber: placeResult.international_phone_number}),
     ...(placeResult.name !== undefined && {displayName: placeResult.name}),
     ...(placeResult.opening_hours !== undefined && {
+      currentOpeningHours: null,
       regularOpeningHours: mapsJsData({
         periods:
             placeResult.opening_hours.periods?.map(
