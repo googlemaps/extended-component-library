@@ -11,7 +11,7 @@ name: Release Please (back patches)
 
 jobs:
   release-please:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - uses: google-github-actions/release-please-action@v3
         id: release
@@ -30,7 +30,7 @@ jobs:
         if: ${{ steps.release.outputs.release_created }}
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 22
           cache: npm
         if: ${{ steps.release.outputs.release_created }}
       - uses: google/wireit@setup-github-actions-caching/v1
@@ -44,7 +44,7 @@ jobs:
       # Now configure with the publish service for install.
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 22
           registry-url: 'https://wombat-dressing-room.appspot.com/'
         if: ${{ steps.release.outputs.release_created }}
         # NPM release should manually specify "tag", since otherwise it will be tagged as

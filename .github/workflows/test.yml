@@ -4,13 +4,13 @@ on: [push]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
 
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 22
           cache: npm
       - uses: google/wireit@setup-github-actions-caching/v2
 
@@ -20,18 +20,18 @@ jobs:
           WIREIT_FAILURES: continue
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
 
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 22
           cache: npm
       - uses: google/wireit@setup-github-actions-caching/v2
 
       - run: npm ci
-      - run: npx playwright install --with-deps
+      - run: npx playwright install --with-deps chromium firefox
       - run: npm test
         env:
           WIREIT_FAILURES: continue

@@ -4,19 +4,19 @@ on: [push]
 
 jobs:
   test-e2e:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     timeout-minutes: 20
 
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
       with:
-        node-version: 18
+        node-version: 22
         cache: npm
     - uses: google/wireit@setup-github-actions-caching/v2
 
     - run: npm ci
-    - run: npx playwright install --with-deps
+    - run: npx playwright install --with-deps chromium firefox
     - run: npm run e2e
       env:
         MAPS_API_KEY: ${{secrets.MAPS_API_KEY}}

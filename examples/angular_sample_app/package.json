@@ -31,5 +31,8 @@
     "@ngx-env/builder": "^16.1.2",
     "@types/google.maps": "~3.65.0",
     "typescript": "~5.0.2"
+  },
+  "overrides": {
+    "webpack": "5.94.0"
   }
 }

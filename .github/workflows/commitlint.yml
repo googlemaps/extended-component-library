@@ -4,12 +4,12 @@ on: [pull_request]
 
 jobs:
   enforce-conventional-commit-message:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
 
     steps:
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 22
 
       - run: npm install -g commitlint @commitlint/config-conventional
       - run: 'echo "${PR_TITLE}" | commitlint -x @commitlint/config-conventional'
