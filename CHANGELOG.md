@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.1](https://github.com/googlemaps/extended-component-library/compare/v0.8.0...v0.8.1) (2026-11-06)
+
+
+### Bug Fixes
+
+* improve screen reader support for icons and selected listing in gmpx-store-locator ([b5cf24a](https://github.com/googlemaps/extended-component-library/commit/b5cf24ad3cabee9e24e12f0ec353b5aaa99c1adc))
+
 ## [0.8.0](https://github.com/googlemaps/extended-component-library/compare/v0.7.0...v0.8.0) (2026-11-03)
 
 
