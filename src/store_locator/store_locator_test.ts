@@ -131,6 +131,43 @@ describe('StoreLocator', () => {
     expect(map?.innerMap?.panTo).toHaveBeenCalledOnceWith(LISTING_A.position);
   });
 
+  it('moves aria-current to the newly selected listing button', async () => {
+    const {resultsList} = await prepareState(
+        {listings: [LISTING_A, LISTING_B], featureSet: FeatureSet.ADVANCED});
+    const getAriaCurrentValues = () =>
+        Array.from(
+            resultsList!.querySelectorAll('.select-location'),
+            (button) => button.getAttribute('aria-current'));
+    const clickButton = async (index: number) => {
+      resultsList!.querySelectorAll<HTMLButtonElement>(
+          '.select-location')[index].click();
+      await env.waitForStability();
+    };
+
+    const initialValues = getAriaCurrentValues();
+    await clickButton(0);
+    const afterFirstClick = getAriaCurrentValues();
+    await clickButton(1);
+    const afterSecondClick = getAriaCurrentValues();
+
+    expect(initialValues).toEqual([null, null]);
+    expect(afterFirstClick).toEqual(['true', null]);
+    expect(afterSecondClick).toEqual([null, 'true']);
+  });
+
+  it('hides decorative icons from assistive technology', async () => {
+    const {locatorRoot} = await prepareState(
+        {listings: [LISTING_A], featureSet: FeatureSet.ADVANCED});
+
+    const searchIcon = locatorRoot.querySelector('.search-title .icon');
+    const backIcon = locatorRoot.querySelector('.back-button .icon');
+
+    expect(searchIcon).not.toBeNull();
+    expect(backIcon).not.toBeNull();
+    expect(searchIcon?.getAttribute('aria-hidden')).toBe('true');
+    expect(backIcon?.getAttribute('aria-hidden')).toBe('true');
+  });
+
   it('sets default map options if none are specified', async () => {
     const {map} = await prepareState(
         {listings: [LISTING_A], featureSet: FeatureSet.BASIC});

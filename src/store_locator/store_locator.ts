@@ -350,7 +350,7 @@ export class StoreLocator extends BaseComponent {
           <div slot="overlay" id="details-panel">
             <button class="back-button"
                 @click=${() => this.overlayLayout?.hideOverlay()}>
-              <span class="icon material-symbols-outlined">arrow_back</span>
+              <span aria-hidden="true" class="icon material-symbols-outlined">arrow_back</span>
               ${this.getMsg('LOCATOR_BACK_BUTTON_CTA')}
             </button>
             <gmpx-place-overview .place=${this.detailsPlaceId} google-logo-already-displayed>
@@ -406,15 +406,19 @@ export class StoreLocator extends BaseComponent {
       e.stopPropagation();
     };
 
+    const isSelected = listing === this.selectedListing;
+
     // clang-format off
     return html`
       <li @click=${liClick}
-          class=${classMap({'selected': listing === this.selectedListing})}
+          class=${classMap({'selected': isSelected})}
           ${ref((el?: Element) => { listing.listingElement = el; })}>
         <gmpx-place-data-provider auto-fetch-disabled
             .place=${listing.placeResult}>
           <div class="result-item">
-            <button class="select-location" @click=${selectButtonClick}>
+            <button class="select-location"
+                aria-current=${isSelected ? 'true' : nothing}
+                @click=${selectButtonClick}>
               <div class="name">
                 <gmpx-place-field-text field="displayName"></gmpx-place-field-text>
               </div>
@@ -467,7 +471,7 @@ export class StoreLocator extends BaseComponent {
         html`
         <div class="header">
           <div class="search-title">
-            <span class="icon material-symbols-outlined">distance</span>
+            <span aria-hidden="true" class="icon material-symbols-outlined">distance</span>
             ${this.getMsg('LOCATOR_LIST_HEADER')}
           </div>
           <gmpx-place-picker for-map="main-map" type="geocode"
