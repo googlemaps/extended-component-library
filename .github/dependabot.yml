@@ -20,3 +20,33 @@ updates:
         patterns:
         - "rollup*"
         - "@rollup*"
+  - package-ecosystem: "npm"
+    directory: "/examples/angular_sample_app"
+    schedule:
+      interval: "monthly"
+    groups:
+      angular:
+        patterns:
+        - "@angular*"
+      minor-and-patch:
+        update-types:
+        - "minor"
+        - "patch"
+  - package-ecosystem: "npm"
+    directory: "/examples/js_sample_app"
+    schedule:
+      interval: "monthly"
+    groups:
+      minor-and-patch:
+        update-types:
+        - "minor"
+        - "patch"
+  - package-ecosystem: "npm"
+    directory: "/examples/react_sample_app"
+    schedule:
+      interval: "monthly"
+    groups:
+      minor-and-patch:
+        update-types:
+        - "minor"
+        - "patch"

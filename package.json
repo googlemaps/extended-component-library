@@ -225,7 +225,7 @@
       ],
       "service": {
         "readyWhen": {
-          "lineMatches": "Angular Live Development Server is listening on localhost"
+          "lineMatches": "Local.*http://localhost:"
         }
       }
     },

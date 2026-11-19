@@ -5,34 +5,26 @@
   "license": "Apache-2.0",
   "scripts": {
     "ng": "ng",
-    "start": "NG_APP_MAPS_API_KEY=$MAPS_API_KEY ng serve --port=$PORT",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development"
+    "start": "ng serve --port=$PORT --define=\"import.meta.env.NG_APP_MAPS_API_KEY=\\\"$MAPS_API_KEY\\\"\"",
+    "build": "ng build --define=\"import.meta.env.NG_APP_MAPS_API_KEY=\\\"$MAPS_API_KEY\\\"\"",
+    "watch": "ng build --watch --configuration development --define=\"import.meta.env.NG_APP_MAPS_API_KEY=\\\"$MAPS_API_KEY\\\"\""
   },
   "type": "module",
   "dependencies": {
-    "@angular/animations": "^16.1.7",
-    "@angular/common": "^16.1.7",
-    "@angular/compiler": "^16.1.7",
-    "@angular/core": "^16.1.7",
-    "@angular/forms": "^16.1.7",
-    "@angular/platform-browser": "^16.1.7",
-    "@angular/platform-browser-dynamic": "^16.1.7",
-    "@angular/router": "^16.1.7",
+    "@angular/common": "^21.2.0",
+    "@angular/compiler": "^21.2.0",
+    "@angular/core": "^21.2.0",
+    "@angular/platform-browser": "^21.2.0",
     "@googlemaps/extended-component-library": "file:../..",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.13.0"
+    "zone.js": "~0.16.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^16.1.6",
-    "@angular/cli": "^16.1.6",
-    "@angular/compiler-cli": "^16.1.7",
-    "@ngx-env/builder": "^16.1.2",
+    "@angular/build": "^21.2.0",
+    "@angular/cli": "^21.2.0",
+    "@angular/compiler-cli": "^21.2.0",
     "@types/google.maps": "~3.65.0",
-    "typescript": "~5.0.2"
-  },
-  "overrides": {
-    "webpack": "5.94.0"
+    "typescript": "~5.9.3"
   }
 }

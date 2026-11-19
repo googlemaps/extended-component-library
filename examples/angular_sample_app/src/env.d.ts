@@ -10,10 +10,7 @@ interface ImportMeta {
 
 interface ImportMetaEnv {
   /**
-   * Built-in environment variable.
-   * @see Docs https://github.com/chihab/ngx-env#ng_app_env.
+   * Maps API key injected at build/serve time via Angular CLI `--define`.
    */
-  readonly NG_APP_ENV: string;
-
   readonly NG_APP_MAPS_API_KEY: string;
 }

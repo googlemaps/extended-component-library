@@ -38,18 +38,15 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@ngx-env/builder:browser",
+          "builder": "@angular/build:application",
           "options": {
             "outputPath": "dist/gmpx-angular-sample-app",
             "index": "src/index.html",
-            "main": "src/main.ts",
+            "browser": "src/main.ts",
             "polyfills": [
               "zone.js"
             ],
             "tsConfig": "tsconfig.app.json",
-            "assets": [
-              "src/assets"
-            ],
             "styles": [
               "src/styles.css"
             ],
@@ -72,33 +69,27 @@
               "outputHashing": "all"
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
-              "sourceMap": true,
-              "namedChunks": true
+              "sourceMap": true
             }
           },
           "defaultConfiguration": "production"
         },
         "serve": {
-          "builder": "@ngx-env/builder:dev-server",
+          "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "gmpx-angular-sample-app:build:production"
+              "buildTarget": "gmpx-angular-sample-app:build:production"
             },
             "development": {
-              "browserTarget": "gmpx-angular-sample-app:build:development"
+              "buildTarget": "gmpx-angular-sample-app:build:development"
             }
           },
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
-          "builder": "@ngx-env/builder:extract-i18n",
-          "options": {
-            "browserTarget": "gmpx-angular-sample-app:build"
-          }
+          "builder": "@angular/build:extract-i18n"
         }
       }
     }
