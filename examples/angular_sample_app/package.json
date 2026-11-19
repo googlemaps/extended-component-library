@@ -11,7 +11,7 @@
   },
   "type": "module",
   "dependencies": {
-    "@angular/common": "^21.2.0",
+    "@angular/common": "^22.2.6",
     "@angular/compiler": "^21.2.0",
     "@angular/core": "^21.2.0",
     "@angular/platform-browser": "^21.2.0",
