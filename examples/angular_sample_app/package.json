@@ -21,7 +21,7 @@
     "zone.js": "~0.16.0"
   },
   "devDependencies": {
-    "@angular/build": "^21.2.0",
+    "@angular/build": "^22.2.7",
     "@angular/cli": "^21.2.0",
     "@angular/compiler-cli": "^21.2.0",
     "@types/google.maps": "~3.65.0",
