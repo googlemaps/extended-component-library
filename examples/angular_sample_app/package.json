@@ -24,7 +24,7 @@
     "@angular/build": "^21.2.0",
     "@angular/cli": "^21.2.0",
     "@angular/compiler-cli": "^21.2.0",
-    "@types/google.maps": "~3.65.0",
+    "@types/google.maps": "~3.66.10",
     "typescript": "~5.9.3"
   }
 }
